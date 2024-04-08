@@ -21,8 +21,6 @@ services:
       - DJANGO_SUPERUSER_PASSWORD=password
     depends_on:
       - db
-    networks:
-      - net
 
   db:
     container_name: db
