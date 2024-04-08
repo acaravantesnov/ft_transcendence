@@ -1,4 +1,8 @@
-FROM python:3.7.3-stretch
+FROM python:3.11-slim-bullseye
+
+# install dependencies
+RUN apt-get update && apt-get install -y netcat
+
 
 # Set unbuffered output for python
 ENV PYTHONUNBUFFERED 1

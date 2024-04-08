@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Wait for the postgres container to be ready before running the Django migrations
+echo "Waiting for postgres..."
+while ! nc -z db 5432; do
+  sleep 0.1
+done
+sleep 5
+
 python manage.py createsuperuser --no-input
 
 echo "Creating Migrations..."
