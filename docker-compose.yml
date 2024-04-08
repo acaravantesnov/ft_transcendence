@@ -6,6 +6,10 @@ services:
     build: .
     ports:
       - "8000:8000"
+    expose:
+      - "5432"
+    networks:
+      - net
     environment:
       - PG_USER=postgres
       - PG_PASSWORD=postgres
@@ -22,10 +26,20 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"
+    expose:
+      - "5432"
+    networks:
+      - net
     volumes:
       - pgdata:/var/lib/postgresql/data
 
 volumes:
   pgdata: {}
+
+networks:
+  net:
+    driver: bridge
+    external: false
+    name: djangoapp
