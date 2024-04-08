@@ -12,8 +12,13 @@ services:
       - PG_DB=postgres
       - PG_PORT=5432
       - PG_HOST=db
+      - DJANGO_SUPERUSER_USERNAME=admin
+      - DJANGO_SUPERUSER_EMAIL=admin@django.com
+      - DJANGO_SUPERUSER_PASSWORD=password
     depends_on:
       - db
+    networks:
+      - net
 
   db:
     container_name: db
@@ -22,10 +27,22 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - net
 
 volumes:
-  pgdata: {}
+  pgdata:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./data
+      o: bind
+
+networks:
+  net:
+    driver: bridge
+    name: net
