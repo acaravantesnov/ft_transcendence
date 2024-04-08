@@ -1,6 +1,9 @@
 #!/bin/bash
+
+python manage.py createsuperuser --no-input
+
 echo "Creating Migrations..."
-python manage.py makemigrations TranscendenceApp
+python manage.py makemigrations
 echo ====================================
 
 echo "Starting Migrations..."
