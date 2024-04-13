@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'TranscendenceApp',
-	'rest_framework',
+    'TranscendenceApp',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

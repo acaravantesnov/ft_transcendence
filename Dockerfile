@@ -7,17 +7,19 @@ RUN apt-get update && apt-get install -y netcat
 # Set unbuffered output for python
 ENV PYTHONUNBUFFERED 1
 
+# Install app dependencies
+COPY ./srcs/requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY ./srcs/django.sh .
+RUN chmod +x ./django.sh
+
 # Create app directory
 WORKDIR /app
 
-# Install app dependencies
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
 # Bundle app source
-COPY . .
+COPY ./srcs/. .
 
-RUN chmod +x /app/django.sh
-
+RUN rm ./requirements.txt ./django.sh
 # entrypoint to run the django.sh file
-ENTRYPOINT ["/app/django.sh"]
+ENTRYPOINT ["/django.sh"]
