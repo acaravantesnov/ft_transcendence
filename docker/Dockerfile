@@ -8,10 +8,10 @@ RUN apt-get update && apt-get install -y netcat
 ENV PYTHONUNBUFFERED 1
 
 # Install app dependencies
-COPY ./srcs/requirements.txt .
+COPY ./tools/requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY ./srcs/django.sh .
+COPY ./tools/django.sh .
 RUN chmod +x ./django.sh
 
 # Create app directory
@@ -20,6 +20,7 @@ WORKDIR /app
 # Bundle app source
 COPY ./srcs/. .
 
-RUN rm ./requirements.txt ./django.sh
+#RUN rm ./requirements.txt ./django.sh
+
 # entrypoint to run the django.sh file
 ENTRYPOINT ["/django.sh"]

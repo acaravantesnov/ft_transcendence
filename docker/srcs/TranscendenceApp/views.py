@@ -58,18 +58,19 @@ def signIn(request):
    #     print(user)
    #     if not user:
    #         return HttpResponse("<h1> Vete a Parla </h2>")
-   #     return redirect('signed', username)
+        return redirect('signed', username)
     return render(request, "signIn.html", {'form': form})
 
 def signUp(request):
     if request.method == "POST":
-        form = newUser(request.POST)
+        form = CreateUserForm(request.POST)
         #if form.validate_username() and form.validate_password():
         if form.is_valid():
             form.save()
         messages.success(request, 'Registration Successfull')
         return redirect('index')
     else:
+        return render_to_response( )
         form = newUser()
 
     return render(request, 'signUp.html', {'form': form})
