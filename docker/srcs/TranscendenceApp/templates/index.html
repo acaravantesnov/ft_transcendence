@@ -1,6 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<center>
 <h1>MAIN PAGE</h1>
 
 <p>Iniciemos sesión: </p>
 <button>
     <a href="{% url 'sign' %}">Sign In</a>
 </button>
+</center>
+
+{% endblock %}

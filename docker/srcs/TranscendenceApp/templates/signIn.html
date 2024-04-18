@@ -1,14 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
 <h1> SIGN IN </h1>
 
-<div>
+<div class='jumbotron'>
+    <center>
+    <div class="text-left" style"max-width:500px">
     <form method="post">
         {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="Sign In">
+	{% for field in form %}
+	<div class='form-group'>
+		<label for="{{ field.name }}">{{ field.label }}</label>
+		{{ field }}
+	</div>
+	{% endfor %}
+	<br>
+	<center><button type="submit" class="btn btn-success btn-lg">SIGN IN</button></center>
     </form>
+    </div>
+    </center>
 </div>
 
+{% if form %}
 <p>If you does not have an account, fulfill your registration here:</p>
 <button>
-    <a href="{% url 'signUp' %}">Sign Up</a>
+	<a href="{% url 'signUp' %}">Sign Up</a>
 </button>
+
+{% endif %}
+
+
+{% endblock %}

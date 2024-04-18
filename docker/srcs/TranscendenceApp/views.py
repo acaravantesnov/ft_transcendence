@@ -1,21 +1,23 @@
 from django.shortcuts import render, redirect
-from rest_framework.response import Response
-from django.contrib import messages
+from django.contrib import messages, auth
 from django.http import HttpResponse
+
+from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import User
 from .serializers import UserSerializer
+
+from .models import MyCustomUser
 from .forms import signUser, newUser
 
 @api_view(['GET'])
 def getData(request):
-    users = User.objects.all()
+    users = MyCustomUser.objects.all()
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def getUser(request, pk):
-    users = User.objects.get(id=pk)
+    users = MyCustomUser.objects.get(id=pk)
     serializer = UserSerializer(users, many=False)
     return Response(serializer.data)
 
@@ -30,7 +32,7 @@ def addUser(request):
 
 @api_view(['PUT'])
 def updateUser(request, pk):
-    user = User.objects.get(id=pk)
+    user = MyCustomUser.objects.get(id=pk)
     serializer = UserSerializer(instance=user, data=request.data)
 
     if serializer.is_valid():
@@ -40,40 +42,57 @@ def updateUser(request, pk):
 
 @api_view(['DELETE'])
 def deleteUser(request, pk):
-    user = User.objects.get(id=pk)
+    user = MyCustomUser.objects.get(id=pk)
     user.delete()
     return Response('User successfully deleted!')
 
 
-def signIn(request):
-    #return render(request, '')
-    form = signUser(request.POST)
-    if form.is_valid():
-        if form.validate():
-            print("Aqui entramos")
-   #     username = form.cleaned_data.get("username")
-   #     password = form.cleaned_data.get("password")
-   #     user = authenticate(request, username=username, password=password)
-   #     #login(request, user)
-   #     print(user)
-   #     if not user:
-   #         return HttpResponse("<h1> Vete a Parla </h2>")
-        return redirect('signed', username)
-    return render(request, "signIn.html", {'form': form})
-
 def signUp(request):
+    form = newUser(request.POST)
     if request.method == "POST":
-        form = CreateUserForm(request.POST)
-        #if form.validate_username() and form.validate_password():
         if form.is_valid():
-            form.save()
-        messages.success(request, 'Registration Successfull')
-        return redirect('index')
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
+            confirm_password = form.cleaned_data.get("confirm_password")
+            email = form.cleaned_data.get("email")
+            first_name = form.cleaned_data.get("first_name")
+            last_name = form.cleaned_data.get("last_name")
+            if password == confirm_password:
+                if MyCustomUser.objects.filter(username=username).exists():
+                    messages.info(request, 'Email already exists')
+                    return redirect('signUp')
+                else:
+                    user = MyCustomUser.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
+                    user.set_password(password)
+                    user.save()
+                    print("success")
+                    return redirect('sign')
     else:
-        return render_to_response( )
-        form = newUser()
+        print('This is not post method')
+        return render(request, "signUp.html", {"form": form})
 
-    return render(request, 'signUp.html', {'form': form})
+def signIn(request):
+    form = signUser(request.POST or None)
+    if request.method == "POST":
+        if  form.is_valid():
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
+            user = auth.authenticate(username=username, password=password)
+
+            if user is not None:
+                auth.login(request,user)
+                return redirect('signed', username)
+            else:
+                messages.info(request, 'Invalid Username or Password')
+                return redirect('sign')
+    else:        
+        return render(request, "signIn.html", {"form": form})
 
 def signed(request, username):
-    return HttpResponse("<h1> Hello %s</h2>" % username)
+    return render(request, "signed.html", {"username": username})
+
+def logOut(request):
+    auth.logout(request)
+    messages.info(request, "Logged out successfully!")
+    return redirect('index')
+
