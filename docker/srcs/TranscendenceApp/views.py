@@ -96,3 +96,6 @@ def logOut(request):
     messages.info(request, "Logged out successfully!")
     return redirect('index')
 
+def game(request):
+    return render(request, "game.html")
+
