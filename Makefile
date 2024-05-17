@@ -13,6 +13,7 @@
 docker_dir = ./docker
 docker_file = docker-compose.yml
 docker_yml = $(docker_dir)/$(docker_file)
+docker_compose = docker compose
 
 PORT = 8000
 HOST = 0.0.0.0
@@ -20,35 +21,35 @@ HOST = 0.0.0.0
 all: up
 
 build:
-	docker-compose -f $(docker_yml) build $(c)
+	$(docker_compose) -f $(docker_yml) build $(c)
 
 up:
-	docker-compose -f ./docker/docker-compose.yml up -d --build
+	$(docker_compose) -f ./docker/docker-compose.yml up -d --build
 
 start:
-	docker-compose -f $(docker_yml) start $(c)
+	$(docker_compose) -f $(docker_yml) start $(c)
 
 stop:
-	docker-compose -f $(docker_yml) stop $(c)
+	$(docker_compose) -f $(docker_yml) stop $(c)
 
 restart: stop start
 
 down:
-	docker-compose -f $(docker_yml) down $(c)
+	$(docker_compose) -f $(docker_yml) down $(c)
 
 destroy:
-	docker-compose -f $(docker_yml) down -v $(c)
+	$(docker_compose) -f $(docker_yml) down -v $(c)
 
 recreate: destroy up
 
 ps:
-	docker-compose -f $(docker_yml) ps
+	$(docker_compose) -f $(docker_yml) ps
 
 login-db:
-	docker-compose -f $(docker_yml) exec db /bin/bash
+	$(docker_compose) -f $(docker_yml) exec db /bin/bash
 
 login-prj:
-	docker-compose -f $(docker_yml) exec djangoapp /bin/bash
+	$(docker_compose) -f $(docker_yml) exec djangoapp /bin/bash
 
 runserver:
-	docker-compose -f $(docker_yml) exec djangoapp python manage.py runserver $(HOST):$(PORT)
+	$(docker_compose) -f $(docker_yml) exec djangoapp python manage.py runserver $(HOST):$(PORT)
