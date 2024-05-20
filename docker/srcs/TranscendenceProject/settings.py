@@ -30,8 +30,8 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +40,22 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'TranscendenceApp',
     'rest_framework',
+    'channels',
 ]
+
+#redis
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://localhost:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -128,3 +143,60 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+#Websockets
+
+ASGI_APPLICATION = 'TranscendenceProject.asgi.application'
+
+# Define the channel layers (using in-memory for simplicity)
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels.layers.InMemoryChannelLayer',
+#     },
+# }
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+# Looging settings
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
+        },
+    },
+    "handlers":{
+      "file":{
+        "level": "DEBUG",
+        "class": "logging.FileHandler",
+        "filename": "/app/debug2.log"
+      }
+    },
+    'loggers': {
+      "django": {
+        "handlers": ["file"],
+        "level": "DEBUG",
+        "propagate": True,
+      },
+      "game": {
+        "handlers": ["file"],
+        "level": "DEBUG",
+        "propagate": True,
+      },
+      "views": {
+        "handlers": ["file"],
+        "level": "DEBUG",
+        "propagate": True,
+      },
+    }
+}

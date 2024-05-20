@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# I think it should be on Dockerfile, but it's not working there
+service redis-server start
+
 python manage.py createsuperuser --no-input
 
 echo "Creating Migrations..."
