@@ -9,6 +9,10 @@ from .serializers import UserSerializer
 from .models import MyCustomUser
 from .forms import signUser, newUser
 
+import logging
+
+logger = logging.getLogger("views")
+
 @api_view(['GET'])
 def getData(request):
     users = MyCustomUser.objects.all()
@@ -95,4 +99,11 @@ def logOut(request):
     auth.logout(request)
     messages.info(request, "Logged out successfully!")
     return redirect('index')
+
+def game(request):
+    return render(request, "game.html")
+
+def game2(request, room_name):
+    logger.debug(f'room_name: {room_name}')
+    return render(request, "game2.html", {'room_name': room_name})
 

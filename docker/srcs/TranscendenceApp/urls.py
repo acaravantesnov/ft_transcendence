@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 urlpatterns = [
@@ -10,5 +10,9 @@ urlpatterns = [
     path('sign/', views.signIn, name="sign"),
     path('signUp/', views.signUp, name="signUp"),
     path('signed/<str:username>', views.signed, name="signed"),
-    path('logout', views.logOut, name="logout")
+    path('logout', views.logOut, name="logout"),
+    path('game', views.game, name='game'),
+    # path('game2', views.game2, name='game2'),
+    # re_path(r'^game2/(?P<room_name>\w+)/$', views.game2, name='game2'),
+    path('game2/<str:room_name>/', views.game2, name='game2'),
 ]
