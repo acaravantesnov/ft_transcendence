@@ -43,7 +43,7 @@ class signUser(forms.Form):
                                widget=forms.TextInput(
                                    attrs={
                                        'class':'form-control',
-                                       'placeholder':'kuuhaku',
+                                       'placeholder':'username',
                                        }))
     password = forms.CharField(label="Password",
                                widget=forms.PasswordInput(

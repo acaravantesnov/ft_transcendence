@@ -15,5 +15,4 @@ urlpatterns = [
     # path('game2', views.game2, name='game2'),
     # re_path(r'^game2/(?P<room_name>\w+)/$', views.game2, name='game2'),
     path('game2/<str:room_name>/', views.game2, name='game2'),
-    path('bs', views.bs, name='bs'),
 ]

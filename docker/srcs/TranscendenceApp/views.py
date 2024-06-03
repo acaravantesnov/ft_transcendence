@@ -70,7 +70,7 @@ def signUp(request):
                     user.set_password(password)
                     user.save()
                     print("success")
-                    return redirect('sign')
+                    return redirect('signIn')
     else:
         print('This is not post method')
         return render(request, "signUp.html", {"form": form})
@@ -88,7 +88,7 @@ def signIn(request):
                 return redirect('signed', username)
             else:
                 messages.info(request, 'Invalid Username or Password')
-                return redirect('sign')
+                return redirect('signIn')
     else:        
         return render(request, "signIn.html", {"form": form})
 
@@ -107,5 +107,3 @@ def game2(request, room_name):
     logger.debug(f'room_name: {room_name}')
     return render(request, "game2.html", {'room_name': room_name})
 
-def bs(request):
-    return render(request, "bs.html")
