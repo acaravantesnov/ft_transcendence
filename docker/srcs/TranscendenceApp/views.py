@@ -107,3 +107,5 @@ def game2(request, room_name):
     logger.debug(f'room_name: {room_name}')
     return render(request, "game2.html", {'room_name': room_name})
 
+def bs(request):
+    return render(request, "bs.html")

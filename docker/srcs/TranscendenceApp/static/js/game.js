@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const ball = document.getElementById('ball');
     let ballX = 50;
     let ballY = 50;
-    let ballSpeedX = 2;
-    let ballSpeedY = 2;
+    let ballSpeedX = 4;
+    let ballSpeedY = 4;
 
     function moveBall() {
         ballX += ballSpeedX;
