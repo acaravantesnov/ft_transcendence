@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # I think it should be on Dockerfile, but it's not working there
-#service redis-server start
+service redis-server start
 
 python3 manage.py createsuperuser --no-input
 
