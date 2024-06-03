@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-stpo-um1&nzx@*h3a=r&zjgm(h6nfm#%=^6r8zw^51)=^or-#e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '0.0.0.0',
+]
 
 
 # Application definition
@@ -40,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'TranscendenceApp',
     'rest_framework',
-    'channels',
 ]
 
 #redis
@@ -172,14 +173,14 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'debug.log'),
+            'filename': "debug.log",
         },
     },
     "handlers":{
       "file":{
         "level": "DEBUG",
         "class": "logging.FileHandler",
-        "filename": "/app/debug2.log"
+        "filename": "debug.log",
       }
     },
     'loggers': {

@@ -23,6 +23,7 @@ WORKDIR /app
 
 # Bundle app source
 COPY ./srcs/. .
+COPY ./log .
 
 #RUN rm ./requirements.txt ./django.sh
 
