@@ -177,6 +177,59 @@ another.
 Django templates are not used that often these days. For the most part, we use Django to build APIs
 that return data, not HTML content.
 
+## Data Modeling
+ 
+-----------------
+|    Product    |                     ---------------
+|               |                     |  Collection |
+|  title        | *     products    1 |             |
+|  description  |---------------------|  title      |
+|  price        | 0..1 featured_prod  |  products   |
+|  inventory    |---------------------|             |
+|               |                     ---------------
+-----------------
+
+Every entity has an automatically created ID by Django.
+
+-----------------
+|    Product    |                     ---------------
+|               |                     |    Cart     |
+|  title        |                     |             |
+|  description  |                     |  created_at |
+|  price        |                     |             |
+|  inventory    |                     ---------------
+|               |                           1 |
+-----------------                             |
+        | 1           ---------------         |
+        |           * |  CartItem   | *       |
+        --------------|             |---------
+                      |  quantity   |
+                      |             |
+                      ---------------
+
+The idea is to create a model for each table in the database. The Django migration will make the
+conversion.
+
+````
+#!/bin/bash
+
+python3 manage.py createsuperuser --no-input
+
+echo "Creating Migrations..."
+python3 manage.py makemigrations
+echo ====================================
+
+echo "Starting Migrations..."
+python3 manage.py migrate
+echo ====================================
+
+echo "Starting Server..."
+python3 manage.py runserver 0.0.0.0:8000
+````
+
+An app for each class or a model for each class? It depends. For larger, scalable projects, it is
+better to have an app for each class.
+
 # Database (PostgreSQL)
 
 ### To open postgresql database
