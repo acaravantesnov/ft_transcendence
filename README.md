@@ -36,10 +36,12 @@ The Web Server takes this Request, processes it, and returns a Response back to 
 data transfer is defined by HTTP (HyperText Transfer Protocol), and defines how Clients and Servers
 can communicate.
 
+````
         Request
 Client  ------> Server
         <------
         Response
+````
 
 Now, as part of building the Back-End for this website, we need to decide how we are going to
 respond to clients.
@@ -178,7 +180,8 @@ Django templates are not used that often these days. For the most part, we use D
 that return data, not HTML content.
 
 ## Data Modeling
- 
+
+````
 -----------------
 |    Product    |                     ---------------
 |               |                     |  Collection |
@@ -188,9 +191,11 @@ that return data, not HTML content.
 |  inventory    |---------------------|             |
 |               |                     ---------------
 -----------------
+````
 
 Every entity has an automatically created ID by Django.
 
+````
 -----------------
 |    Product    |                     ---------------
 |               |                     |    Cart     |
@@ -206,6 +211,7 @@ Every entity has an automatically created ID by Django.
                       |  quantity   |
                       |             |
                       ---------------
+````
 
 The idea is to create a model for each table in the database. The Django migration will make the
 conversion.
