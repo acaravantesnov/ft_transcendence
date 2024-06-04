@@ -5,4 +5,4 @@ docker exec -it db psql -U postgres
 \dt
 
 # To open table
-SELECT * FROM table_name;
+SELECT * FROM "table_name";

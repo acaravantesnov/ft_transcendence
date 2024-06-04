@@ -172,32 +172,35 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': "debug.log",
+        "django":{
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "django.log",
         },
-    },
-    "handlers":{
-      "file":{
-        "level": "DEBUG",
-        "class": "logging.FileHandler",
-        "filename": "debug.log",
-      }
+        "game":{
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "game.log",
+        },
+        "views":{
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "views.log",
+        },
     },
     'loggers': {
       "django": {
-        "handlers": ["file"],
+        "handlers": ["django"],
         "level": "DEBUG",
         "propagate": True,
       },
       "game": {
-        "handlers": ["file"],
+        "handlers": ["game"],
         "level": "DEBUG",
         "propagate": True,
       },
       "views": {
-        "handlers": ["file"],
+        "handlers": ["views"],
         "level": "DEBUG",
         "propagate": True,
       },

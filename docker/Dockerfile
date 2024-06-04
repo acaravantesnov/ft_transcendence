@@ -15,16 +15,14 @@ RUN chmod 777 /etc/redis/redis.conf
 # Set unbuffered output for python
 ENV PYTHONUNBUFFERED 1
 
-COPY ./tools/django.sh .
-RUN chmod +x ./django.sh
-
 # Create app directory
 WORKDIR /app
 
 # Bundle app source
 COPY ./srcs .
-COPY ./log .
 COPY ./tools .
+
+RUN chmod +x ./django.sh
 
 #RUN rm ./requirements.txt ./django.sh
 
