@@ -2,6 +2,7 @@ services:
   djangoapp:
     container_name: djangoapp
     build: .
+    restart: always
     ports:
       - "8000:8000"
     expose:
@@ -23,6 +24,7 @@ services:
   db:
     container_name: db
     image: postgres:12-bullseye
+    restart: always
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
