@@ -88,7 +88,7 @@ def signIn(request):
 
                 if user is not None:
                     auth.login(request,user)
-                    return redirect('index')
+                    return redirect('signed', username=username)
                 else:
                     messages.info(request, 'Invalid Username or Password')
                     return redirect('signIn')
