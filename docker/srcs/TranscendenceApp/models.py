@@ -1,3 +1,9 @@
+'''
+Defines the model classes for this app.
+Model classes are used to pull out data from the database and present it
+to the user.
+'''
+
 from django.db import models
 from django.utils import timezone
 

@@ -1,8 +1,8 @@
 """
-Used to communicate with the websockets
-This is a websocket consumer that listens to the 'game' group and sends the ball position to all the clients in the group
+Used to communicate with the websockets.
+This is a websocket consumer that listens to the 'game' group and sends the ball position to all the
+clients in the group.
 """
-
 
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer

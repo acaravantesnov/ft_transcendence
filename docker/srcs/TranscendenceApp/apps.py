@@ -1,3 +1,7 @@
+'''
+Configures the app.
+'''
+
 from django.apps import AppConfig
 
 

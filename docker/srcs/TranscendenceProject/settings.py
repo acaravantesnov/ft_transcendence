@@ -31,19 +31,16 @@ ALLOWED_HOSTS = [
     'localhost',
 ]
 
-
-# Application definition
 INSTALLED_APPS = [
-    'daphne',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'TranscendenceApp',
-    'rest_framework',
-    'channels',
+    'daphne',                       #
+    'django.contrib.admin',         # Admin interface for managing our data.
+    'django.contrib.auth',          # Authenticating users.
+    'django.contrib.contenttypes',  # 
+    'django.contrib.messages',      # Displaying one-time notifications to the user.
+    'django.contrib.staticfiles',   # Serving static files like CSS, JavaScript, images.
+    'TranscendenceApp',             # Our app.
+    'rest_framework',               #
+    'channels',                     #
 ]
 
 #redis

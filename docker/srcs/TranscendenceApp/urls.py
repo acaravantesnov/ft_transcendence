@@ -1,6 +1,11 @@
+'''
+Maps the view functions to the URL patterns.
+'''
+
 from django.urls import path, re_path
 from . import views
 
+# URLConf module
 urlpatterns = [
     path('', views.getData),
     path ('create', views.addUser),
