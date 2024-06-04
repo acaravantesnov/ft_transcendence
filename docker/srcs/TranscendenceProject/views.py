@@ -8,4 +8,8 @@ from django.contrib import auth
 # Create your views here.
 
 def home(request):
-    return render(request, 'index.html')
+    if request.user.is_authenticated:
+        username = request.user.username
+    else:
+        username = "Guest"
+    return render(request, 'index.html', {"username": username})

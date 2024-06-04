@@ -50,7 +50,6 @@ def deleteUser(request, pk):
     user.delete()
     return Response('User successfully deleted!')
 
-
 def signUp(request):
     form = newUser(request.POST)
     if request.method == "POST":
@@ -76,21 +75,25 @@ def signUp(request):
         return render(request, "signUp.html", {"form": form})
 
 def signIn(request):
-    form = signUser(request.POST or None)
-    if request.method == "POST":
-        if  form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
-            user = auth.authenticate(username=username, password=password)
+    if request.user.is_authenticated:
+        username = request.user.username
+        return render(request, "signIn.html", {"username": username})
+    else:
+        form = signUser(request.POST or None)
+        if request.method == "POST":
+            if  form.is_valid():
+                username = form.cleaned_data.get("username")
+                password = form.cleaned_data.get("password")
+                user = auth.authenticate(username=username, password=password)
 
-            if user is not None:
-                auth.login(request,user)
-                return redirect('signed', username)
-            else:
-                messages.info(request, 'Invalid Username or Password')
-                return redirect('signIn')
-    else:        
-        return render(request, "signIn.html", {"form": form})
+                if user is not None:
+                    auth.login(request,user)
+                    return redirect('index')
+                else:
+                    messages.info(request, 'Invalid Username or Password')
+                    return redirect('signIn')
+        else:        
+            return render(request, "signIn.html", {"form": form})
 
 def signed(request, username):
     return render(request, "signed.html", {"username": username})

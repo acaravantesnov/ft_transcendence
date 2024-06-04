@@ -41,7 +41,16 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="{% url 'signIn' %}">Sign In</a>
+            <script>
+              function notification(){
+                alert("You are already logged in!");
+              }
+            </script>
+            {% if request.user.username == username and request.user.is_authenticated %}
+              <a onclick="notification()" class="nav-link" href="">Sign In</a>
+            {% else %}
+              <a class="nav-link" href="{% url 'signIn' %}">Sign In</a>
+            {% endif %}
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'signUp' %}">Sign Up</a>
@@ -59,6 +68,7 @@
   <footer class="footer mt-auto py-3 bg-dark text-white mt-5">
     <div class="container-fluid text-center">
       <span>© 2024 ft_transcendence</span>
+      <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
     </div>
   </footer>
 
