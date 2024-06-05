@@ -1,6 +1,22 @@
-# Back-End (Django)
+# Table of Contents
 
-## What is Django, and why is it so popular?
+- [Back-End (Django)](#back-end-django)
+   * [What is Django, and why is it so popular?](#what-is-django-and-why-is-it-so-popular)
+   * [How the web works.](#how-the-web-works)
+   * [APIs](#apis)
+   * [Django Project and Apps](#django-project-and-apps)
+   * [Views](#views)
+   * [Templates](#templates)
+   * [Data Modeling](#data-modeling)
+- [Database (PostgreSQL)](#database-postgresql)
+- [Front-End (HTML, CSS, JavaScript)](#front-end-html-css-javascript)
+   * [JavaScript Fetch](#javascript-fetch)
+
+---
+
+## Back-End (Django)
+
+### What is Django, and why is it so popular?
 
 Django is a free and open-source framework for building web applications with Python. It's not the
 only framework with Python (flask, tornado, bottle, falcon, hug, ...), but its the most popular one.
@@ -17,7 +33,7 @@ caching data, and much much more...
 Now, since Django offers all these amazing features, we can focus on our application and its
 requirements. We don't have to re-invent the wheel and code all this features from scratch.
 
-## How the web works.
+### How the web works.
 
 Let's say we are going to build an online store and publish it at "moshbuy.com". This website is
 going to have two parts or applications: The Front-End, and the Back-End.
@@ -62,7 +78,7 @@ best practice.
 These days we have Front-End tools like React, Angular or Vue for generating web pages on the
 Client. On contrast, there are Back-End tools like Django, Asp.NET Core, Express on the Server.
 
-## APIs
+### APIs
 
 If we push the responsibility of generating web pages to the Client, the Server basically becomes a
 gateway to the data. On the Server, we can provide end-points that the Client can talk-to to get or
@@ -74,7 +90,7 @@ we say the server provides an API (Application Programming Interface) to Clients
 like the push buttons on a remote control. All of these buttons represent the interface or API we
 use to interact with the TV.
 
-## Django Project and Apps
+### Django Project and Apps
 
 Every Django Project is essentialy a collection of certain Apps, each providing an specific
 functionality. These are defined in the "Settings.py" file inside "TranscendenceProject", in the
@@ -94,7 +110,7 @@ INSTALLED_APPS = [
 ]
 ````
 
-## Views
+### Views
 
 A view function is a function that takes a Request and returns a Response. It is a Request Handler.
 In sime frameworks it is called an action, but in Django it is called a view.
@@ -144,7 +160,7 @@ urlpatterns = [
 ]
 ````
 
-## Templates
+### Templates
 
 With templates, instead of returning a plain HttpResponse like in the "views.py" example above, we
 can use the "render" function to render a template and return HTML markup to the Client.
@@ -179,7 +195,7 @@ another.
 Django templates are not used that often these days. For the most part, we use Django to build APIs
 that return data, not HTML content.
 
-## Data Modeling
+### Data Modeling
 
 ````
 -----------------
@@ -236,13 +252,21 @@ python3 manage.py runserver 0.0.0.0:8000
 An app for each class or a model for each class? It depends. For larger, scalable projects, it is
 better to have an app for each class.
 
-# Database (PostgreSQL)
+---
 
-### To open postgresql database
+## Database (PostgreSQL)
+
+To open postgresql database
 docker exec -it db psql -U postgres
 
-### To show tables
+To show tables
 \dt
 
-### To open table
+To open table
 SELECT * FROM "table_name";
+
+---
+
+## Front-End (HTML, CSS, JavaScript)
+
+### JavaScript Fetch
