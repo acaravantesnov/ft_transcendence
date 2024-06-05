@@ -2,6 +2,10 @@
 Defines the model classes for this app.
 Model classes are used to pull out data from the database and present it
 to the user.
+
+Django uses an ORM (Object Relational Mapping) to map a python object to a database table. This
+allows to use multiple types of databases and have django handle all the low-level commands that
+actually create, update and retrieve data.
 '''
 
 from django.db import models
@@ -20,3 +24,6 @@ class Game(models.Model):
     duration = models.IntegerField()
     player1_score = models.IntegerField()
     player2_score = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.player1} vs {self.player2}'

@@ -1,6 +1,7 @@
-Django==5.0.4
+django
 psycopg2-binary==2.9.9
 djangorestframework==3.15.1
+environs
 channels[daphne]
 channels-redis
 django-redis

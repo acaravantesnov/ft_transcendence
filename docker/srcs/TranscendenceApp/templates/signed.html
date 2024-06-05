@@ -9,7 +9,9 @@
 <div class="container pt-4 pb-4">
     <div class="row", style="font-family: Dosis">
         <div class="col-sm-12 col-md-8">
-			
+			<div class="bordered-div">
+                <button type="button" id="playButton" class="btn btn-success">PLAY</button>
+            </div>
         </div>
 
         <div class="col-sm-12 col-md-4">
@@ -27,6 +29,26 @@
 
     </div>
 </div>
+
+<script>
+document.getElementById('playButton').addEventListener('click', function() {
+    fetch('http://0.0.0.0:8000/users/read/1', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // Aquí puedes manejar los datos de la respuesta de la API
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        // Aquí puedes manejar los errores de la solicitud
+    });
+});
+</script>
 
 {% else %}
 	<p> No hagas trampa y logeate acaravan </p>

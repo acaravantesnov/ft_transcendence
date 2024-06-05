@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',      # Displaying one-time notifications to the user.
     'django.contrib.staticfiles',   # Serving static files like CSS, JavaScript, images.
     'TranscendenceApp',             # Our app.
-    'rest_framework',               #
+    'rest_framework',               # REST API.
     'channels',                     #
 ]
 
