@@ -7,10 +7,34 @@ from django.shortcuts import render, redirect
 from django.contrib import messages, auth
 from django.http import HttpResponse
 
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from .serializers import UserSerializer
+'''
+REST framework provides an APIView class, which subclasses Django's View class.
 
+APIView classes are different from regular View classes in the following ways:
+
+* Requests passed to the handler methods will be REST framework's Request instances, not Django's
+HttpRequest instances.
+* Handler methods may return REST framework's Response, instead of Django's HttpResponse. The view
+will manage content negotiation and setting the correct renderer on the response.
+* Any APIException exceptions will be caught and mediated into appropriate responses.
+* Incoming requests will be authenticated and appropriate permission and/or throttle checks will be
+run before dispatching the request to the handler method.
+'''
+from rest_framework.response import Response
+
+'''
+REST framework also allows you to work with regular function based views. It provides a set of
+simple decorators that wrap your function based views to ensure they receive an instance of Request
+(rather than the usual Django HttpRequest) and allows them to return a Response (instead of a Django
+HttpResponse), and allow you to configure how the request is processed.
+
+The core of this functionality is the api_view decorator, which takes a list of HTTP methods that
+your view should respond to.
+'''
+from rest_framework.decorators import api_view
+
+
+from .serializers import UserSerializer, GameSerializer
 from .models import MyCustomUser, Game
 from .forms import signUser, newUser
 
