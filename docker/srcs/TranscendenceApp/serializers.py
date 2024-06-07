@@ -4,11 +4,11 @@ rendered into JSON, XML or other content types.
 '''
 
 from rest_framework import serializers
-from .models import User, Game
+from .models import MyCustomUser, Game
 
-class UserSerializer(serializers.ModelSerializer):
+class MyCustomUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = MyCustomUser
         fields = '__all__'
         
 class GameSerializer(serializers.ModelSerializer):

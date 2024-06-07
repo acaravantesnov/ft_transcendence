@@ -34,7 +34,7 @@ your view should respond to.
 from rest_framework.decorators import api_view
 
 
-from .serializers import UserSerializer, GameSerializer
+from .serializers import MyCustomUserSerializer, GameSerializer
 from .models import MyCustomUser, Game
 from .forms import signUser, newUser
 
@@ -45,18 +45,18 @@ logger = logging.getLogger("views")
 @api_view(['GET'])
 def getData(request):
     users = MyCustomUser.objects.all()
-    serializer = UserSerializer(users, many=True)
+    serializer = MyCustomUserSerializer(users, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 def getUser(request, pk):
     users = MyCustomUser.objects.get(id=pk)
-    serializer = UserSerializer(users, many=False)
+    serializer = MyCustomUserSerializer(users, many=False)
     return Response(serializer.data)
 
 @api_view(['POST'])
 def addUser(request):
-    serializer = UserSerializer(data=request.data)
+    serializer = MyCustomUserSerializer(data=request.data)
 
     if serializer.is_valid():
         serializer.save()
@@ -66,7 +66,7 @@ def addUser(request):
 @api_view(['PUT'])
 def updateUser(request, pk):
     user = MyCustomUser.objects.get(id=pk)
-    serializer = UserSerializer(instance=user, data=request.data)
+    serializer = MyCustomUserSerializer(instance=user, data=request.data)
 
     if serializer.is_valid():
         serializer.save()
@@ -80,8 +80,8 @@ def deleteUser(request, pk):
     return Response('User successfully deleted!')
 
 def signUp(request):
-    form = newUser(request.POST)
     if request.method == "POST":
+        form = newUser(request.POST)
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
@@ -91,17 +91,24 @@ def signUp(request):
             last_name = form.cleaned_data.get("last_name")
             if password == confirm_password:
                 if MyCustomUser.objects.filter(username=username).exists():
+                    messages.info(request, 'Username already exists')
+                    return redirect('signUp')
+                elif MyCustomUser.objects.filter(email=email).exists():
                     messages.info(request, 'Email already exists')
                     return redirect('signUp')
                 else:
-                    user = MyCustomUser.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
-                    user.set_password(password)
+                    user = MyCustomUser.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
                     user.save()
                     print("success")
                     return redirect('signIn')
+            else:
+                messages.error(request, "Passwords do not match")
+        else:
+            messages.error(request, "Form is not valid")
     else:
-        print('This is not post method')
-        return render(request, "signUp.html", {"form": form})
+        form = newUser()
+
+    return render(request, "signUp.html", {"form": form})
 
 def signIn(request):
     if request.user.is_authenticated:
@@ -110,19 +117,18 @@ def signIn(request):
     else:
         form = signUser(request.POST or None)
         if request.method == "POST":
-            if  form.is_valid():
+            if form.is_valid():
                 username = form.cleaned_data.get("username")
                 password = form.cleaned_data.get("password")
                 user = auth.authenticate(username=username, password=password)
 
                 if user is not None:
-                    auth.login(request,user)
+                    auth.login(request, user)
                     return redirect('signed', username=username)
                 else:
-                    messages.info(request, 'Invalid Username or Password')
+                    messages.error(request, 'Invalid Username or Password')
                     return redirect('signIn')
-        else:        
-            return render(request, "signIn.html", {"form": form})
+        return render(request, "signIn.html", {"form": form})
 
 def signed(request, username):
     return render(request, "signed.html", {"username": username})

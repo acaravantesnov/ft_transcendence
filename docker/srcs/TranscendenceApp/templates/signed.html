@@ -19,10 +19,10 @@
                 <div class="card-body">
                     <h5 class="card-title">User statistics</h5>
                     <p class="card-text">Username: {{ request.user.username }}</p>
-                    <p class="card-text">Email: {{ request.user.email }}</p>
-                    <p class="card-text">Wins: {{ request.user.wins }}</p>
-                    <p class="card-text">Losses: {{ request.user.losses }}</p>
-                    <p class="card-text">Games played: {{ request.user.games_played }}</p>
+                    <p class="card-text">Wins: {{ request.user.gamesWon }}</p>
+                    <p class="card-text">Losses: {{ request.user.gamesLost }}</p>
+                    <p class="card-text">Goals: {{ request.user.goals }}</p>
+                    <p class="card-text">Score: {{ request.user.score }}</p>
                 </div>
             </div>
         </div>
