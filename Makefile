@@ -6,7 +6,7 @@
 #    By: acaravan <acaravan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/13 17:01:21 by mortega-          #+#    #+#              #
-#    Updated: 2024/06/10 17:13:35 by acaravan         ###   ########.fr        #
+#    Updated: 2024/06/10 20:44:22 by acaravan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ down:
 destroy:
 	$(docker_compose) -f $(docker_yml) down -v $(c)
 
+# Call script again?
 recreate: destroy up
 
 ps:
