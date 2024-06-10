@@ -34,6 +34,7 @@ ALLOWED_HOSTS = [
 ]
 
 INSTALLED_APPS = [
+    'channels',                     #
     'daphne',                       #
     'django.contrib.admin',         # Admin interface for managing our data.
     'django.contrib.auth',          # Authenticating users.
@@ -42,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',   # Serving static files like CSS, JavaScript, images.
     'TranscendenceApp',             # Our app.
     'rest_framework',               # REST API.
-    'channels',                     #
 ]
 
 #redis

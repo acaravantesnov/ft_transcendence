@@ -1,11 +1,11 @@
-# """
+"""
 # ASGI config for Transcendence project.
 
 # It exposes the ASGI callable as a module-level variable named ``application``.
 
 # For more information on this file, see
 # https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
-# """
+"""
 
 # import os
 
@@ -15,13 +15,18 @@
 
 # application = get_asgi_application()
 
-"""
-Used to communicate with the websockets
-"""
-
 import os
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
+
+'''
+AuthMiddleware and channel support standard Django authentication where the user details are stored
+in the session.
+
+AuthMiddleware requires SessionMiddleware to function, which itself requires CookieMiddleware. For
+convenience, these are also procided as a combined callable called AuthMiddlewareStack that includes
+all three.
+'''
 from channels.auth import AuthMiddlewareStack
 import TranscendenceApp.routing
 
@@ -35,4 +40,3 @@ application = ProtocolTypeRouter({
         )
     ),
 })
-

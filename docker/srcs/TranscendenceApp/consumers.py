@@ -14,6 +14,8 @@ import logging
 logger = logging.getLogger("game")
 
 class GameConsumer(AsyncWebsocketConsumer):
+
+    # Connect method for the initial request that comes in from the client.
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'game_{self.room_name}'
@@ -49,6 +51,11 @@ class GameConsumer(AsyncWebsocketConsumer):
           self.game_task = asyncio.create_task(self.game_loop())
           logger.debug('Started game_loop')
 
+    # Receive message from WebSocket (Client).
+    async def receive(self, text_data):
+        pass  # No need to handle client messages in this example
+    
+    # Disconnect method for when the client disconnects.
     async def disconnect(self, close_code):
         logger.debug(f'Disconnecting from {self.room_name}')
         # Leave room group
@@ -64,9 +71,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         # Close Redis connection
         self.redis.close()
         await self.redis.wait_closed()
-
-    async def receive(self, text_data):
-        pass  # No need to handle client messages in this example
 
     async def game_loop(self):
       try:
