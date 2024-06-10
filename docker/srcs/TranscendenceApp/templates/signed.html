@@ -32,8 +32,8 @@
 
 <script>
 document.getElementById('playButton').addEventListener('click', function() {
-    fetch('http://0.0.0.0:8000/users/read/1', {
-        method: 'GET',
+    fetch('http://0.0.0.0:8000/users/addGame', {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         }

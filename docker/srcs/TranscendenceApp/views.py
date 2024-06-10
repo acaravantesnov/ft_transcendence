@@ -63,6 +63,15 @@ def addUser(request):
 
     return Response(serializer.data)
 
+@api_view(['POST'])
+def addGame(request):
+    serializer = GameSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
 @api_view(['PUT'])
 def updateUser(request, pk):
     user = MyCustomUser.objects.get(id=pk)
