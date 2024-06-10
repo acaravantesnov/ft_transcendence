@@ -6,7 +6,7 @@
 #    By: acaravan <acaravan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/13 17:01:21 by mortega-          #+#    #+#              #
-#    Updated: 2024/06/07 14:45:11 by acaravan         ###   ########.fr        #
+#    Updated: 2024/06/10 15:19:54 by acaravan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,5 +53,4 @@ runserver:
 
 up:
 	$(docker_compose) -f ./docker/docker-compose.yml up -d --build
-	$(docker_compose) -f $(docker_yml) exec djangoapp /bin/bash
 

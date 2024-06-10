@@ -15,9 +15,9 @@ from django.contrib.auth.models import AbstractUser
 
 class MyCustomUser(AbstractUser):
     gamesWon = models.IntegerField(default=0)
-   # gamesLost = models.IntegerField(default=0)
-   # goals = models.IntegerField(default=0)
-   # score = models.IntegerField(default=0)
+    gamesLost = models.IntegerField(default=0)
+    goals = models.IntegerField(default=0)
+    score = models.IntegerField(default=0)
 
 class Game(models.Model):
     player1 = models.ForeignKey(MyCustomUser, on_delete=models.CASCADE, related_name='player1')
