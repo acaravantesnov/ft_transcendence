@@ -26,7 +26,12 @@ services:
       - net
 
 volumes:
-  pgdata: {}
+  pgdata:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/acaravan/Desktop/pgdata
+      o: bind
 
 networks:
   net:

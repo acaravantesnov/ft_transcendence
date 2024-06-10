@@ -6,7 +6,7 @@
 #    By: acaravan <acaravan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/13 17:01:21 by mortega-          #+#    #+#              #
-#    Updated: 2024/06/10 15:19:54 by acaravan         ###   ########.fr        #
+#    Updated: 2024/06/10 17:13:35 by acaravan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,10 @@ ps:
 	$(docker_compose) -f $(docker_yml) ps
 
 login-db:
-	$(docker_compose) -f $(docker_yml) exec db psql -d postgres -U postgres
+	$(docker_compose) -f $(docker_yml) exec db /bin/bash
+
+open-db:
+	$(docker_compose) -f $(docker_yml) exec db psql -U postgres
 
 login-prj:
 	$(docker_compose) -f $(docker_yml) exec djangoapp /bin/bash
