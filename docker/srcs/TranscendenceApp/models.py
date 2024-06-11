@@ -14,19 +14,22 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 
 class MyCustomUser(AbstractUser):
-    animeflv = models.IntegerField(default=0)
-    #gamesLost = models.IntegerField(default=0)
-    #goals = models.IntegerField(default=0)
-    #score = models.IntegerField(default=0)
+    animeflv = models.IntegerField(null=True)
+    #gamesLost = models.IntegerField(null=True)
+    #goals = models.IntegerField(null=True)
+    #score = models.IntegerField(null=True)
+    
+    def __str__(self):
+        return self.username
 
 class Game(models.Model):
-    player1 = models.ForeignKey(MyCustomUser, on_delete=models.CASCADE, related_name='player1')
-    player2 = models.ForeignKey(MyCustomUser, on_delete=models.CASCADE, related_name='player2')
+    player1 = models.ForeignKey(MyCustomUser, on_delete=models.CASCADE, related_name='player1', null=True)
+    player2 = models.ForeignKey(MyCustomUser, on_delete=models.CASCADE, related_name='player2', null=True)
     winner = models.ForeignKey(MyCustomUser, on_delete=models.CASCADE, related_name='winner', null=True, blank=True)
     date = models.DateTimeField(default=timezone.now)
     duration = models.DurationField(default=timezone.timedelta())
-    player1_score = models.IntegerField(default=0)
-    player2_score = models.IntegerField(default=0)
+    player1_score = models.IntegerField(null=True)
+    player2_score = models.IntegerField(null=True)
 
     def __str__(self):
         return f'{self.player1} vs {self.player2}'

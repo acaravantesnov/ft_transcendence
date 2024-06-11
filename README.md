@@ -273,7 +273,18 @@ handshake and create an open connection between our client and server.
 
 # Database (PostgreSQL)
 
-To open postgresql database
+## To make migrations effectively
+
+make recreate
+make login-prj
+python3 manage.py makemigrations
+python3 manage.py makemigrations TranscendenceApp
+python3 manage.py migrate
+echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('${DJANGO_SUPERUSER_USERNAME}', '${DJANGO_SUPERUSER_EMAIL}', '${DJANGO_SUPERUSER_PASSWORD}')" | python3 manage.py shell
+exit
+make
+
+## To interact with DB from shell
 docker exec -it db psql -U postgres
 
 To show tables
