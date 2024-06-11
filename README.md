@@ -273,6 +273,97 @@ handshake and create an open connection between our client and server.
 
 # Database (PostgreSQL)
 
+## Database Relationships
+
+- One to Many:
+
+For example a Customer with several orders. Each order has just one associated Customer.
+
+In the Customers table, each row would be each Customer. For the Orders table, each row would have a
+Customer_ID, as a Customer can have several Orders.
+
+- Many to Many:
+
+For example a store that has Tags and Products. Each Tag (i.e. Sports, Summer or Kitchen) can have
+several Products (Ball, BBQ Grill, Dishes), and vice-versa.
+
+In a Many to Many relationship, an intermediary table is created. This table stores the id reference
+to both tables.
+
+## Database Model Queries
+
+In order to retrieve data from the database, the back-end has to perform a query.
+
+queryset = Customer.objects.all()
+
+- queryset: Variable to hold the return value.
+- Customer: Model name.
+- Objects: Model Objects Attribute.
+- all(): Method
+
+There are several methods  that can be performed to interact with the database (all, get, filter,
+exclude):
+
+- **all()**: Returns the whole table as a QuerySet, which is a dictionary of objects.
+
+customers = Customer.objects.all()
+print(customers)
+
+OUTPUT: <QuerySet [<Customer: Peter Piper>, <Customer: John Doe>]>
+
+- **first()/last()**: Returns the first/last element in the QuerySet or table.
+
+print(customers.first())
+print(customers.last())
+
+OUTPUT: Peter Piper
+OUTPUT: John Doe
+
+- **get()**: Returns single customer by an attribute value. If there is more than one instance with
+the same attribute value, it will create an error.
+
+customer1 = Customer.objects.get(name='Peter Piper')
+print(customer1.email)
+
+OUTPUT: pete@gmail.com
+
+- **filter()**: Returns all the elements with an specific attribute value.
+
+products = Product.objets.filter(category="Out Door")
+print(products)
+
+OUTPUT: <QuerySet [<Product: BBQ Grill>, <Product: Ball>]>
+
+To filter by another model with a Many to Many relationship, use __.
+
+products = Product.objets.filter(tags__name="Sports")
+print(products)
+
+OUTPUT: <QuerySet [<Product: Ball>]>
+
+- **BONUS 1**: In order to retreive child objects from a parent instance, we can do the following.
+
+class ParentModel(models.Model):
+  name = models.CharField(max_length=200, null=True)
+
+class ChildModel(models.Model):
+  parent = models.ForeignKey(ParentModel)
+  name = models.CharField(max_length=200, null=True)
+
+parent = ParentModel.objects.first()
+childs = parent.childmodel_set.all()
+
+- **BONUS 2**: We can order instances by other atributes, for example id. To reverse the order, add
+a - before the attribute.
+
+products = Product.objects.all().ordder_by('id')
+print(products)
+products = Product.objects.all().ordder_by('-id')
+print(products)
+
+OUTPUT: <QuerySet [<Product: BBQ Grill>, <Product: Dishes>, <Product: Ball>]>
+OUTPUT: <QuerySet [<Product: Ball>, <Product: Dishes>, <Product: BBQ Grill>]>
+
 ## To make migrations effectively
 
 make recreate

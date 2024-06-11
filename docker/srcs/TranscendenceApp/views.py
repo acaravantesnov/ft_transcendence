@@ -146,9 +146,6 @@ def signIn(request):
                     return redirect('signIn')
         return render(request, "signIn.html", {"form": form})
 
-def signed(request, username):
-    return render(request, "signed.html", {"username": username})
-
 def logOut(request):
     auth.logout(request)
     messages.info(request, "Logged out successfully!")

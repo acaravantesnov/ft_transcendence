@@ -1,9 +1,30 @@
-<div class="card card-body">
-    <h5 class="card-title">User statistics</h5>
-    <p class="card-text">Username: {{ request.user.username }}</p>
-    <p class="card-text">Email: {{ request.user.email }}</p>
-    <p class="card-text">Wins: {{ request.user.gamesWon }}</p>
-    <p class="card-text">Losses: {{ request.user.gamesLost }}</p>
-    <p class="card-text">Goals: {{ request.user.goals }}</p>
-    <p class="card-text">Score: {{ request.user.score }}</p>
+<div class="card card-body pt-4 pb-4">
+    <h2 class="card-title">Statistics</h5>
+    <hr>
+    <div class="row", style="font-family: Dosis">
+        <div class="col">
+            <h4>Username</h4>
+            <p class="card-text">{{ request.user.username }}</p>
+        </div>
+        <div class="col">
+            <h4>Email</h4>
+            <p class="card-text">{{ request.user.email }}</p>
+        </div>
+        <div class="col">
+            <h4>Games Won</h4>
+            <p class="card-text">{{ request.user.gamesWon }}</p>
+        </div>
+        <div class="col">
+            <h4>Games Lost</h4>
+            <p class="card-text">{{ request.user.gamesLost }}</p>
+        </div>
+        <div class="col">
+            <h4>Goals</h4>
+            <p class="card-text">{{ request.user.goals }}</p>
+        </div>
+        <div class="col">
+            <h4>Score</h4>
+            <p class="card-text">{{ request.user.score }}</p>
+        </div>
+    </div>
 </div>

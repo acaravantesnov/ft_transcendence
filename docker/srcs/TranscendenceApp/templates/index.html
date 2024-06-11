@@ -2,7 +2,20 @@
 
 {% block content %}
 
-<div class="container pt-4 pb-4 bg-white">
+<div class="container pt-4 pb-4">
+
+    {% if request.user.username == username and request.user.is_authenticated %}
+
+    <div class="row", style="font-family: Dosis">
+        {% include 'statistics.html' %}
+    </div>
+
+    <div class="row", style="font-family: Dosis">
+        {% include 'mygame.html' %}
+    </div>
+
+    {% else %}
+
     <div class="row", style="font-family: Dosis">
         <div class="col-sm-12">
             <h1 class="display-1">ft</h1>
@@ -10,12 +23,6 @@
             <p>by acaravan, digarcia, mortega-, alaguila and enevado</p>
         </div>
         
-    </div>
-
-    {% if request.user.username == username and request.user.is_authenticated %}
-
-    <div class="row", style="font-family: Dosis">
-        {% include 'statistics.html' %}
     </div>
 
     {% endif %}
