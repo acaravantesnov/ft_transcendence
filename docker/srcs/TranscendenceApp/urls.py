@@ -17,6 +17,7 @@ urlpatterns = [
     path('signUp/', views.signUp, name="signUp"),
     path('signed/<str:username>', views.home, name="signed"),
     path('logout', views.logOut, name="logout"),
+    path('statistics/<str:username>', views.getGamesWon, name="statistics"),
     path('game', views.game, name='game'),
     # path('game2', views.game2, name='game2'),
     # re_path(r'^game2/(?P<room_name>\w+)/$', views.game2, name='game2'),

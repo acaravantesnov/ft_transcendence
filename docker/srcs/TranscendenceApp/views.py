@@ -35,12 +35,35 @@ from rest_framework.decorators import api_view
 
 
 from .serializers import MyCustomUserSerializer, GameSerializer
-from .models import MyCustomUser, Game
+from .models import *
 from .forms import signUser, newUser
 
 import logging
 
 logger = logging.getLogger("views")
+
+@api_view(['GET'])
+def getGamesWon(request, username):
+    games = Game.objects.filter(player1__username=username) | Game.objects.filter(player2__username=username)
+    gamesWon = games.filter(winner__username=username)
+    return Response(gamesWon.count())
+
+@api_view(['GET'])
+def getGamesLost(request, username):
+    games = Game.objects.filter(player1__username=username) | Game.objects.filter(player2__username=username)
+    gamesLost = games.exclude(winner__username=username)
+    return Response(gamesLost.count())
+
+@api_view(['GET'])
+def getGoals(request, username):
+    games = Game.objects.filter(player1__username=username) | Game.objects.filter(player2__username=username)
+    goals = 0
+    for game in games:
+        if game.player1.username == username:
+            goals += game.player1_score
+        else:
+            goals += game.player2_score
+    return Response(goals)
 
 @api_view(['GET'])
 def getData(request):
