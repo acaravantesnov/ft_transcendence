@@ -2,29 +2,23 @@
 
 {% block content %}
 
-<div class="container pt-4 pb-4">
+<div class="container pt-4 pb-4 bg-white">
     <div class="row", style="font-family: Dosis">
-        <div class="col-sm-12 col-md-8">
+        <div class="col-sm-12">
             <h1 class="display-1">ft</h1>
             <h1 class="display-1">transcendence</h1>
             <p>by acaravan, digarcia, mortega-, alaguila and enevado</p>
         </div>
-        {% if request.user.username == username and request.user.is_authenticated %}
-        <div class="col-sm-12 col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">User statistics</h5>
-                    <p class="card-text">Username: {{ request.user.username }}</p>
-                    <p class="card-text">Email: {{ request.user.email }}</p>
-                    <p class="card-text">Wins: {{ request.user.gamesWon }}</p>
-                    <p class="card-text">Losses: {{ request.user.gamesLost }}</p>
-                    <p class="card-text">Goals: {{ request.user.goals }}</p>
-                    <p class="card-text">Score: {{ request.user.score }}</p>
-                </div>
-            </div>
-        </div>
-        {% endif %}
+        
     </div>
+
+    {% if request.user.username == username and request.user.is_authenticated %}
+
+    <div class="row", style="font-family: Dosis">
+        {% include 'statistics.html' %}
+    </div>
+
+    {% endif %}
 </div>
 
 {% endblock %}

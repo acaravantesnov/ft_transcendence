@@ -20,7 +20,6 @@
   <style>
     body {
       padding-top: 60px;
-      background-color: #ffffff; /* Light gray background for a softer look */
     }
   </style>
   <style>
@@ -34,56 +33,24 @@
 </style>
 </head>
 
-<body>
+<body class="bg-light">
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top mb-5">
-    <div class="container">
-      <a class="navbar-brand" href="/">
-        <span class="fw-bold text-white">
-          ft_transcendence
-        </span>
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <script>
-              function notification(){
-                alert("You are already logged in!");
-              }
-            </script>
-            {% if request.user.username == username and request.user.is_authenticated %}
-              <a onclick="notification()" class="nav-link" href="">Sign In</a>
-            {% else %}
-              <a class="nav-link" href="{% url 'signIn' %}">Sign In</a>
-            {% endif %}
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'signUp' %}">Sign Up</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+  {% include 'navbar.html' %}
 
   <!-- Content -->
   {% block content %}
+
   {% endblock %}
 
   <!-- Footer -->
-  <footer class="footer mt-auto py-3 bg-dark text-white mt-5">
-    <div class="container-fluid text-center">
-      <span>© 2024 ft_transcendence</span>
-      <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-    </div>
-  </footer>
-
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  {% include 'footer.html' %}
 
 </body>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
 </html>

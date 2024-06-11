@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top mb-5">
+<div class="container">
+    <a class="navbar-brand" href="/">
+    <span class="fw-bold text-white">
+        ft_transcendence
+    </span>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+        <script>
+            function notification(){
+            alert("You are already logged in!");
+            }
+        </script>
+        {% if request.user.username == username and request.user.is_authenticated %}
+            <a onclick="notification()" class="nav-link" href="">Sign In</a>
+        {% else %}
+            <a class="nav-link" href="{% url 'signIn' %}">Sign In</a>
+        {% endif %}
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" href="{% url 'signUp' %}">Sign Up</a>
+        </li>
+    </ul>
+    </div>
+</div>
+</nav>

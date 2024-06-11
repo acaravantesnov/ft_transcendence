@@ -88,6 +88,13 @@ def deleteUser(request, pk):
     user.delete()
     return Response('User successfully deleted!')
 
+def home(request, username):
+    if request.user.is_authenticated:
+        username = request.user.username
+    else:
+        username = "Guest"
+    return render(request, 'index.html', {"username": username})
+
 def signUp(request):
     if request.method == "POST":
         form = newUser(request.POST)

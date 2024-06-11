@@ -9,70 +9,19 @@
 <div class="container pt-4 pb-4">
     <div class="row", style="font-family: Dosis">
         <div class="col-sm-12 col-md-8">
-			{% comment %} <div class="bordered-div">
+			<div class="card card-body">
                 <button type="button" id="playButton" class="btn btn-success">PLAY</button>
-            </div> {% endcomment %}
-            <div id="game-area" style="width: 600px; height: 400px; position: relative; border: 1px solid black;">
-                <div id="ball" style="width: 20px; height: 20px; background-color: red; position: absolute;"></div>
             </div>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const ball = document.getElementById('ball');
-                    const gameArea = document.getElementById('game-area');
-                    const gameAreaRect = gameArea.getBoundingClientRect();
-                    const ballSize = 20; // size of the ball
-
-                    console.log('Path:', window.location.pathname);
-
-                    const roomName = window.location.pathname.split('/').slice(-2, -1)[0];
-
-                    // Log the room name
-                    console.log('Room name:', roomName);
-                    // Log the splitted path
-                    console.log('Splitted path:', window.location.pathname.split('/'));
-                    // Log the sliced path
-                    console.log('Sliced path:', window.location.pathname.split('/').slice(-2, -1));
-                    // Log the websocket URL
-                    console.log('Websocket URL:', 'ws://' + window.location.host + '/ws/game2/' + roomName + '/');
-
-                    const socket = new WebSocket('ws://' + window.location.host + '/ws/game2/' + roomName + '/');
-
-                    socket.onmessage = function(e) {
-                        console.log('Message:', e.data);
-                        const data = JSON.parse(e.data);
-                        console.log('Data:', data);
-                        console.log('X:', data.x);
-                        console.log('Y:', data.y);
-
-                        // Get the dimensions of the game area
-                        const gameAreaRect = gameArea.getBoundingClientRect();
-                        
-                        // Calculate new position with boundary checks
-                        let newX = data.x;
-                        let newY = data.y;
-
-                        // Boundary checks
-                        newX = Math.max(0, Math.min(newX, gameAreaRect.width - ballSize));
-                        newY = Math.max(0, Math.min(newY, gameAreaRect.height - ballSize));
-
-                        // Set the position of the ball
-                        ball.style.left = newX + 'px';
-                        ball.style.top = newY + 'px';
-                    };
-                });
-            </script>
         </div>
 
         <div class="col-sm-12 col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">User statistics</h5>
-                    <p class="card-text">Username: {{ request.user.username }}</p>
-                    <p class="card-text">Wins: {{ request.user.gamesWon }}</p>
-                    <p class="card-text">Losses: {{ request.user.gamesLost }}</p>
-                    <p class="card-text">Goals: {{ request.user.goals }}</p>
-                    <p class="card-text">Score: {{ request.user.score }}</p>
-                </div>
+            <div class="card card-body"> 
+                <h5 class="card-title">User statistics</h5>
+                <p class="card-text">Username: {{ request.user.username }}</p>
+                <p class="card-text">Wins: {{ request.user.gamesWon }}</p>
+                <p class="card-text">Losses: {{ request.user.gamesLost }}</p>
+                <p class="card-text">Goals: {{ request.user.goals }}</p>
+                <p class="card-text">Score: {{ request.user.score }}</p>
             </div>
         </div>
 
