@@ -736,3 +736,7 @@ getData()
 # References
 
 - **Async Javascript, Await, Promises and Fetch API**: https://www.youtube.com/watch?v=jnME98ckDbQ&list=PL1PqvM2UQiMoGNTaxFMSK2cih633lpFKP&pp=iAQB
+
+- **Django Basics**: https://www.youtube.com/watch?v=xv_bwpA_aEA&list=PL-51WBLyFTg2vW-_6XBoUpE7vpmoR3ztO
+
+- **Django Channels and WebSockets**: https://www.youtube.com/watch?v=F4nwRQPXD8w
