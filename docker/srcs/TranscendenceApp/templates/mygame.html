@@ -13,16 +13,21 @@
             'X-CSRFToken': csrftoken,
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({username: '{{ request.user.username }}'}),
+        body: JSON.stringify({
+            player1: '{{ request.user.id }}',
+            player2: '',
+            winner: '{{ request.user.id }}',
+            date: '2021-06-01',
+            duration: 10,
+            player1_score: 7,
+            player2_score: 0}),
     })
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
-        // Aquí puedes manejar los datos de la respuesta de la API
     })
     .catch((error) => {
         console.error('Error:', error);
-        // Aquí puedes manejar los errores de la solicitud
     });
 });
 
