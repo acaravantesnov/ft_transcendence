@@ -637,9 +637,99 @@ async function start() {
 start()
 ````
 
-## Fetch API
+## Fetch API 4:00
 
+fetch is a function built into JavaScript to send requests to an API. It receives a Request object,
+and returns a Response object (it is actually a Promise that eventually resolves into a Response).
 
+````
+{ Response } = fetch({ Request })
+````
+
+By default, if we pass a URL as the only parameter to fetch, it will create Request instance within
+it, using GET as the default method.
+
+````
+const response = fetch('SomeApi.com')
+````
+
+Is the same as:
+
+````
+const request =
+  new Request('SomeAPI.com', {
+    method: 'GET'
+  })
+
+const response = fetch(request)
+````
+
+In order to get the actual data from the Response object, we can use the json method (which returns
+a Promise, and so we should await for it too).
+
+````
+const url =
+'http://worldtimeapi.org/api/timezone/America/New_York'
+
+async function getData() {
+  const response = await fetch(url)
+  const data = await response.json()
+  console.log(data)
+}
+
+getData()
+````
+
+Now, how could we send parameters with the GET request? First way is through the url itself. After
+each ? character, a parameter and value are introduced.
+
+````
+https://api.thenewsapi.com/v1/news/top?api_token=...
+````
+
+However, the API sometimes requires the request to send parameters in a more secure way. To achieve
+this, it uses the request header(s).
+
+In the following example, the API tells the user that he should include an access token.
+
+````
+const url =
+'https://api.spotify.com/v1/artists/0k17h0D3J5VfsdmQ1iZtE8'
+
+async function getData() {
+  const response = await fetch(url)
+  const data = await response.json()
+  console.log(data)
+}
+
+getData()
+````
+
+OUTPUT:
+
+{
+  error: { status: 401, message: 'No token provided' }
+}
+
+This can be solved by including the token through the request header, as following:
+
+````
+const url =
+'https://api.spotify.com/v1/artists/0k17h0D3J5VfsdmQ1iZtE9'
+
+async function getData() {
+  const request = new Request(url, {
+    headers: {
+      'Authorization': '...'
+    }
+  })
+  const response = await fetch(request)
+  const data = await response.json()
+  console.log(data)
+}
+
+getData()
+````
 
 ---
 
