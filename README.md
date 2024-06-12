@@ -1,6 +1,5 @@
 # Table of Contents
 
-
    * [What is Django, and why is it so popular?](#what-is-django-and-why-is-it-so-popular)
    * [How the web works.](#how-the-web-works)
    * [APIs](#apis)
@@ -10,8 +9,17 @@
    * [Data Modeling](#data-modeling)
    * [Channels and WebSockets](#channels-and-websockets)
 - [Database (PostgreSQL)](#database-postgresql)
+   * [Database Relationships](#database-relationships)
+   * [Database Model Queries](#database-model-queries)
+   * [To make migrations effectively](#to-make-migrations-effectively)
+   * [To interact with DB from shell](#to-interact-with-db-from-shell)
 - [Front-End (HTML, CSS, JavaScript)](#front-end-html-css-javascript)
-   * [JavaScript Fetch](#javascript-fetch)
+   * [Synchronous vs Asynchronous programming in JavaScript](#synchronous-vs-asynchronous-programming-in-javascript)
+   * [Promises](#promises)
+   * [Async Await](#async-await)
+   * [Fetch API](#fetch-api)
+- [References](#references)
+      + [Async Javascript, Await, Promises and Fetch API](#async-javascript-await-promises-and-fetch-api)
 
 ---
 
@@ -294,7 +302,9 @@ to both tables.
 
 In order to retrieve data from the database, the back-end has to perform a query.
 
+````
 queryset = Customer.objects.all()
+````
 
 - queryset: Variable to hold the return value.
 - Customer: Model name.
@@ -306,15 +316,19 @@ exclude):
 
 - **all()**: Returns the whole table as a QuerySet, which is a dictionary of objects.
 
+````
 customers = Customer.objects.all()
 print(customers)
+````
 
 OUTPUT: <QuerySet [<Customer: Peter Piper>, <Customer: John Doe>]>
 
 - **first()/last()**: Returns the first/last element in the QuerySet or table.
 
+````
 print(customers.first())
 print(customers.last())
+````
 
 OUTPUT: Peter Piper
 OUTPUT: John Doe
@@ -322,27 +336,34 @@ OUTPUT: John Doe
 - **get()**: Returns single customer by an attribute value. If there is more than one instance with
 the same attribute value, it will create an error.
 
+````
 customer1 = Customer.objects.get(name='Peter Piper')
 print(customer1.email)
+````
 
 OUTPUT: pete@gmail.com
 
 - **filter()**: Returns all the elements with an specific attribute value.
 
+````
 products = Product.objets.filter(category="Out Door")
 print(products)
+````
 
 OUTPUT: <QuerySet [<Product: BBQ Grill>, <Product: Ball>]>
 
 To filter by another model with a Many to Many relationship, use __.
 
+````
 products = Product.objets.filter(tags__name="Sports")
 print(products)
+````
 
 OUTPUT: <QuerySet [<Product: Ball>]>
 
 - **BONUS 1**: In order to retreive child objects from a parent instance, we can do the following.
 
+````
 class ParentModel(models.Model):
   name = models.CharField(max_length=200, null=True)
 
@@ -352,20 +373,24 @@ class ChildModel(models.Model):
 
 parent = ParentModel.objects.first()
 childs = parent.childmodel_set.all()
+````
 
 - **BONUS 2**: We can order instances by other atributes, for example id. To reverse the order, add
 a - before the attribute.
 
+````
 products = Product.objects.all().ordder_by('id')
 print(products)
 products = Product.objects.all().ordder_by('-id')
 print(products)
+````
 
 OUTPUT: <QuerySet [<Product: BBQ Grill>, <Product: Dishes>, <Product: Ball>]>
 OUTPUT: <QuerySet [<Product: Ball>, <Product: Dishes>, <Product: BBQ Grill>]>
 
 ## To make migrations effectively
 
+````
 make recreate
 make login-prj
 python3 manage.py makemigrations
@@ -374,8 +399,10 @@ python3 manage.py migrate
 echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('${DJANGO_SUPERUSER_USERNAME}', '${DJANGO_SUPERUSER_EMAIL}', '${DJANGO_SUPERUSER_PASSWORD}')" | python3 manage.py shell
 exit
 make
+````
 
 ## To interact with DB from shell
+````
 docker exec -it db psql -U postgres
 
 To show tables
@@ -383,9 +410,239 @@ To show tables
 
 To open table
 SELECT * FROM "table_name";
+````
 
 ---
 
 # Front-End (HTML, CSS, JavaScript)
 
-## JavaScript Fetch
+## Synchronous vs Asynchronous programming in JavaScript
+
+- **Synchronous**: Blocks the execution of any line of code that comes after it.
+
+````
+syncFunc()
+console.log('hello')
+````
+
+In this example, if syncFunc takes 5 seconds to execute, 'hello' would not be printed in the console
+after this 5 seconds.
+
+- **Asynchronous**: Does not block.
+
+````
+asyncFunc()
+console.log('hello')
+````
+
+In this example, 'hello' is printed inmediately. asyncFunc() is executed at the same time.
+
+## Promises
+
+There are always two pieces involved when using promises in JavaScript: The promise maker and the
+promise receiver.
+
+The **maker** is a function that makes a promise and returns it. It is an asynchronous function.
+
+````
+function getWeather() {
+  return new Promise(function(resolve, reject) {
+    setTimeout(() => {
+      resolve('Sunny')
+    }, 100)
+  })
+}
+````
+
+Because the async process takes an unknown amount of time, the function needs to return something
+immediately. It returns a Promise instance, it will stay in a **pending** state, and eventually be
+fulfilled when the async function has finished. If the promise is successfully fulfilled, the
+promise is **resolved**, **rejected** otherwise.
+
+The **receiver** is the part of the code that calls the maker, receives the promise and does
+something with it.
+
+````
+const promise = getWeather()
+promise.then(
+  function(data) {
+  console.log('Success param ${data}')
+  },
+  function(error) {
+    console.log('Error param ${error})
+  }
+)
+````
+
+We can now simplify the receiver code by using separate functions.
+
+````
+function onSuccess(data) {
+  console.log('Success param ${data})
+}
+
+function onError(error) {
+  console.log('Error param ${error})
+}
+
+getWeather().then(onSuccess, onError)
+````
+
+Now we can start chaining promises to each other. Let's say that once I get the weather and based on
+it, I want to get an icon.
+
+````
+function getWeather() {
+  return new Promise(function(resolve, reject) {
+    resolve('Sunny')
+  })
+}
+
+function getWeatherIcon(weather) {
+  return new Promise(function(resolve, reject) {
+    setTimeout(() => {
+      switch(weather) {
+        case 'Sunny':
+          resolve('SunnyIcon')
+          break
+        case 'Clody':
+          resolve('CloudyIcon')
+          break
+        case 'Rainy':
+          resolve('RainyIcon')
+          break
+        default:
+          reject('NO ICON FOUND')
+      }
+    }, 100)
+  })
+}
+
+getWeather()
+  .then(getWeatherIcon)
+  .then(onSuccess, onError)
+````
+
+OUTPUT: Success SunnyIcon
+
+Another method is catch(onError). If any of the promises rejects, it directly catches the error and
+stops the promise chaining.
+
+## Async Await
+
+````
+function getData() {
+  return new Promise(...)
+}
+
+const result = getData()
+````
+
+In the above example, getData() does not return an actual value, it returns the promise of that
+value that will resolve in the future. Javascript thinks this is synchronous code (when the function
+inside promise takes some time), and does not wait until it has finished. This can be solved using
+await.
+
+````
+const result = await getData()
+````
+
+But we cannot use await like this. It is called async await because they are used together, await
+must be used inside an async function. Let's see the following example:
+
+````
+function getData() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(46)
+    }, 1)
+  })
+}
+
+async function start1()  {
+  const result = getData()
+  console.log(result)
+}
+
+async function start2()  {
+  getData()
+    .then(result => {
+      console.log(resut)
+    })
+}
+
+start1()
+start2()
+````
+
+OUTPUT: 46
+OUTPUT: 46
+
+Now with a real exampe with fetch(). Fetch, as we will see in the next section, is a native browser
+feature to callback endpoints of an API and get/post data (among other HTTP methods), and it returns
+a promise. Same as before, we will compare doing the same request, one with async await, and the
+other using then chaining.
+
+````
+async function start1()  {
+  const data = await fetch('https://api.weather.gov/gridpoints/OKX/35,35/forecast')
+  const result = await data.json()
+  console.log(result.properties.periodds[1].shortForecast)
+}
+
+async function start2()  {
+  fetch('https://api.weather.gov/gridpoints/OKX/35,35/forecast')
+    .then(data => data.json())
+    .then(result => {
+      console.log(result.properties.periodds[1].shortForecast)
+    })
+}
+
+start1()
+start2()
+````
+
+OUTPUT: Mostly Cloudy then Patchy Fog
+OUTPUT: Mostly Cloudy then Patchy Fog
+
+Some **important considerations** about async await:
+
+1. async and await must be used together. Exceptions are JS Modules and Chrome DevTools Console.
+2. aync/await only affects the Promise receiver.
+3. You can await any function that returns a Promise.
+4. Any function can be converted to async.
+5. All async functions return a Promise by default.
+6. Error handling with try/catch.
+
+
+````
+function getData() {
+  return new Promise(function(resolve, reject) {
+    setTimeout(() => {
+      // resolve('HERE is your DATA')
+      reject('Something went wrong!')
+    }, 1)
+  })
+}
+
+async function start() {
+  try {
+    const result = await getData()
+    // SUCCESS
+  } catch (error) {
+    // ERROR
+  }
+}
+
+start()
+````
+
+## Fetch API
+
+
+
+---
+
+# References
+
+- **Async Javascript, Await, Promises and Fetch API**: https://www.youtube.com/watch?v=jnME98ckDbQ&list=PL1PqvM2UQiMoGNTaxFMSK2cih633lpFKP&pp=iAQB
