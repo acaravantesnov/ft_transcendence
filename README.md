@@ -8,6 +8,10 @@
    * [Templates](#templates)
    * [Data Modeling](#data-modeling)
    * [Channels and WebSockets](#channels-and-websockets)
+      + [How is a websocket initiated in a web environment?](#how-is-a-websocket-initiated-in-a-web-environment)
+      + [Workflow comparison of HTTP and WebSocket's communications for a request from the client to the server:](#workflow-comparison-of-http-and-websockets-communications-for-a-request-from-the-client-to-the-server)
+      + [How do we know who to send messages to? (Django Channels)](#how-do-we-know-who-to-send-messages-to-django-channels)
+      + [Process](#process)
 - [Database (PostgreSQL)](#database-postgresql)
    * [Database Relationships](#database-relationships)
    * [Database Model Queries](#database-model-queries)
@@ -19,7 +23,6 @@
    * [Async Await](#async-await)
    * [Fetch API](#fetch-api)
 - [References](#references)
-      + [Async Javascript, Await, Promises and Fetch API](#async-javascript-await-promises-and-fetch-api)
 
 ---
 
@@ -262,20 +265,68 @@ better to have an app for each class.
 ## Channels and WebSockets
 
 Django channels take django and extends its abilities beyond HTTP to handle WebSockets, Chat
-Protocols, IoT Protocols, etc. It is built on a Python specification called ASGI (Asynchronous
-Server Gateway Interface).
+Protocols, IoT Protocols, etc. It is built on a Python specification called ASGI.
 
 WebSockets are used on the Client side to initiate a connection, and Channels on the Server side to
 receive and send requests back to the client.
 
-There are four key steps to set up the server and make a connection:
+Imagine we want to create a web chat. In a traditional HTTP communication, if UserA wanted to send
+a message to UserB, it would need to send a POST request to the server (getting the response back),
+and UserB would have to make a GET request to retrieve the message stored within the server. This
+would mean UserB would have to refresh the page each time UserA sends a new messsage.
 
-1. Configure ASGI: Change django project to use ASGI and complete some basic channels configuration
-after installation.
-2. Consumers: Channels version of django views.
-3. Routing: Create routing to handle the url routing for this consumers.
-4. WebSockets: Use the built-in Javascript WebSocket API on the client side to initiate the
-handshake and create an open connection between our client and server.
+With WebSockets, this is solved. Both WebSockets and HTTP are build over TCP. However, unlike HTTP,
+WebSockets is a bi-directional protocol. The server and client can push messages at any time.
+
+WebSockets is a full-duplex communication. Cient and server can talk to each other independently at
+the same time. This is supported by most/all browsers, and similar to HTTPS (HTTP with SSL
+protection), there is a Secured WebSocket version (WSS).
+
+### How is a websocket initiated in a web environment?
+
+UserA sends a usual HTTP request to the server (which has WS enabled). The server upgrades to WS
+sending it back to UserA, which now has a WS Session or Channel available. The server now knows that
+UserA is WS enabled, so there is now an open persistent connection between both ends. Server knows
+where to send the data to (to UserA), and UserA knows where to send the WS data too (to the server).
+Now any of both ends can close the connectin whenever is desired.
+
+In our chatroom situation, say UserA gets to our chatroom, it is upgraded to WS by the server, and
+same with UserB and UserC. Now whenever a User sends a message to the server, the server sends that
+same message to all other Users (without making them refresh the web page or send more HTTP GET
+requests).
+
+### Workflow comparison of HTTP and WebSocket's communications for a request from the client to the server:
+
+- **HTTP**: UserA sends an HTTP Request. This request goes through a WSGI (Web Server Gateway
+Interface) to handle the request. Later, the URL path embedded within the URL is routed in "urls.py"
+into Django Views (functions or classes), which give functionality to that request.
+
+- **WebSocket's**: UserA sends a WebSocket request. This request goes through a ASGI Daphne
+(Asynchronous Server Gateway Interface) to handle the request. Later, the path is routed through the
+"routing.py" into Django Consumers.
+
+### How do we know who to send messages to? (Django Channels)
+
+Now that everyone can send/receive messages in real-time, if we are using chatrooms, and users are
+able to get into multiple chatrooms, how do we know who to send messages to? This is solved using a
+package called Django Channels. With Channels comes this idea of groups.
+
+- Every user in our chatroom has a reply_channel.
+- We can keep track of the user reply_channels connected to our server.
+- With the Chat App we will need multiple users (in one room), so we need to keep track of who's in that room.
+- To do so, we can create user Groups and assign a Group to a chatroom.
+
+When a user enters a chat room, their reply_channel will be entered into that group. When a message
+is sent from the server, it will now send it to the Group instead of to each individual user within
+that group.
+
+### Process
+
+1. Install Django Channels.
+2. Create Django templates/ views.
+3. Channels Routing.
+4. Consumer (view).
+5. Template configuration handle WS.
 
 ---
 
@@ -637,7 +688,7 @@ async function start() {
 start()
 ````
 
-## Fetch API 4:00
+## Fetch API
 
 fetch is a function built into JavaScript to send requests to an API. It receives a Request object,
 and returns a Response object (it is actually a Promise that eventually resolves into a Response).

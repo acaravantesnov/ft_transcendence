@@ -7,9 +7,7 @@
 		<div class="col-sm-12 col-md-8">
 			<h1 class="display-2">Sign Up</h1>
 		</div>
-		<div class="col-sm-12 col-md-4">
-			
-		</div>
+		<div class="col-sm-12 col-md-4"></div>
 	</div>
 </div>
 
@@ -18,18 +16,20 @@
 		<div class="col-md-12">
             <div class='jumbotron'>
                 <center>
-                <div class="text-left" style"max-width:500px">
-                <form method="post">
-                    {% csrf_token %}
-                {% for field in form %}
-                    <div class='form-group'>
-                            <label for="{{ field.name }}">{{ field.label }}</label>
-                            {{ field }}
+                    <div class="text-left" style"max-width:500px">
+                        <form method="post">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div class='form-group'>
+                                        <label for="{{ field.name }}">{{ field.label }}</label>
+                                        {{ field }}
+                                </div>
+                            {% endfor %}
+                            <br>
+                            <center><button type="submit" class="btn btn-success btn-lg">Accept</button></center>
+                        </form>
                     </div>
-                    {% endfor %}
-                    <br>
-                    <center><button type="submit" class="btn btn-success btn-lg">Accept</button></center>
-                </form>
+                </center>
             </div>
         </div>
     </div>
