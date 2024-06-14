@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<div class="container title-padding pb-4">
+<div class="container pb-4">
 
     {% if request.user.username == username and request.user.is_authenticated %}
 
@@ -17,7 +17,7 @@
 
     {% else %}
 
-    <div class="row" style="font-family: Dosis">
+    <div class="row title-padding" style="font-family: Dosis">
         <div class="col-sm-8">
             <p class="responsive-text-large">ft<br>transcendence</p>
             <p class="responsive-text-small">by acaravan, digarcia, mortega-, alaguila and enevado</p>

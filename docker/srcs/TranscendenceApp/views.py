@@ -171,7 +171,7 @@ def signIn(request):
                     return redirect('signIn')
         return render(request, "signIn.html", {"form": form})
 
-def logOut(request):
+def signOut(request):
     auth.logout(request)
     messages.info(request, "Logged out successfully!")
     return redirect('index')
