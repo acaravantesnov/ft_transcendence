@@ -1,7 +1,9 @@
-<div class="card card-body pt-4 pb-4">
-    <button type="button" id="playButton" class="btn btn-success">PLAY</button>
-    <div id="game-area" class="mt-4">
-        <div id="ball"></div>
+<div class="col-12">
+    <div class="card card-body pt-4 pb-4">
+        <button type="button" id="playButton" class="btn btn-success">PLAY</button>
+        <div id="game-area" class="mt-4">
+            <div id="ball"></div>
+        </div>
     </div>
 </div>
 
@@ -10,6 +12,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const ball = document.getElementById('ball');
         const gameArea = document.getElementById('game-area');
+        const ballDiameter = 25;
         console.log('Path:', window.location.pathname);
     
         const roomName = window.location.pathname.split('/').slice(-2, -1)[0];
@@ -33,6 +36,16 @@
             console.log('Y:', data.y);
             ball.style.left = data.x + 'px';
             ball.style.top = data.y + 'px';
+
+            // Get the dimensions of the game area
+            const gameAreaRect = gameArea.getBoundingClientRect();
+
+            // Calculate the new positions with boundary checking
+            let newLeft = Math.max(0, Math.min(gameAreaRect.width - ballDiameter, data.x));
+            let newTop = Math.max(0, Math.min(gameAreaRect.height - ballDiameter, data.y));
+
+            ball.style.left = newLeft + 'px';
+            ball.style.top = newTop + 'px';
         };
     });
 

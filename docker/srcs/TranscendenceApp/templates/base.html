@@ -28,16 +28,20 @@
 
 <body class="bg-light">
 
+  <div class="wrapper">
     <!-- Navbar -->
     {% include 'navbar.html' %}
 
     <!-- Content -->
-    {% block content %}
+    <main>
+      {% block content %}
 
-    {% endblock %}
+      {% endblock %}
+    </main>
 
     <!-- Footer -->
     {% include 'footer.html' %}
+  </div>
 
 </body>
 

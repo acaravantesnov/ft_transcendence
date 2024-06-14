@@ -1,34 +1,35 @@
-<div class="card card-body pt-4 pb-4">
-    <h2 class="card-title">Statistics</h5>
-    <hr>
-    <div class="row", style="font-family: Dosis">
-        <div class="col">
-            <h4>Username</h4>
-            <p class="card-text">{{ request.user.username }}</p>
-        </div>
-        <div class="col">
-            <h4>Email</h4>
-            <p class="card-text">{{ request.user.email }}</p>
-        </div>
-        <div class="col">
-            <h4>Games Won</h4>
-            <p class="card-text" id="gamesWon" data-fetch-url="http://0.0.0.0:8000/users/statistics/gamesWon/{{request.user.username}}"></p>
-        </div>
-        <div class="col">
-            <h4>Games Lost</h4>
-            <p class="card-text" id="gamesLost" data-fetch-url="http://0.0.0.0:8000/users/statistics/gamesLost/{{request.user.username}}"></p>
-        </div>
-        <div class="col">
-            <h4>Goals</h4>
-            <p class="card-text" id="goals" data-fetch-url="http://0.0.0.0:8000/users/statistics/goals/{{request.user.username}}"></p>
-        </div>
-        <div class="col">
-            <h4>Score</h4>
-            <p class="card-text"></p>
+<div class="col-12">
+    <div class="card card-body pt-4 pb-4">
+        <h5 class="card-title">Statistics</h5>
+        <hr>
+        <div class="row", style="font-family: Dosis">
+            <div class="col">
+                <h6>Username</h6>
+                <p class="card-text">{{ request.user.username }}</p>
+            </div>
+            <div class="col">
+                <h6>Email</h6>
+                <p class="card-text">{{ request.user.email }}</p>
+            </div>
+            <div class="col">
+                <h6>Games Won</h6>
+                <p class="card-text" id="gamesWon" data-fetch-url="http://0.0.0.0:8000/users/statistics/gamesWon/{{request.user.username}}"></p>
+            </div>
+            <div class="col">
+                <h6>Games Lost</h6>
+                <p class="card-text" id="gamesLost" data-fetch-url="http://0.0.0.0:8000/users/statistics/gamesLost/{{request.user.username}}"></p>
+            </div>
+            <div class="col">
+                <h6>Goals</h6>
+                <p class="card-text" id="goals" data-fetch-url="http://0.0.0.0:8000/users/statistics/goals/{{request.user.username}}"></p>
+            </div>
+            <div class="col">
+                <h6>Score</h6>
+                <p class="card-text"></p>
+            </div>
         </div>
     </div>
 </div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {

@@ -1,28 +1,30 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 
-<div class="container pt-4 pb-4">
+<div class="container title-padding pb-4">
 
     {% if request.user.username == username and request.user.is_authenticated %}
 
-    <div class="row", style="font-family: Dosis">
+    <div class="row" style="font-family: Dosis">
         {% include 'statistics.html' %}
     </div>
 
-    <div class="row top-buffer", style="font-family: Dosis">
+    <div class="row top-buffer" style="font-family: Dosis">
         {% include 'mygame.html' %}
     </div>
 
     {% else %}
 
-    <div class="row", style="font-family: Dosis">
-        <div class="col-sm-12">
-            <h1 class="display-1">ft</h1>
-            <h1 class="display-1">transcendence</h1>
-            <p>by acaravan, digarcia, mortega-, alaguila and enevado</p>
+    <div class="row" style="font-family: Dosis">
+        <div class="col-sm-8">
+            <p class="responsive-text-large">ft<br>transcendence</p>
+            <p class="responsive-text-small">by acaravan, digarcia, mortega-, alaguila and enevado</p>
         </div>
-        
+        <div class="col-sm-4">
+            <img src="{% static 'images/pong.gif' %}" class="rounded-image image-center" alt="pong">
+        </div>
     </div>
 
     {% endif %}
