@@ -22,8 +22,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 AUTH_USER_MODEL = "TranscendenceApp.MyCustomUser"
 
-LOGIN_REDIRECT_URL = 
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-stpo-um1&nzx@*h3a=r&zjgm(h6nfm#%=^6r8zw^51)=^or-#e'
 
