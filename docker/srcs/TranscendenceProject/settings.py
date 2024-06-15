@@ -20,6 +20,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
+AUTH_USER_MODEL = "TranscendenceApp.MyCustomUser"
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-stpo-um1&nzx@*h3a=r&zjgm(h6nfm#%=^6r8zw^51)=^or-#e'
 
@@ -28,20 +30,19 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '0.0.0.0',
+    'localhost',
 ]
 
-
-# Application definition
 INSTALLED_APPS = [
-    'daphne',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'TranscendenceApp',
-    'rest_framework',
+    'channels',                     #
+    'daphne',                       #
+    'django.contrib.admin',         # Admin interface for managing our data.
+    'django.contrib.auth',          # Authenticating users.
+    'django.contrib.contenttypes',  # 
+    'django.contrib.messages',      # Displaying one-time notifications to the user.
+    'django.contrib.staticfiles',   # Serving static files like CSS, JavaScript, images.
+    'TranscendenceApp',             # Our app.
+    'rest_framework',               # REST API.
 ]
 
 #redis
@@ -138,7 +139,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -170,32 +175,35 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': "debug.log",
+        "django":{
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "django.log",
         },
-    },
-    "handlers":{
-      "file":{
-        "level": "DEBUG",
-        "class": "logging.FileHandler",
-        "filename": "debug.log",
-      }
+        "game":{
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "game.log",
+        },
+        "views":{
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "views.log",
+        },
     },
     'loggers': {
       "django": {
-        "handlers": ["file"],
+        "handlers": ["django"],
         "level": "DEBUG",
         "propagate": True,
       },
       "game": {
-        "handlers": ["file"],
+        "handlers": ["game"],
         "level": "DEBUG",
         "propagate": True,
       },
       "views": {
-        "handlers": ["file"],
+        "handlers": ["views"],
         "level": "DEBUG",
         "propagate": True,
       },

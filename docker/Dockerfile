@@ -10,22 +10,21 @@ RUN pip install -r requirements.txt
 
 # Start redis
 RUN chmod 777 /etc/redis/redis.conf
-# RUN service redis-server start #For some reason doesn't work here, moved to entrypoint
+# RUN service redis-server start
 
 # Set unbuffered output for python
 ENV PYTHONUNBUFFERED 1
-
-COPY ./tools/django.sh .
-RUN chmod +x ./django.sh
 
 # Create app directory
 WORKDIR /app
 
 # Bundle app source
-COPY ./srcs/. .
-COPY ./log .
+COPY ./srcs .
+COPY ./tools .
+
+RUN chmod +x ./django.sh
 
 #RUN rm ./requirements.txt ./django.sh
 
-# entrypoint to run the django.sh file
-ENTRYPOINT ["/django.sh"]
+# entrypoint to run the django.sh file with bash
+ENTRYPOINT ["/bin/bash", "django.sh"]

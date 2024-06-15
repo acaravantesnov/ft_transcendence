@@ -2,33 +2,55 @@
 
 {% block content %}
 
-<h1> SIGN IN </h1>
-
-<div class='jumbotron'>
-    <center>
-    <div class="text-left" style"max-width:500px">
-    <form method="post">
-        {% csrf_token %}
-	{% for field in form %}
-	<div class='form-group'>
-		<label for="{{ field.name }}">{{ field.label }}</label>
-		{{ field }}
+<div class="container pt-4 pb-4">
+	<div class="row", style="font-family: Dosis">
+		<div class="col-sm-12 col-md-8">
+			<h3 class="display-2">Sign In</h3>
+		</div>
+		<div class="col-sm-12 col-md-4">
+			
+		</div>
 	</div>
-	{% endfor %}
-	<br>
-	<center><button type="submit" class="btn btn-success btn-lg">SIGN IN</button></center>
-    </form>
-    </div>
-    </center>
 </div>
 
-{% if form %}
-<p>If you does not have an account, fulfill your registration here:</p>
-<button>
-	<a href="{% url 'signUp' %}">Sign Up</a>
-</button>
+{% if request.user.username == username and request.user.is_authenticated %}
+
+  <!-- Tell user he is already loged In -->
+  <p>You are already logged in.</p>
+
+{% else %}
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class='jumbotron'>
+				<center>
+					<div class="text-left" style"max-width:500px">
+						<form method="post">
+							{% csrf_token %}
+							{% for field in form %}
+							<div class='form-group'>
+								<label for="{{ field.name }}">{{ field.label }}</label>
+								{{ field }}
+							</div>
+							{% endfor %}
+							<br>
+							<center><button type="submit" class="btn btn-success btn-lg">Sign In</button></center>
+						</form>
+						{% if form %}
+							<br>
+							<p>If you do not have an account, fulfill your registration here:</p>
+							<button class="mb-4">
+								<a href="{% url 'signUp' %}">Sign Up</a>
+							</button>
+						{% endif %}
+					</div>
+				</center>
+			</div>
+		</div>
+	</div>
+</div>
 
 {% endif %}
-
 
 {% endblock %}
