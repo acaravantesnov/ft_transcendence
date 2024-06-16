@@ -138,25 +138,22 @@ def home(request, username):
     return render(request, 'index.html', {"username": username})
 
 def signIn(request):
-    if request.user.is_authenticated:
-        username = request.user.username
-        return render(request, "signIn.html", {"username": username})
+    if request.method == "POST":
+        form = signUser(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('/', username=username)
+            else:
+                messages.error(request, "Invalid Username or Password")
+        else:
+            messages.error(request, "Form is not valid")
     else:
-        form = signUser(request.POST or None)
-        if request.method == "POST":
-            if form.is_valid():
-                username = form.cleaned_data.get("username")
-                password = form.cleaned_data.get("password")
-                user = auth.authenticate(username=username, password=password)
-
-                if user is not None:
-                    auth.login(request, user)
-                    return redirect('signed', username=username)
-                else:
-                    messages.error(request, 'Invalid Username or Password')
-                    return redirect('signIn')
-        return render(request, "signIn.html", {"form": form})
-
+        form = signUser()
+    return render(request, "signIn.html", {"form": form})
 
 def signUp(request):
     if request.method == "POST":
