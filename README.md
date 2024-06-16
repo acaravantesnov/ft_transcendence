@@ -366,6 +366,25 @@ backend.
 - /users/signOut/ -> signOut
 - /users/signed/<str:username>  -> home
 
+**SPA Routes**:
+
+- / -> 
+- /admin  -> 
+- /users  -> 
+- /users/create -> 
+- /users/read/<str:pk>  -> 
+- /users/update/<str:pk>  -> 
+- /users/delete/<str:pk>  -> 
+- /users/addGame  -> 
+- /users/statistics/gamesWon/<str:username> -> 
+- /users/statistics/gamesLost/<str:username>  -> 
+- /users/statistics/goals/<str:username>  -> 
+
+- /users/signIn/  -> 
+- /users/signUp/  -> 
+- /users/signOut/ -> 
+- /users/signed/<str:username>  -> 
+
 ---
 
 # Database (PostgreSQL)
