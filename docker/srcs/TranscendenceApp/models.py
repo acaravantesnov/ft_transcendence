@@ -13,6 +13,13 @@ from django.utils import timezone
 
 from django.contrib.auth.models import AbstractUser
 
+'''
+What should the MyCustomUser model add to the default User model? (animeflv for the moment)
+
+- avatar: A profile picture for the user.
+- rank: The rank of the user.
+- friendList: A list of friends that the user has added.
+'''
 class MyCustomUser(AbstractUser):
     animeflv = models.IntegerField(null=True)
     #gamesLost = models.IntegerField(null=True)

@@ -20,8 +20,4 @@ urlpatterns = [
     path('statistics/gamesWon/<str:username>', views.getGamesWon, name="statistics1"),
     path('statistics/gamesLost/<str:username>', views.getGamesLost, name="statistics2"),
     path('statistics/goals/<str:username>', views.getGoals, name="statistics3"),
-    path('game', views.game, name='game'),
-    # path('game2', views.game2, name='game2'),
-    # re_path(r'^game2/(?P<room_name>\w+)/$', views.game2, name='game2'),
-    path('game2/<str:room_name>/', views.game2, name='game2'),
 ]
