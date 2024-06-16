@@ -320,13 +320,51 @@ When a user enters a chat room, their reply_channel will be entered into that gr
 is sent from the server, it will now send it to the Group instead of to each individual user within
 that group.
 
-### Process
+**Process**:
 
 1. Install Django Channels.
 2. Create Django templates/ views.
 3. Channels Routing.
 4. Consumer (view).
 5. Template configuration handle WS.
+
+## Single Page Application (SPA)
+
+### What is a Multi Page Application (MPA)?
+
+In an **MPA**, the user sends a GET request for each web page it wants to access. The backend server
+choses a view based on the desired URL, accesses data in the DB if needed, computes all the logic,
+and eventually renders an HTML to send the webpage to the user (along with other static files such
+as CSS and JS).
+
+### What is a Single Page Application (SPA)?
+
+In an **SPA**, the user sends a GET request for the first access to the web page (usually the root
+path). In that first request, the server sends back the webpage, along with CSS files, and a lot of
+JS. The sent JS includes a frontend routing system so that the client can render new web pages
+based on purely JS fetch requests to get html files, and to access the DB through the API on the
+backend.
+
+### From MPA to SPA.
+
+**MPA Routes**:
+
+- / -> home
+- /admin  -> admin.site.urls
+- /users  -> @getData
+- /users/create -> @addUser
+- /users/read/<str:pk>  -> @getUser
+- /users/update/<str:pk>  -> @updateUser
+- /users/delete/<str:pk>  -> @deleteUser
+- /users/addGame  -> @addGame
+- /users/statistics/gamesWon/<str:username> -> @getGamesWon
+- /users/statistics/gamesLost/<str:username>  -> @getGamesLost
+- /users/statistics/goals/<str:username>  -> @getGoals
+
+- /users/signIn/  -> signIn
+- /users/signUp/  -> signUp
+- /users/signOut/ -> signOut
+- /users/signed/<str:username>  -> home
 
 ---
 

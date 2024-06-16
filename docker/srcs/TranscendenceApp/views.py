@@ -43,6 +43,54 @@ import logging
 logger = logging.getLogger("views")
 
 @api_view(['GET'])
+def getData(request):
+    users = MyCustomUser.objects.all()
+    serializer = MyCustomUserSerializer(users, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def addUser(request):
+    serializer = MyCustomUserSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors)
+
+@api_view(['GET'])
+def getUser(request, pk):
+    users = MyCustomUser.objects.get(id=pk)
+    serializer = MyCustomUserSerializer(users, many=False)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+def updateUser(request, pk):
+    user = MyCustomUser.objects.get(id=pk)
+    serializer = MyCustomUserSerializer(instance=user, data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def deleteUser(request, pk):
+    user = MyCustomUser.objects.get(id=pk)
+    user.delete()
+    return Response('User successfully deleted!')
+
+@api_view(['POST'])
+def addGame(request):
+    serializer = GameSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors)
+
+@api_view(['GET'])
 def getGamesWon(request, username):
     games = Game.objects.filter(player1__username=username) | Game.objects.filter(player2__username=username)
     gamesWon = games.filter(winner__username=username)
@@ -65,60 +113,33 @@ def getGoals(request, username):
             goals += game.player2_score
     return Response(goals)
 
-@api_view(['GET'])
-def getData(request):
-    users = MyCustomUser.objects.all()
-    serializer = MyCustomUserSerializer(users, many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def getUser(request, pk):
-    users = MyCustomUser.objects.get(id=pk)
-    serializer = MyCustomUserSerializer(users, many=False)
-    return Response(serializer.data)
-
-@api_view(['POST'])
-def addUser(request):
-    serializer = MyCustomUserSerializer(data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    else:
-        return Response(serializer.errors)
-
-@api_view(['POST'])
-def addGame(request):
-    serializer = GameSerializer(data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    else:
-        return Response(serializer.errors)
-
-@api_view(['PUT'])
-def updateUser(request, pk):
-    user = MyCustomUser.objects.get(id=pk)
-    serializer = MyCustomUserSerializer(instance=user, data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-
-    return Response(serializer.data)
-
-@api_view(['DELETE'])
-def deleteUser(request, pk):
-    user = MyCustomUser.objects.get(id=pk)
-    user.delete()
-    return Response('User successfully deleted!')
-
 def home(request, username):
     if request.user.is_authenticated:
         username = request.user.username
     else:
         username = "Guest"
     return render(request, 'index.html', {"username": username})
+
+def signIn(request):
+    if request.user.is_authenticated:
+        username = request.user.username
+        return render(request, "signIn.html", {"username": username})
+    else:
+        form = signUser(request.POST or None)
+        if request.method == "POST":
+            if form.is_valid():
+                username = form.cleaned_data.get("username")
+                password = form.cleaned_data.get("password")
+                user = auth.authenticate(username=username, password=password)
+
+                if user is not None:
+                    auth.login(request, user)
+                    return redirect('signed', username=username)
+                else:
+                    messages.error(request, 'Invalid Username or Password')
+                    return redirect('signIn')
+        return render(request, "signIn.html", {"form": form})
+
 
 def signUp(request):
     if request.method == "POST":
@@ -150,26 +171,6 @@ def signUp(request):
         form = newUser()
 
     return render(request, "signUp.html", {"form": form})
-
-def signIn(request):
-    if request.user.is_authenticated:
-        username = request.user.username
-        return render(request, "signIn.html", {"username": username})
-    else:
-        form = signUser(request.POST or None)
-        if request.method == "POST":
-            if form.is_valid():
-                username = form.cleaned_data.get("username")
-                password = form.cleaned_data.get("password")
-                user = auth.authenticate(username=username, password=password)
-
-                if user is not None:
-                    auth.login(request, user)
-                    return redirect('signed', username=username)
-                else:
-                    messages.error(request, 'Invalid Username or Password')
-                    return redirect('signIn')
-        return render(request, "signIn.html", {"form": form})
 
 def signOut(request):
     auth.logout(request)
