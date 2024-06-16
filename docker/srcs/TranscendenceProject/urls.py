@@ -23,6 +23,7 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name="index"),
+    path('404', views.error404, name="error404"),
     path('admin/', admin.site.urls),
     path('users/', include('TranscendenceApp.urls')),
 ]

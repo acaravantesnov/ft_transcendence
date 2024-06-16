@@ -5,7 +5,9 @@ In sime frameworks it is called an action, but in Django it is called a view.
 
 from django.shortcuts import render, redirect
 from django.contrib import messages, auth
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+
+from django.contrib.auth import authenticate, login
 
 '''
 REST framework provides an APIView class, which subclasses Django's View class.
@@ -49,7 +51,19 @@ def getData(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
-def addUser(request):
+def checkCredentials(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    user = authenticate(username=username, password=password)
+
+    if user is not None:
+        login(request, user)
+        return JsonResponse({'status': 'success', 'redirect_url': '/users/game/' + username})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid Username or Password'})
+
+@api_view(['POST'])
+def createUser(request):
     serializer = MyCustomUserSerializer(data=request.data)
 
     if serializer.is_valid():
@@ -59,7 +73,7 @@ def addUser(request):
         return Response(serializer.errors)
 
 @api_view(['GET'])
-def getUser(request, pk):
+def readUser(request, pk):
     users = MyCustomUser.objects.get(id=pk)
     serializer = MyCustomUserSerializer(users, many=False)
     return Response(serializer.data)
@@ -112,6 +126,9 @@ def getGoals(request, username):
         else:
             goals += game.player2_score
     return Response(goals)
+
+def title(request):
+    return render(request, 'title.html')
 
 def home(request, username):
     if request.user.is_authenticated:
@@ -176,3 +193,6 @@ def signOut(request):
     auth.logout(request)
     messages.info(request, "Logged out successfully!")
     return redirect('index')
+
+def game(request, username):
+    return render(request, 'index.html', {"username": username})

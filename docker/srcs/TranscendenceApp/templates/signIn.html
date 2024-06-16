@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% load static %}
 
-{% block content %}
 
+<!DOCTYPE html>
 <div class="container pt-4 pb-4">
 	<div class="row", style="font-family: Dosis">
 		<div class="col-sm-12 col-md-8">
@@ -25,12 +25,12 @@
 		<div class="col-md-12">
 			<div class='jumbotron'>
 				<center>
-					<div class="text-left" style"max-width:500px">
-						<form method="post">
+					<div class="text-left" style="max-width:500px">
+						<form id="myform" action="#">
 							{% csrf_token %}
 							{% for field in form %}
 							<div class='form-group'>
-								<label for="{{ field.name }}">{{ field.label }}</label>
+								<label for="{{ field.id_for_label }}">{{ field.label }}</label>
 								{{ field }}
 							</div>
 							{% endfor %}
@@ -53,4 +53,4 @@
 
 {% endif %}
 
-{% endblock %}
+<script src="{% static 'js/signIn.js' %}"></script>

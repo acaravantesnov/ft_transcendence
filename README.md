@@ -347,43 +347,29 @@ backend.
 
 ### From MPA to SPA.
 
-**MPA Routes**:
+The idea is to take advantage of the already built views, in order to simplify the change from MPA
+to SPA, and complete the Server Side Rendering (SSR) module at the same time.
 
-- / -> home
-- /admin  -> admin.site.urls
-- /users  -> @getData
-- /users/create -> @addUser
-- /users/read/<str:pk>  -> @getUser
-- /users/update/<str:pk>  -> @updateUser
-- /users/delete/<str:pk>  -> @deleteUser
-- /users/addGame  -> @addGame
-- /users/statistics/gamesWon/<str:username> -> @getGamesWon
-- /users/statistics/gamesLost/<str:username>  -> @getGamesLost
-- /users/statistics/goals/<str:username>  -> @getGoals
+The SPA bhevaiour of this project is the following:
 
-- /users/signIn/  -> signIn
-- /users/signUp/  -> signUp
-- /users/signOut/ -> signOut
-- /users/signed/<str:username>  -> home
+Imagine the client tries to access the following path "0.0.0.0:8000". In this case, as the GET
+request is for the root path, the server just sends back the rendered index.html file to the client,
+along with the CSS and JS files. This is the only situation in which the browser itself should
+refresh the page.
 
-**SPA Routes**:
+Part of the JS code that the frontend receives is the "router.js" file. This file is in charge of
+handling the url paths that the client wants to access from now on. Each url path is mapped to a
+urlpattern in the "urls.py" file in our app. This way, when the user wants to access "0.0.0.0:8000
+/user/signIn", the router sends a fetch GET request to the backend, which ends up calling the signIn
+view function, that renders the "signIn.html" back to the client. This way, all the inner code is
+embedded inside the "index.html" page (our SPA), as a div with an specific id, adn if the client
+needs information from the database, it just needs to send another fetch request to the endpoints
+within the API.
 
-- / -> 
-- /admin  -> 
-- /users  -> 
-- /users/create -> 
-- /users/read/<str:pk>  -> 
-- /users/update/<str:pk>  -> 
-- /users/delete/<str:pk>  -> 
-- /users/addGame  -> 
-- /users/statistics/gamesWon/<str:username> -> 
-- /users/statistics/gamesLost/<str:username>  -> 
-- /users/statistics/goals/<str:username>  -> 
-
-- /users/signIn/  -> 
-- /users/signUp/  -> 
-- /users/signOut/ -> 
-- /users/signed/<str:username>  -> 
+The only problem with this approach is the user management system (sign in, up, out). When the user
+fills in the Sign In form, this should trigger a fetch POST function with the personnal info to the
+server. If the credentials are correct, the backend should send the token, generate the cookies, and
+redirect the user to the game itself.
 
 ---
 

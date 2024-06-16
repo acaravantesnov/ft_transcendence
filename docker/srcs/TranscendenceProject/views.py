@@ -18,3 +18,6 @@ def home(request):
     else:
         username = "Guest"
     return render(request, 'index.html', {"username": username})
+
+def error404(request):
+    return render(request, '404.html')
