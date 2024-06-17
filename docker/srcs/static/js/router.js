@@ -1,10 +1,6 @@
 document.querySelectorAll('.cmon').forEach(function(element) {
     element.addEventListener('click', (e) => {
-        console.log('RouterEventListener');
-        const {target} = e;
-        if (!target.matches('nav a')) {
-            return;
-        }
+        console.log('RouterEventListener, route:', e.target.href);
         e.preventDefault();
         route(e);
     });
@@ -20,6 +16,11 @@ const routes = {
         urlPattern: 'users/',
         title: 'Home',
         description: 'Home'
+    },
+    '/users/': {
+        urlPattern: 'users/',
+        title: 'Users',
+        description: 'Users'
     },
     '/users/signIn/': {
         urlPattern: '/users/signIn/',
@@ -53,6 +54,7 @@ const routes = {
 const route = (event) => {
     event = event || window.event;
     event.preventDefault();
+    console.log('Router, route:', event.target.href);
     window.history.pushState({}, '', event.target.href);
     locationHandler();
 }
@@ -64,9 +66,15 @@ const locationHandler = async () => {
     }
     // Check if location is '/users/game/', followed by the username.
     // If true, then redirect to '/users/game/<str:username>'.
-    console.log(location);
+    console.log("location:", location);
     let html = '';
-    if (location.startsWith('/users/game/')) {
+    //Think this first if statement is not needed
+    if (location === '/') {
+        html = await fetch('/users/').then(res => res.text());
+        document.getElementById('content').innerHTML = html;
+        console.log('Loaded /');
+    }
+    else if (location.startsWith('/users/game/')) {
         const username = location.split('/').pop();
         const url = `/users/game/${username}`;
         html = await fetch(url).then(res => res.text());
@@ -77,7 +85,7 @@ const locationHandler = async () => {
         const route = routes[location] || routes[404];
         html = await fetch(route.urlPattern).then(res => res.text());
         document.getElementById('content').innerHTML = html;
-        console.log('Loaded');
+        console.log('Loaded route:', route.urlPattern);
     }
 }
 

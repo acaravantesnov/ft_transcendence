@@ -1,5 +1,3 @@
-console.log('statistics.js loaded');
-
 function initializeStatistics() {
     const fetchElements = document.querySelectorAll('[data-fetch-url]');
 

@@ -7,7 +7,7 @@ from . import views
 
 # URLConf module
 urlpatterns = [
-    path('', views.title),
+    path('', views.title, name="title"),
     path('create', views.createUser),
     path('read/<str:pk>', views.readUser),
     path('update/<str:pk>', views.updateUser),
