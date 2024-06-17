@@ -6,11 +6,9 @@ document.querySelectorAll('.cmon').forEach(function(element) {
             return;
         }
         e.preventDefault();
-        route();
+        route(e);
     });
 });
-
-
 
 const routes = {
     404: {
@@ -45,6 +43,13 @@ const routes = {
     },
 }
 
+/*
+    Takes an event object as an argument. If the event object is not provided, it will default to
+    the window.event object.
+    Prevents the default action of the event object.
+    Updates the browser’s history stack and the URL without reloading the page.
+    locationhandler is called to load the appropriate content based on the new URL
+*/
 const route = (event) => {
     event = event || window.event;
     event.preventDefault();
@@ -60,16 +65,19 @@ const locationHandler = async () => {
     // Check if location is '/users/game/', followed by the username.
     // If true, then redirect to '/users/game/<str:username>'.
     console.log(location);
+    let html = '';
     if (location.startsWith('/users/game/')) {
         const username = location.split('/').pop();
         const url = `/users/game/${username}`;
-        const html = await fetch(url).then(res => res.text());
+        html = await fetch(url).then(res => res.text());
         document.getElementById('content').innerHTML = html;
+        console.log('Loaded game.html for user:', username);
     }
     else {
         const route = routes[location] || routes[404];
-        const html = await fetch(route.urlPattern).then(res => res.text());
+        html = await fetch(route.urlPattern).then(res => res.text());
         document.getElementById('content').innerHTML = html;
+        console.log('Loaded');
     }
 }
 

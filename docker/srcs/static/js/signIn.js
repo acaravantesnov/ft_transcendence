@@ -29,8 +29,9 @@ async function submitSignIn()
             const responseData = await response.json();
 
             if (responseData.status == 'success') {
-                // Redirect to the URL provided in the response from the root URL
-                route();
+                // Create an event to be passed to the route function, this will change the url and load the appropriate content
+                const event = new CustomEvent('TRIGGER', { detail: { href: '/' } });
+                document.dispatchEvent(event);
             } else {
                 alert(responseData.message); // Show error message on failure
             }
@@ -38,9 +39,14 @@ async function submitSignIn()
             console.error('Error:', error);
         }
     }
-
-    window.onpopstate = locationHandler;
-    window.route = route;
-
-    locationHandler();
 }
+
+// Add an event listener for the custom 'TRIGGER' event outside the function to avoid re-registration
+document.addEventListener('TRIGGER', (e) => {
+    const { href } = e.detail;
+    const event = {
+        preventDefault: () => {},
+        target: { href }
+    };
+    route(event);
+});

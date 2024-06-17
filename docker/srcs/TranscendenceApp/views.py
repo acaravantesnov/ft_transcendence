@@ -202,7 +202,7 @@ def signUp(request):
 def signOut(request):
     auth.logout(request)
     messages.info(request, "Logged out successfully!")
-    return redirect('/')
+    return redirect('/users/signIn/')
 
 def game(request, username):
     return render(request, 'game.html', {"username": username})

@@ -6,13 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const roomName = window.location.pathname.split('/').slice(-2, -1)[0];
 
-    // Log the room name
     console.log('Room name:', roomName);
-    // Log the splitted path
     console.log('Splitted path:', window.location.pathname.split('/'));
-    // Log the sliced path
     console.log('Sliced path:', window.location.pathname.split('/').slice(-2, -1));
-    // Log the websocket URL
     console.log('Websocket URL:', 'ws://' + window.location.host + '/ws/game2/' + roomName + '/');
 
     const socket = new WebSocket('ws://' + window.location.host + '/ws/game2/' + roomName + '/');
@@ -26,10 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ball.style.left = data.x + 'px';
         ball.style.top = data.y + 'px';
 
-        // Get the dimensions of the game area
         const gameAreaRect = gameArea.getBoundingClientRect();
-
-        // Calculate the new positions with boundary checking
         let newLeft = Math.max(0, Math.min(gameAreaRect.width - ballDiameter, data.x));
         let newTop = Math.max(0, Math.min(gameAreaRect.height - ballDiameter, data.y));
 
@@ -71,7 +64,6 @@ function getCookie(name) {
         var cookies = document.cookie.split(';');
         for (var i = 0; i < cookies.length; i++) {
             var cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
