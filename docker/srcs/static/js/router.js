@@ -1,4 +1,3 @@
-
 document.querySelectorAll('.cmon').forEach(function(element) {
     element.addEventListener('click', (e) => {
         console.log('RouterEventListener');
@@ -10,6 +9,8 @@ document.querySelectorAll('.cmon').forEach(function(element) {
         route();
     });
 });
+
+
 
 const routes = {
     404: {

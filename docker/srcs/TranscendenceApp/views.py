@@ -70,9 +70,9 @@ def checkCredentials(request):
 
     if user is not None:
         login(request, user)
-        return JsonResponse({'status': 'success', 'redirect_url': '/users/game/' + username})
+        return JsonResponse({'status': 'success'})
     else:
-        return JsonResponse({'status': 'Werror', 'message': 'Invalid Username or Password', 'username': username, 'password': password})
+        return JsonResponse({'status': 'error', 'message': 'Invalid Username or Password'})
 
 @api_view(['POST'])
 def createUser(request):
@@ -81,9 +81,9 @@ def createUser(request):
 
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data)
+        return JsonResponse({'status': 'success'})
     else:
-        return Response(serializer.errors)
+        return JsonResponse({'status': 'error', 'message': serializer.errors})
 
 @api_view(['GET'])
 def readUser(request, pk):
@@ -202,7 +202,7 @@ def signUp(request):
 def signOut(request):
     auth.logout(request)
     messages.info(request, "Logged out successfully!")
-    return redirect('index')
+    return redirect('/')
 
 def game(request, username):
-    return render(request, 'index.html', {"username": username})
+    return render(request, 'game.html', {"username": username})

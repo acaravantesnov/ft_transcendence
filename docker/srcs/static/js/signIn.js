@@ -30,7 +30,7 @@ async function submitSignIn()
 
             if (responseData.status == 'success') {
                 // Redirect to the URL provided in the response from the root URL
-                window.location.href = responseData['redirect_url'];
+                route();
             } else {
                 alert(responseData.message); // Show error message on failure
             }
@@ -38,4 +38,9 @@ async function submitSignIn()
             console.error('Error:', error);
         }
     }
+
+    window.onpopstate = locationHandler;
+    window.route = route;
+
+    locationHandler();
 }

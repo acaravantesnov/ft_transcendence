@@ -29,13 +29,23 @@ async function submitSignUp()
             const responseData = await response.json();
 
             if (responseData.status == 'success') {
-                // Redirect to the URL provided in the response from the root URL
-                window.location.href = responseData['redirect_url'];
+               route();
             } else {
-                alert(responseData.message); // Show error message on failure
+                let errorMessage;
+                for (let key in responseData.message) {
+                    if (responseData.message.hasOwnProperty(key)) {
+                        errorMessage += `\n${key}: ${responseData.message[key][0]}`;
+                    }
+                }
+                alert(errorMessage);
             }
         } catch (error) {
             console.error('Error:', error);
         }
     }
+
+    window.onpopstate = locationHandler;
+    window.route = route;
+
+    locationHandler();
 }
