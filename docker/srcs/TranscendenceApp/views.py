@@ -8,6 +8,7 @@ from django.contrib import messages, auth
 from django.http import HttpResponse, JsonResponse
 
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import make_password
 
 '''
 REST framework provides an APIView class, which subclasses Django's View class.
@@ -54,16 +55,28 @@ def getData(request):
 def checkCredentials(request):
     username = request.data.get('username')
     password = request.data.get('password')
+    
+    try:
+        user = MyCustomUser.objects.get(username=username)
+    except MyCustomUser.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'})
+
+    if not user.is_active:
+        user.is_active = True
+        user.save()
+        print(f"Activated user '{username}'")
+    
     user = authenticate(username=username, password=password)
 
     if user is not None:
         login(request, user)
         return JsonResponse({'status': 'success', 'redirect_url': '/users/game/' + username})
     else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid Username or Password'})
+        return JsonResponse({'status': 'Werror', 'message': 'Invalid Username or Password', 'username': username, 'password': password})
 
 @api_view(['POST'])
 def createUser(request):
+    request.data['password'] = make_password(request.data['password'])
     serializer = MyCustomUserSerializer(data=request.data)
 
     if serializer.is_valid():

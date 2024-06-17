@@ -1,8 +1,8 @@
-async function submitSignIn()
+async function submitSignUp()
 {
-    const signInTrigger = document.getElementById('mySignInForm');
-    if (signInTrigger) {
-        console.log('signInTrigger');
+    const signUpTrigger = document.getElementById('mySignUpForm');
+    if (signUpTrigger) {
+        console.log('signUpTrigger');
         // Gather form data
         const formData = new FormData(event.target);
 
@@ -13,7 +13,7 @@ async function submitSignIn()
         });
 
         try {
-            const response = await fetch('checkCredentials/', {
+            const response = await fetch('createUser/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

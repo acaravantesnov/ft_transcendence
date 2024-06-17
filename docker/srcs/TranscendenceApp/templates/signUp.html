@@ -13,7 +13,7 @@
             <div class='jumbotron'>
                 <center>
                     <div class="text-left" style"max-width:500px">
-                        <form method="post">
+                        <form id="mySignUpForm" onsubmit="submitSignUp();return false;">
                             {% csrf_token %}
                             {% for field in form %}
                                 <div class='form-group'>

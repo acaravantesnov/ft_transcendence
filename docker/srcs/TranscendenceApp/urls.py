@@ -19,6 +19,7 @@ urlpatterns = [
     path('signIn/', views.signIn, name="signIn"),
     path('signIn/checkCredentials/', views.checkCredentials),
     path('signUp/', views.signUp, name="signUp"),
+    path('signUp/createUser/', views.createUser),
     path('signOut/', views.signOut, name="signOut"),
     path('game/<str:username>', views.game, name="game"),
 ]
