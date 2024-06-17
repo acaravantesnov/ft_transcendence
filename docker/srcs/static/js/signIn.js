@@ -30,7 +30,9 @@ async function submitSignIn()
 
             if (responseData.status == 'success') {
                 // Create an event to be passed to the route function, this will change the url and load the appropriate content
-                const event = new CustomEvent('TRIGGER', { detail: { href: '/' } });
+                let str = '/users/game/' + formObject.username;
+                console.log('str:', str);
+                const event = new CustomEvent('TRIGGER', { detail: { href: str } });
                 document.dispatchEvent(event);
             } else {
                 alert(responseData.message); // Show error message on failure
