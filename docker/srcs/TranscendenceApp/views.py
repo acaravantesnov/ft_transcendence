@@ -46,7 +46,7 @@ import logging
 logger = logging.getLogger("views")
 
 @api_view(['GET'])
-def getUsername(request):
+def getCurrentUsername(request):
     if (request.user.is_authenticated):
         return JsonResponse({'username': request.user.username})
     else:

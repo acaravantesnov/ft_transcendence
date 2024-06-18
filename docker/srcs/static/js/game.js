@@ -42,10 +42,8 @@ var csrftoken = getCookie('csrftoken');
 
 document.getElementById('playButton').addEventListener('click', function() {
     var newGame = async () => {
-        const response = await fetch('/users/getUsername/');
-        const data = await response.json();
-        
-        const username = data.username;
+
+        const username = await getCurrentUsername();
     
         await fetch('/users/addGame/', {
             method: 'POST',

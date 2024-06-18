@@ -1,11 +1,7 @@
 document.querySelectorAll('.cmon').forEach(function(element) {
     element.addEventListener('click', (e) => {
         var checkIfLoggedIn = async (e) => {
-            const response = await fetch('/users/getUsername/');
-            const data = await response.json();
-
-            const username = data.username;
-
+            const username = await getCurrentUsername();
             if (username == 'Guest') {
                 route(e);
             } else {
@@ -33,7 +29,7 @@ document.addEventListener('TRIGGER', (e) => {
     route(event);
 });
 
-const routes = {
+var routes = {
     404: {
         urlPattern: '404',
         title: '404 - Page not found',

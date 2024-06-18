@@ -1,7 +1,6 @@
 var stats = async () => {
-    const response = await fetch('/users/getUsername/');
-    const data = await response.json();
-    const username = data.username;
+
+    const username = await getCurrentUsername();
 
     await fetch(`/users/statistics/${username}`)
         .then(response => response.json())
