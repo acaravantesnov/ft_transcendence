@@ -21,10 +21,8 @@ What should the MyCustomUser model add to the default User model? (animeflv for 
 - friendList: A list of friends that the user has added.
 '''
 class MyCustomUser(AbstractUser):
-    animeflv = models.IntegerField(null=True)
-    #gamesLost = models.IntegerField(null=True)
-    #goals = models.IntegerField(null=True)
-    #score = models.IntegerField(null=True)
+    friends = models.ManyToManyField('self', blank=True)
+    avatar = models.ImageField(upload_to='avatars/', default='avatars/default.jpg')
     
     def __str__(self):
         return self.username
