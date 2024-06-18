@@ -127,27 +127,19 @@ def addGame(request):
         return Response(serializer.errors)
 
 @api_view(['GET'])
-def getGamesWon(request, username):
+def statistics(request, username):
+    if (MyCustomUser.objects.filter(username=username).count() == 0):
+        return Response({'error': 'User not found'})
     games = Game.objects.filter(player1__username=username) | Game.objects.filter(player2__username=username)
     gamesWon = games.filter(winner__username=username)
-    return Response(gamesWon.count())
-
-@api_view(['GET'])
-def getGamesLost(request, username):
-    games = Game.objects.filter(player1__username=username) | Game.objects.filter(player2__username=username)
     gamesLost = games.exclude(winner__username=username)
-    return Response(gamesLost.count())
-
-@api_view(['GET'])
-def getGoals(request, username):
-    games = Game.objects.filter(player1__username=username) | Game.objects.filter(player2__username=username)
     goals = 0
     for game in games:
         if game.player1.username == username:
             goals += game.player1_score
         else:
             goals += game.player2_score
-    return Response(goals)
+    return Response({'gamesWon': gamesWon.count(), 'gamesLost': gamesLost.count(), 'goals': goals})
 
 def title(request):
     return render(request, 'title.html')
@@ -166,34 +158,7 @@ def signIn(request):
     return render(request, "signIn.html", {"form": form})
 
 def signUp(request):
-    if request.method == "POST":
-        form = newUser(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
-            confirm_password = form.cleaned_data.get("confirm_password")
-            email = form.cleaned_data.get("email")
-            first_name = form.cleaned_data.get("first_name")
-            last_name = form.cleaned_data.get("last_name")
-            if password == confirm_password:
-                if MyCustomUser.objects.filter(username=username).exists():
-                    messages.info(request, 'Username already exists')
-                    return redirect('signUp')
-                elif MyCustomUser.objects.filter(email=email).exists():
-                    messages.info(request, 'Email already exists')
-                    return redirect('signUp')
-                else:
-                    user = MyCustomUser.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
-                    user.save()
-                    print("success")
-                    return redirect('signIn')
-            else:
-                messages.error(request, "Passwords do not match")
-        else:
-            messages.error(request, "Form is not valid")
-    else:
-        form = newUser()
-
+    form = newUser()
     return render(request, "signUp.html", {"form": form})
 
 def signOut(request):
