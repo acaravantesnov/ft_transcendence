@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="container pb-4">
     <div class="row secondary-padding" style="font-family: Dosis">
         {% include 'statistics.html' %}
@@ -15,49 +17,4 @@
     </div>
 </div>
 
-<script>
-    console.log("game script tag");
-    let csrftoken = getCookie('csrftoken');
-
-    document.getElementById('playButton').addEventListener('click', function() {
-        fetch('http://0.0.0.0:8000/users/addGame', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                player1: '{{ request.user.id }}',
-                player2: '',
-                winner: '{{ request.user.id }}',
-                date: '2021-06-01',
-                duration: 10,
-                player1_score: 7,
-                player2_score: 0}),
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    });
-
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-</script>
+<script src="{% static 'js/game.js' %}"></script>

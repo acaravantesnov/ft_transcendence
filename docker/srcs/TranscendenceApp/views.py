@@ -46,6 +46,13 @@ import logging
 logger = logging.getLogger("views")
 
 @api_view(['GET'])
+def getUsername(request):
+    if (request.user.is_authenticated):
+        return JsonResponse({'username': request.user.username})
+    else:
+        return JsonResponse({'username': 'Guest'})
+
+@api_view(['GET'])
 def getData(request):
     users = MyCustomUser.objects.all()
     serializer = MyCustomUserSerializer(users, many=True)
@@ -109,6 +116,8 @@ def deleteUser(request, pk):
 
 @api_view(['POST'])
 def addGame(request):
+    request.data['player1'] = MyCustomUser.objects.get(username=request.data['player1']).pk
+    request.data['winner'] = MyCustomUser.objects.get(username=request.data['winner']).pk
     serializer = GameSerializer(data=request.data)
 
     if serializer.is_valid():

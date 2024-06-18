@@ -1,29 +1,25 @@
-function initializeStatistics() {
-    console.log('initializeStatistics2 function.');
-    const fetchElements = document.querySelectorAll('[data-fetch-url]');
+console.log("statistics script tag");
 
-    fetchElements.forEach(element => {
-        const url = element.getAttribute('data-fetch-url');
-        fetchData(url, element.id);
-    });
-
-    function fetchData(url, resultElementId) {
-        console.log('initializeStatistics3 function.');
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
+var stats = async () => {
+    const response = await fetch('/users/getUsername/');
+    const data = await response.json();
+    
+    const username = data.username;
+    console.log('USERNAME:', username);
+    const endpoints = {
+        gamesWon: `/users/statistics/gamesWon/${username}`,
+        gamesLost: `/users/statistics/gamesLost/${username}`,
+        goals: `/users/statistics/goals/${username}`,
+    };
+    for (const [key, url] of Object.entries(endpoints)) {
+        await fetch(url)
+            .then(response => response.json())
             .then(data => {
-                const resultElement = document.getElementById(resultElementId);
-                resultElement.textContent = JSON.stringify(data, null, 2);
+                console.log('Success:', data);
+                document.getElementById(key).textContent = data;
             })
-            .catch(error => {
-                console.error('There has been a problem with your fetch operation:', error);
-            });
+            .catch(error => console.error('Error fetching data:', error));
     }
-}
+};
 
-initializeStatistics();
+stats();

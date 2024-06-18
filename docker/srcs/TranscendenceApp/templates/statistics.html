@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="col-12">
     <div class="card card-body pt-4 pb-4">
         <h5 class="card-title">Statistics</h5>
@@ -23,23 +25,4 @@
     </div>
 </div>
 
-<script>
-    console.log("statistics script tag");
-
-    const username = '{{ request.user.username }}';
-    const endpoints = {
-        gamesWon: `/users/statistics/gamesWon/${username}`,
-        gamesLost: `/users/statistics/gamesLost/${username}`,
-        goals: `/users/statistics/goals/${username}`,
-    };
-
-    for (const [key, url] of Object.entries(endpoints)) {
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                document.getElementById(key).textContent = data;
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    }
-</script>
+<script src="{% static 'js/statistics.js' %}"></script>
