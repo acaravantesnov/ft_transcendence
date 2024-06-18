@@ -1,5 +1,6 @@
-async function submitSignUp()
+async function submitSignUp(event)
 {
+    event.preventDefault();
     const signUpTrigger = document.getElementById('mySignUpForm');
     if (signUpTrigger) {
         console.log('signUpTrigger');
@@ -29,7 +30,7 @@ async function submitSignUp()
             const responseData = await response.json();
 
             if (responseData.status == 'success') {
-               route();
+               route(event);
             } else {
                 let errorMessage;
                 for (let key in responseData.message) {

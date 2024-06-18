@@ -1,4 +1,5 @@
 function initializeStatistics() {
+    console.log('initializeStatistics2 function.');
     const fetchElements = document.querySelectorAll('[data-fetch-url]');
 
     fetchElements.forEach(element => {
@@ -7,6 +8,7 @@ function initializeStatistics() {
     });
 
     function fetchData(url, resultElementId) {
+        console.log('initializeStatistics3 function.');
         fetch(url)
             .then(response => {
                 if (!response.ok) {
@@ -23,3 +25,5 @@ function initializeStatistics() {
             });
     }
 }
+
+initializeStatistics();

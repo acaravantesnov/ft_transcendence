@@ -2,14 +2,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const ball = document.getElementById('ball');
     const gameArea = document.getElementById('game-area');
     const ballDiameter = 25;
-    console.log('Path:', window.location.pathname);
+    //console.log('Path:', window.location.pathname);
 
     const roomName = window.location.pathname.split('/').slice(-2, -1)[0];
 
-    console.log('Room name:', roomName);
-    console.log('Splitted path:', window.location.pathname.split('/'));
-    console.log('Sliced path:', window.location.pathname.split('/').slice(-2, -1));
-    console.log('Websocket URL:', 'ws://' + window.location.host + '/ws/game2/' + roomName + '/');
+    // console.log('Room name:', roomName);
+    // console.log('Splitted path:', window.location.pathname.split('/'));
+    // console.log('Sliced path:', window.location.pathname.split('/').slice(-2, -1));
+    // console.log('Websocket URL:', 'ws://' + window.location.host + '/ws/game2/' + roomName + '/');
 
     // const socket = new WebSocket('ws://' + window.location.host + '/ws/game2/' + roomName + '/');
 

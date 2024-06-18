@@ -39,8 +39,8 @@ const routes = {
     },
     '/users/game/': {
         urlPattern: '/users/game/',
-        title: 'Signed',
-        description: 'Signed'
+        title: 'Game',
+        description: 'Game'
     },
 }
 
@@ -54,7 +54,7 @@ const routes = {
 const route = (event) => {
     event = event || window.event;
     event.preventDefault();
-    console.log('Router, route:', event.target.href);
+    console.log('route function. route:', event.target.href);
     window.history.pushState({}, '', event.target.href);
     locationHandler();
 }
@@ -64,28 +64,23 @@ const locationHandler = async () => {
     if (location.length == 0) {
         location = '/';
     }
-    // Check if location is '/users/game/', followed by the username.
-    // If true, then redirect to '/users/game/<str:username>'.
-    console.log("location:", location);
+    console.log("locationHandler function. location:", location);
     let html = '';
     //Think this first if statement is not needed
     if (location === '/') {
         html = await fetch('/users/').then(res => res.text());
         document.getElementById('content').innerHTML = html;
-        console.log('Loaded /');
     }
     else if (location.startsWith('/users/game/')) {
         const username = location.split('/').pop();
         const url = `/users/game/${username}`;
         html = await fetch(url).then(res => res.text());
         document.getElementById('content').innerHTML = html;
-        console.log('Loaded game.html for user:', username);
     }
     else {
         const route = routes[location] || routes[404];
         html = await fetch(route.urlPattern).then(res => res.text());
         document.getElementById('content').innerHTML = html;
-        console.log('Loaded route:', route.urlPattern);
     }
 }
 

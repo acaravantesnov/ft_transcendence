@@ -151,21 +151,9 @@ def home(request, username):
     return render(request, 'index.html', {"username": username})
 
 def signIn(request):
-    if request.method == "POST":
-        form = signUser(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('/', username=username)
-            else:
-                messages.error(request, "Invalid Username or Password")
-        else:
-            messages.error(request, "Form is not valid")
-    else:
-        form = signUser()
+    if request.user.is_authenticated:
+        return redirect('/users/game/' + request.user.username)
+    form = signUser()
     return render(request, "signIn.html", {"form": form})
 
 def signUp(request):
