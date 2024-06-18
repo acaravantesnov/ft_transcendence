@@ -2,7 +2,6 @@ async function submitSignIn()
 {
     const signInTrigger = document.getElementById('mySignInForm');
     if (signInTrigger) {
-        console.log('signInTrigger');
         // Gather form data
         const formData = new FormData(event.target);
 

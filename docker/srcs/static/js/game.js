@@ -41,29 +41,34 @@
 var csrftoken = getCookie('csrftoken');
 
 document.getElementById('playButton').addEventListener('click', function() {
-    const username = document.location.pathname.split('/').pop();
-    fetch('/users/addGame/', {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': csrftoken,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            player1: `${username}`,
-            player2: '',
-            winner: `${username}`,
-            date: '2021-06-01',
-            duration: 10,
-            player1_score: 7,
-            player2_score: 0}),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
+    var newGame = async () => {
+        const response = await fetch('/users/getUsername/');
+        const data = await response.json();
+        
+        const username = data.username;
+    
+        await fetch('/users/addGame/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                player1: `${username}`,
+                player2: '',
+                winner: `${username}`,
+                date: '2021-06-01',
+                duration: 10,
+                player1_score: 7,
+                player2_score: 0}),
+        })
+        .then(response => response.json())
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    };
+
+    newGame();
 });
 
 function getCookie(name) {

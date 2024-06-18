@@ -3,7 +3,6 @@ async function submitSignUp(event)
     event.preventDefault();
     const signUpTrigger = document.getElementById('mySignUpForm');
     if (signUpTrigger) {
-        console.log('signUpTrigger');
         // Gather form data
         const formData = new FormData(event.target);
 

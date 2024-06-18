@@ -1,9 +1,36 @@
 document.querySelectorAll('.cmon').forEach(function(element) {
     element.addEventListener('click', (e) => {
-        console.log('RouterEventListener, route:', e.target.href);
+        var checkIfLoggedIn = async (e) => {
+            const response = await fetch('/users/getUsername/');
+            const data = await response.json();
+
+            const username = data.username;
+
+            if (username == 'Guest') {
+                route(e);
+            } else {
+                let str = '/users/game/' + username;
+                const event = new CustomEvent('TRIGGER', { detail: { href: str } });
+                document.dispatchEvent(event);
+            }
+        }
+
         e.preventDefault();
-        route(e);
+        checkIfLoggedIn(e);
     });
+});
+
+document.getElementById('signOut').addEventListener('click', (e) => {
+    route(e);
+});
+
+document.addEventListener('TRIGGER', (e) => {
+    const { href } = e.detail;
+    const event = {
+        preventDefault: () => {},
+        target: { href }
+    };
+    route(event);
 });
 
 const routes = {
@@ -37,11 +64,6 @@ const routes = {
         title: 'Sign Out',
         description: 'Sign Out'
     },
-    '/users/game/': {
-        urlPattern: '/users/game/',
-        title: 'Game',
-        description: 'Game'
-    },
 }
 
 /*
@@ -54,7 +76,6 @@ const routes = {
 const route = (event) => {
     event = event || window.event;
     event.preventDefault();
-    console.log('route function. route:', event.target.href);
     window.history.pushState({}, '', event.target.href);
     locationHandler();
 }
@@ -64,7 +85,6 @@ const locationHandler = async () => {
     if (location.length == 0) {
         location = '/';
     }
-    console.log("locationHandler function. location:", location);
     let html = '';
     //Think this first if statement is not needed
     if (location === '/') {
