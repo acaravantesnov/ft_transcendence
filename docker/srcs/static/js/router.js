@@ -2,13 +2,8 @@ document.querySelectorAll('.cmon').forEach(function(element) {
     element.addEventListener('click', (e) => {
         var checkIfLoggedIn = async (e) => {
             const username = await getCurrentUsername();
-            if (username == 'Guest') {
+            if (username != 'Guest')
                 route(e);
-            } else {
-                let str = '/users/game/' + username;
-                const event = new CustomEvent('TRIGGER', { detail: { href: str } });
-                document.dispatchEvent(event);
-            }
         }
 
         e.preventDefault();
@@ -16,17 +11,38 @@ document.querySelectorAll('.cmon').forEach(function(element) {
     });
 });
 
-document.getElementById('signOut').addEventListener('click', (e) => {
+document.getElementById('brand').addEventListener('click', (e) => {
     route(e);
 });
 
-document.addEventListener('TRIGGER', (e) => {
-    const { href } = e.detail;
-    const event = {
-        preventDefault: () => {},
-        target: { href }
-    };
-    route(event);
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+document.getElementById('signOut').addEventListener('click', (e) => {
+    async function signOut() {
+        await fetch('/users/signOut/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        });
+    }
+    signOut();
+    route(e);
 });
 
 var routes = {
@@ -34,9 +50,6 @@ var routes = {
         urlPattern: '404',
         title: '404 - Page not found',
         description: '404 - Page not found'
-    },
-    '/': {
-
     },
     '/users/signIn/': {
         urlPattern: '/users/signIn/',
@@ -47,11 +60,6 @@ var routes = {
         urlPattern: '/users/signUp/',
         title: 'Sign Up',
         description: 'Sign Up'
-    },
-    '/users/signOut/': {
-        urlPattern: '/users/signOut/',
-        title: 'Sign Out',
-        description: 'Sign Out'
     },
 }
 
@@ -76,21 +84,26 @@ const locationHandler = async () => {
     }
     let html = '';
 
-    if (location == '/')
+    if (location == '/') // '/'
     {
         const username = await getCurrentUsername();
         const url = `/users/home/${username}`;
         html = await fetch(url).then(res => res.text());
     }
-    else if (location.startsWith('/users/home/')) {
+    else if (location == '/users/home/') { // '/users/home/'
+        const username = await getCurrentUsername();
+        const url = `/users/home/${username}`;
+        html = await fetch(url).then(res => res.text());
+    }
+    else if (location.startsWith('/users/home/')) { // '/users/home/username'
         html = await fetch(location).then(res => res.text());
     }
-    else if (location.startsWith('/users/game/')) {
+    else if (location.startsWith('/users/game/')) { // '/users/game/username'
         const username = location.split('/').pop();
         const url = `/users/game/${username}`;
         html = await fetch(url).then(res => res.text());
     }
-    else {
+    else { // routes
         const route = routes[location] || routes[404];
         html = await fetch(route.urlPattern).then(res => res.text());
     }

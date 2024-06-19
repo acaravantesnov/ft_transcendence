@@ -148,8 +148,20 @@ def title(request):
     return redirect('signIn')
 
 def home(request, username):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and username != 'Guest':
         return render(request, 'title.html')
+    form = signUser()
+    return render(request, 'signIn.html', {'form': form})
+
+def play(request, username):
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'game.html')
+    form = signUser()
+    return render(request, 'signIn.html', {'form': form})
+
+def leaderboards(request, username):
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'leaderboards.html')
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
@@ -157,10 +169,10 @@ def signUp(request):
     form = newUser()
     return render(request, "signUp.html", {"form": form})
 
+@api_view(['POST'])
 def signOut(request):
     auth.logout(request)
-    messages.info(request, "Logged out successfully!")
-    return render(request, 'title.html')
+    return JsonResponse({'status': 'success'})
 
 def game(request, username):
     return render(request, 'game.html', {"username": username})

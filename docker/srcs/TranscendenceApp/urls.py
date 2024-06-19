@@ -9,6 +9,8 @@ from . import views
 urlpatterns = [
     path('', views.title, name="title"),
     path('home/<str:username>', views.home, name="home"),
+    path('play/<str:username>', views.play, name="play"),
+    path('leaderboards/<str:username>', views.leaderboards, name="leaderboards"),
     path('getCurrentUsername/', views.getCurrentUsername, name="getCurrentUsername"),
     path('create', views.createUser),
     path('read/<str:pk>', views.readUser),

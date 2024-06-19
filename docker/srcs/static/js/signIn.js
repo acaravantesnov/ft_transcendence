@@ -12,7 +12,7 @@ async function submitSignIn()
         });
 
         try {
-            const response = await fetch('users/checkCredentials/', {
+            const response = await fetch('/users/checkCredentials/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -38,6 +38,11 @@ async function submitSignIn()
             console.error('Error:', error);
         }
     }
+}
+
+async function redirectSignUp(event)
+{
+    route(event);
 }
 
 // Add an event listener for the custom 'TRIGGER' event outside the function to avoid re-registration
