@@ -1,29 +1,22 @@
 {% load static %}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="/">
-            <img src="{% static 'images/logo.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
-        </a>
+    <div class="container" style="font-family: Dosis">
+        <a class="navbar-brand cmon" href="{% url 'index' %}">ft_transcendence</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <center>
-            <span class="fw-bold text-white">
-                {{ username }}
-            </span>
-        </center>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                 {% if request.user.username == username and request.user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'signOut' %}">Sign Out</a>
+                    <a class="nav-link cmon" href="{% url 'signOut' %}">Sign Out</a>
                 {% else %}
-                    <a class="nav-link" href="{% url 'signIn' %}">Sign In</a>
+                    <a class="nav-link cmon" href="{% url 'signIn' %}">Sign In</a>
                 {% endif %}
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="{% url 'signUp' %}">Sign Up</a>
+                    <a class="nav-link cmon" href="{% url 'signUp' %}">Sign Up</a>
                 </li>
             </ul>
         </div>

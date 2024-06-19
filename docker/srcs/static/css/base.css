@@ -38,8 +38,8 @@ main {
 
 .rounded-image {
     border-radius: 50%;
-    width: 18vw;
-    height: 18vw;
+    width: 25vh;
+    height: 25vh;
 }
 
 .image-center {
@@ -55,8 +55,12 @@ main {
     padding-top: 20vh;
 }
 
+.secondary-padding {
+    padding-top: 5vh;
+}
+
 .responsive-text-large {
-    font-size: 5vw;
+    font-size: 10vh;
     margin-bottom: 0;
 }
 

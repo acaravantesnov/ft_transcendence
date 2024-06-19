@@ -7,17 +7,18 @@ from . import views
 
 # URLConf module
 urlpatterns = [
-    path('', views.getData),
-    path('create', views.addUser),
-    path('addGame', views.addGame),
-    path('read/<str:pk>', views.getUser),
+    path('', views.title, name="title"),
+    path('getCurrentUsername/', views.getCurrentUsername, name="getCurrentUsername"),
+    path('create', views.createUser),
+    path('read/<str:pk>', views.readUser),
     path('update/<str:pk>', views.updateUser),
     path('delete/<str:pk>', views.deleteUser),
+    path('addGame/', views.addGame),
+    path('statistics/<str:username>', views.statistics, name="statistics"),
     path('signIn/', views.signIn, name="signIn"),
+    path('signIn/checkCredentials/', views.checkCredentials),
     path('signUp/', views.signUp, name="signUp"),
-    path('signed/<str:username>', views.home, name="signed"),
+    path('signUp/createUser/', views.createUser),
     path('signOut/', views.signOut, name="signOut"),
-    path('statistics/gamesWon/<str:username>', views.getGamesWon, name="statistics1"),
-    path('statistics/gamesLost/<str:username>', views.getGamesLost, name="statistics2"),
-    path('statistics/goals/<str:username>', views.getGoals, name="statistics3"),
+    path('game/<str:username>', views.game, name="game"),
 ]

@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="col-12">
     <div class="card card-body pt-4 pb-4">
         <h5 class="card-title">Statistics</h5>
@@ -5,50 +7,22 @@
         <div class="row", style="font-family: Dosis">
             <div class="col">
                 <h6>Games Won</h6>
-                <p class="card-text" id="gamesWon" data-fetch-url="http://0.0.0.0:8000/users/statistics/gamesWon/{{request.user.username}}"></p>
+                <p id="gamesWon"></p>
             </div>
             <div class="col">
                 <h6>Games Lost</h6>
-                <p class="card-text" id="gamesLost" data-fetch-url="http://0.0.0.0:8000/users/statistics/gamesLost/{{request.user.username}}"></p>
+                <p id="gamesLost"></p>
             </div>
             <div class="col">
                 <h6>Goals</h6>
-                <p class="card-text" id="goals" data-fetch-url="http://0.0.0.0:8000/users/statistics/goals/{{request.user.username}}"></p>
+                <p id="goals"></p>
             </div>
             <div class="col">
                 <h6>Score</h6>
-                <p class="card-text"></p>
+                {% comment %} <p id="score"></p> {% endcomment %}
             </div>
         </div>
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    // Seleccionar todos los elementos que tienen el atributo data-fetch-url
-    const fetchElements = document.querySelectorAll('[data-fetch-url]');
-
-    // Iterar sobre cada elemento y hacer la petición fetch
-    fetchElements.forEach(element => {
-        const url = element.getAttribute('data-fetch-url');
-        fetchData(url, element.id);
-    });
-});
-
-function fetchData(url, resultElementId) {
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const resultElement = document.getElementById(resultElementId);
-            resultElement.textContent = JSON.stringify(data, null, 2);
-        })
-        .catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-        });
-}
-</script>
+<script src="{% static 'js/statistics.js' %}"></script>

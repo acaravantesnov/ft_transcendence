@@ -5,7 +5,10 @@ In sime frameworks it is called an action, but in Django it is called a view.
 
 from django.shortcuts import render, redirect
 from django.contrib import messages, auth
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import make_password
 
 '''
 REST framework provides an APIView class, which subclasses Django's View class.
@@ -43,27 +46,11 @@ import logging
 logger = logging.getLogger("views")
 
 @api_view(['GET'])
-def getGamesWon(request, username):
-    games = Game.objects.filter(player1__username=username) | Game.objects.filter(player2__username=username)
-    gamesWon = games.filter(winner__username=username)
-    return Response(gamesWon.count())
-
-@api_view(['GET'])
-def getGamesLost(request, username):
-    games = Game.objects.filter(player1__username=username) | Game.objects.filter(player2__username=username)
-    gamesLost = games.exclude(winner__username=username)
-    return Response(gamesLost.count())
-
-@api_view(['GET'])
-def getGoals(request, username):
-    games = Game.objects.filter(player1__username=username) | Game.objects.filter(player2__username=username)
-    goals = 0
-    for game in games:
-        if game.player1.username == username:
-            goals += game.player1_score
-        else:
-            goals += game.player2_score
-    return Response(goals)
+def getCurrentUsername(request):
+    if (request.user.is_authenticated):
+        return JsonResponse({'username': request.user.username})
+    else:
+        return JsonResponse({'username': 'Guest'})
 
 @api_view(['GET'])
 def getData(request):
@@ -71,31 +58,45 @@ def getData(request):
     serializer = MyCustomUserSerializer(users, many=True)
     return Response(serializer.data)
 
-@api_view(['GET'])
-def getUser(request, pk):
-    users = MyCustomUser.objects.get(id=pk)
-    serializer = MyCustomUserSerializer(users, many=False)
-    return Response(serializer.data)
+@api_view(['POST'])
+def checkCredentials(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    
+    try:
+        user = MyCustomUser.objects.get(username=username)
+    except MyCustomUser.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'})
+
+    if not user.is_active:
+        user.is_active = True
+        user.save()
+        print(f"Activated user '{username}'")
+    
+    user = authenticate(username=username, password=password)
+
+    if user is not None:
+        login(request, user)
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid Username or Password'})
 
 @api_view(['POST'])
-def addUser(request):
+def createUser(request):
+    request.data['password'] = make_password(request.data['password'])
     serializer = MyCustomUserSerializer(data=request.data)
 
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data)
+        return JsonResponse({'status': 'success'})
     else:
-        return Response(serializer.errors)
+        return JsonResponse({'status': 'error', 'message': serializer.errors})
 
-@api_view(['POST'])
-def addGame(request):
-    serializer = GameSerializer(data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    else:
-        return Response(serializer.errors)
+@api_view(['GET'])
+def readUser(request, pk):
+    users = MyCustomUser.objects.get(id=pk)
+    serializer = MyCustomUserSerializer(users, many=False)
+    return Response(serializer.data)
 
 @api_view(['PUT'])
 def updateUser(request, pk):
@@ -113,6 +114,36 @@ def deleteUser(request, pk):
     user.delete()
     return Response('User successfully deleted!')
 
+@api_view(['POST'])
+def addGame(request):
+    request.data['player1'] = MyCustomUser.objects.get(username=request.data['player1']).pk
+    request.data['winner'] = MyCustomUser.objects.get(username=request.data['winner']).pk
+    serializer = GameSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors)
+
+@api_view(['GET'])
+def statistics(request, username):
+    if (MyCustomUser.objects.filter(username=username).count() == 0):
+        return Response({'error': 'User not found'})
+    games = Game.objects.filter(player1__username=username) | Game.objects.filter(player2__username=username)
+    gamesWon = games.filter(winner__username=username)
+    gamesLost = games.exclude(winner__username=username)
+    goals = 0
+    for game in games:
+        if game.player1.username == username:
+            goals += game.player1_score
+        else:
+            goals += game.player2_score
+    return Response({'gamesWon': gamesWon.count(), 'gamesLost': gamesLost.count(), 'goals': goals})
+
+def title(request):
+    return render(request, 'title.html')
+
 def home(request, username):
     if request.user.is_authenticated:
         username = request.user.username
@@ -120,58 +151,20 @@ def home(request, username):
         username = "Guest"
     return render(request, 'index.html', {"username": username})
 
-def signUp(request):
-    if request.method == "POST":
-        form = newUser(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
-            confirm_password = form.cleaned_data.get("confirm_password")
-            email = form.cleaned_data.get("email")
-            first_name = form.cleaned_data.get("first_name")
-            last_name = form.cleaned_data.get("last_name")
-            if password == confirm_password:
-                if MyCustomUser.objects.filter(username=username).exists():
-                    messages.info(request, 'Username already exists')
-                    return redirect('signUp')
-                elif MyCustomUser.objects.filter(email=email).exists():
-                    messages.info(request, 'Email already exists')
-                    return redirect('signUp')
-                else:
-                    user = MyCustomUser.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
-                    user.save()
-                    print("success")
-                    return redirect('signIn')
-            else:
-                messages.error(request, "Passwords do not match")
-        else:
-            messages.error(request, "Form is not valid")
-    else:
-        form = newUser()
-
-    return render(request, "signUp.html", {"form": form})
-
 def signIn(request):
     if request.user.is_authenticated:
-        username = request.user.username
-        return render(request, "signIn.html", {"username": username})
-    else:
-        form = signUser(request.POST or None)
-        if request.method == "POST":
-            if form.is_valid():
-                username = form.cleaned_data.get("username")
-                password = form.cleaned_data.get("password")
-                user = auth.authenticate(username=username, password=password)
+        return redirect('/users/game/' + request.user.username)
+    form = signUser()
+    return render(request, "signIn.html", {"form": form})
 
-                if user is not None:
-                    auth.login(request, user)
-                    return redirect('signed', username=username)
-                else:
-                    messages.error(request, 'Invalid Username or Password')
-                    return redirect('signIn')
-        return render(request, "signIn.html", {"form": form})
+def signUp(request):
+    form = newUser()
+    return render(request, "signUp.html", {"form": form})
 
 def signOut(request):
     auth.logout(request)
     messages.info(request, "Logged out successfully!")
-    return redirect('index')
+    return render(request, 'title.html')
+
+def game(request, username):
+    return render(request, 'game.html', {"username": username})

@@ -1,9 +1,5 @@
-{% extends "base.html" %}
-
-{% block content %}
-
 <div class="container pt-4 pb-4">
-	<div class="row", style="font-family: Dosis">
+	<div class="row secondary-padding", style="font-family: Dosis">
 		<div class="col-sm-12 col-md-8">
 			<h3 class="display-2">Sign Up</h3>
 		</div>
@@ -17,7 +13,7 @@
             <div class='jumbotron'>
                 <center>
                     <div class="text-left" style"max-width:500px">
-                        <form method="post">
+                        <form id="mySignUpForm" onsubmit="submitSignUp(event);return false;">
                             {% csrf_token %}
                             {% for field in form %}
                                 <div class='form-group'>
@@ -34,5 +30,3 @@
         </div>
     </div>
 </div>
-
-{% endblock %}

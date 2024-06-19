@@ -320,13 +320,56 @@ When a user enters a chat room, their reply_channel will be entered into that gr
 is sent from the server, it will now send it to the Group instead of to each individual user within
 that group.
 
-### Process
+**Process**:
 
 1. Install Django Channels.
 2. Create Django templates/ views.
 3. Channels Routing.
 4. Consumer (view).
 5. Template configuration handle WS.
+
+## Single Page Application (SPA)
+
+### What is a Multi Page Application (MPA)?
+
+In an **MPA**, the user sends a GET request for each web page it wants to access. The backend server
+choses a view based on the desired URL, accesses data in the DB if needed, computes all the logic,
+and eventually renders an HTML to send the webpage to the user (along with other static files such
+as CSS and JS).
+
+### What is a Single Page Application (SPA)?
+
+In an **SPA**, the user sends a GET request for the first access to the web page (usually the root
+path). In that first request, the server sends back the webpage, along with CSS files, and a lot of
+JS. The sent JS includes a frontend routing system so that the client can render new web pages
+based on purely JS fetch requests to get html files, and to access the DB through the API on the
+backend.
+
+### From MPA to SPA.
+
+The idea is to take advantage of the already built views, in order to simplify the change from MPA
+to SPA, and complete the Server Side Rendering (SSR) module at the same time.
+
+The SPA bhevaiour of this project is the following:
+
+Imagine the client tries to access the following path "0.0.0.0:8000". In this case, as the GET
+request is for the root path, the server just sends back the rendered index.html file to the client,
+along with the CSS and JS files. This is the only situation in which the browser itself should
+refresh the page.
+
+Part of the JS code that the frontend receives is the "router.js" file. This file is in charge of
+handling the url paths that the client wants to access from now on. Each url path is mapped to a
+urlpattern in the "urls.py" file in our app. This way, when the user wants to access "0.0.0.0:8000
+/user/signIn", the router sends a fetch GET request to the backend, which ends up calling the signIn
+view function, that renders the "signIn.html" back to the client. This way, all the inner code is
+embedded inside the "index.html" page (our SPA), as a div with an specific id, adn if the client
+needs information from the database, it just needs to send another fetch request to the endpoints
+within the API.
+
+The only problem with this approach is the user management system (sign in, up, out). When the user
+fills in the Sign In form, this should trigger a fetch POST function with the personnal info to the
+server. If the credentials are correct, the backend should send the token, generate the cookies, and
+redirect the user to the game itself.
 
 ---
 

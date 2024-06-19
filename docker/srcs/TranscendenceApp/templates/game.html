@@ -1,0 +1,20 @@
+{% load static %}
+
+<div class="container pb-4">
+    <div class="row secondary-padding" style="font-family: Dosis">
+        {% include 'statistics.html' %}
+    </div>
+
+    <div class="row top-buffer" style="font-family: Dosis">
+        <div class="col-12">
+            <div class="card card-body pt-4 pb-4">
+                <button type="button" id="playButton" class="btn btn-success">PLAY</button>
+                <div id="game-area" class="mt-4">
+                    <div id="ball"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/game.js' %}"></script>
