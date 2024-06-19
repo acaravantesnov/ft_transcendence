@@ -36,14 +36,7 @@ var routes = {
         description: '404 - Page not found'
     },
     '/': {
-        urlPattern: 'users/',
-        title: 'Home',
-        description: 'Home'
-    },
-    '/users/': {
-        urlPattern: 'users/',
-        title: 'Users',
-        description: 'Users'
+
     },
     '/users/signIn/': {
         urlPattern: '/users/signIn/',
@@ -82,21 +75,24 @@ const locationHandler = async () => {
         location = '/';
     }
     let html = '';
-    //Think this first if statement is not needed
-    if (location === '/') {
-        html = await fetch('/users/').then(res => res.text());
-        document.getElementById('content').innerHTML = html;
+
+    if (location == '/')
+    {
+        const username = await getCurrentUsername();
+        const url = `/users/home/${username}`;
+        html = await fetch(url).then(res => res.text());
+    }
+    else if (location.startsWith('/users/home/')) {
+        html = await fetch(location).then(res => res.text());
     }
     else if (location.startsWith('/users/game/')) {
         const username = location.split('/').pop();
         const url = `/users/game/${username}`;
         html = await fetch(url).then(res => res.text());
-        document.getElementById('content').innerHTML = html;
     }
     else {
         const route = routes[location] || routes[404];
         html = await fetch(route.urlPattern).then(res => res.text());
-        document.getElementById('content').innerHTML = html;
     }
 
     insertHTML(html, document.getElementById('content'));

@@ -73,13 +73,14 @@ def checkCredentials(request):
         user.save()
         print(f"Activated user '{username}'")
     
+    
     user = authenticate(username=username, password=password)
 
     if user is not None:
         login(request, user)
         return JsonResponse({'status': 'success'})
     else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid Username or Password'})
+        return JsonResponse({'status': 'error', 'message': 'Invalid Username or Password', 'username': username})
 
 @api_view(['POST'])
 def createUser(request):
@@ -142,20 +143,15 @@ def statistics(request, username):
     return Response({'gamesWon': gamesWon.count(), 'gamesLost': gamesLost.count(), 'goals': goals})
 
 def title(request):
-    return render(request, 'title.html')
+    if request.user.is_authenticated:
+        return render(request, 'title.html')
+    return redirect('signIn')
 
 def home(request, username):
     if request.user.is_authenticated:
-        username = request.user.username
-    else:
-        username = "Guest"
-    return render(request, 'index.html', {"username": username})
-
-def signIn(request):
-    if request.user.is_authenticated:
-        return redirect('/users/game/' + request.user.username)
+        return render(request, 'title.html')
     form = signUser()
-    return render(request, "signIn.html", {"form": form})
+    return render(request, 'signIn.html', {'form': form})
 
 def signUp(request):
     form = newUser()

@@ -22,7 +22,7 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('', views.home, name="index"),
+    path('', views.welcome, name="welcome"),
     path('404', views.error404, name="error404"),
     path('admin/', admin.site.urls),
     path('users/', include('TranscendenceApp.urls')),

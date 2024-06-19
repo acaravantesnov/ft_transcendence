@@ -2,14 +2,18 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container" style="font-family: Dosis">
-        <a class="navbar-brand cmon" href="{% url 'index' %}">ft_transcendence</a>
+        {% if request.user == user and request.user.is_authenticated %}
+            <a class="navbar-brand cmon" href="/{{username}}/home">ft_transcendence</a>
+        {% else %}
+            <p class="navbar-brand">ft_transcendence</p>
+        {% endif %}
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                {% if request.user.username == username and request.user.is_authenticated %}
+                {% comment %} <li class="nav-item active">
+                {% if request.user.is_authenticated %}
                     <a class="nav-link cmon" href="{% url 'signOut' %}">Sign Out</a>
                 {% else %}
                     <a class="nav-link cmon" href="{% url 'signIn' %}">Sign In</a>
@@ -17,7 +21,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link cmon" href="{% url 'signUp' %}">Sign Up</a>
-                </li>
+                </li> {% endcomment %}
             </ul>
         </div>
     </div>

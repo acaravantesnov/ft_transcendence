@@ -8,6 +8,7 @@ from . import views
 # URLConf module
 urlpatterns = [
     path('', views.title, name="title"),
+    path('home/<str:username>', views.home, name="home"),
     path('getCurrentUsername/', views.getCurrentUsername, name="getCurrentUsername"),
     path('create', views.createUser),
     path('read/<str:pk>', views.readUser),
@@ -15,8 +16,7 @@ urlpatterns = [
     path('delete/<str:pk>', views.deleteUser),
     path('addGame/', views.addGame),
     path('statistics/<str:username>', views.statistics, name="statistics"),
-    path('signIn/', views.signIn, name="signIn"),
-    path('signIn/checkCredentials/', views.checkCredentials),
+    path('checkCredentials/', views.checkCredentials, name="checkCredentials"),
     path('signUp/', views.signUp, name="signUp"),
     path('signUp/createUser/', views.createUser),
     path('signOut/', views.signOut, name="signOut"),
