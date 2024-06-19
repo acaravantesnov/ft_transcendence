@@ -1,22 +1,14 @@
 {% load static %}
 
-<div class="container pt-4 pb-4">
-	<div class="row secondary-padding", style="font-family: Dosis">
-		<div class="col-sm-12 col-md-8">
-			<h3 class="display-2">Sign In</h3>
-		</div>
-		<div class="col-sm-12 col-md-4">
-			
-		</div>
+<div class="container mb-3">
+	<div class="row", style="font-family: Dosis">
+		<center>
+			<div class="col-sm-12">
+				<h4 class="display-2">Welcome!</h4>
+			</div>
+		</center>
 	</div>
 </div>
-
-{% if request.user.username == username and request.user.is_authenticated %}
-
-  <!-- Tell user he is already loged In -->
-  <p>You are already logged in.</p>
-
-{% else %}
 
 <div class="container">
 	<div class="row">
@@ -38,7 +30,7 @@
 						{% if form %}
 							<br>
 							<p>If you do not have an account, fulfill your registration here:</p>
-							<a class="nav-link cmon" href="{% url 'signUp' %}">Sign Up</a>
+							<a class="nav-link" href="/users/signUp/" onclick="redirectSignUp(event);">Sign Up</a>
 						{% endif %}
 					</div>
 				</center>
@@ -46,5 +38,3 @@
 		</div>
 	</div>
 </div>
-
-{% endif %}

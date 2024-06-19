@@ -12,7 +12,7 @@ async function submitSignIn()
         });
 
         try {
-            const response = await fetch('checkCredentials/', {
+            const response = await fetch('/users/checkCredentials/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -28,8 +28,7 @@ async function submitSignIn()
             const responseData = await response.json();
 
             if (responseData.status == 'success') {
-                // Create an event to be passed to the route function, this will change the url and load the appropriate content
-                let str = '/users/game/' + formObject.username;
+                let str = '/users/home/' + formObject.username;
                 const event = new CustomEvent('TRIGGER', { detail: { href: str } });
                 document.dispatchEvent(event);
             } else {
@@ -39,6 +38,11 @@ async function submitSignIn()
             console.error('Error:', error);
         }
     }
+}
+
+async function redirectSignUp(event)
+{
+    route(event);
 }
 
 // Add an event listener for the custom 'TRIGGER' event outside the function to avoid re-registration

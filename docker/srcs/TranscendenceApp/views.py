@@ -73,13 +73,14 @@ def checkCredentials(request):
         user.save()
         print(f"Activated user '{username}'")
     
+    
     user = authenticate(username=username, password=password)
 
     if user is not None:
         login(request, user)
         return JsonResponse({'status': 'success'})
     else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid Username or Password'})
+        return JsonResponse({'status': 'error', 'message': 'Invalid Username or Password', 'username': username})
 
 @api_view(['POST'])
 def createUser(request):
@@ -142,29 +143,36 @@ def statistics(request, username):
     return Response({'gamesWon': gamesWon.count(), 'gamesLost': gamesLost.count(), 'goals': goals})
 
 def title(request):
-    return render(request, 'title.html')
+    if request.user.is_authenticated:
+        return render(request, 'title.html')
+    return redirect('signIn')
 
 def home(request, username):
-    if request.user.is_authenticated:
-        username = request.user.username
-    else:
-        username = "Guest"
-    return render(request, 'index.html', {"username": username})
-
-def signIn(request):
-    if request.user.is_authenticated:
-        return redirect('/users/game/' + request.user.username)
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'title.html')
     form = signUser()
-    return render(request, "signIn.html", {"form": form})
+    return render(request, 'signIn.html', {'form': form})
+
+def play(request, username):
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'game.html')
+    form = signUser()
+    return render(request, 'signIn.html', {'form': form})
+
+def leaderboards(request, username):
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'leaderboards.html')
+    form = signUser()
+    return render(request, 'signIn.html', {'form': form})
 
 def signUp(request):
     form = newUser()
     return render(request, "signUp.html", {"form": form})
 
+@api_view(['POST'])
 def signOut(request):
     auth.logout(request)
-    messages.info(request, "Logged out successfully!")
-    return render(request, 'title.html')
+    return JsonResponse({'status': 'success'})
 
 def game(request, username):
     return render(request, 'game.html', {"username": username})
