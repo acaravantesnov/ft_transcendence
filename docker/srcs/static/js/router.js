@@ -15,6 +15,14 @@ document.getElementById('brand').addEventListener('click', (e) => {
     route(e);
 });
 
+async function updateUsername() {
+    const username = await getCurrentUsername();
+    document.getElementById('offcanvasExampleLabel').innerHTML = username;
+};
+
+updateUsername();
+setInterval(updateUsername, 5000);
+
 document.getElementById('signOut').addEventListener('click', (e) => {
     async function signOut() {
         await fetch('/users/signOut/', {
