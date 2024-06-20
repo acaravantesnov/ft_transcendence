@@ -180,35 +180,47 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        "django":{
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "django.log",
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': "debug.log",
         },
-        "game":{
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "game.log",
-        },
-        "views":{
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "views.log",
-        },
+    },
+    "handlers":{
+      "file":{
+        "level": "DEBUG",
+        "class": "logging.FileHandler",
+        "filename": "debug.log",
+      }
     },
     'loggers': {
       "django": {
-        "handlers": ["django"],
+        "handlers": ["file"],
         "level": "DEBUG",
         "propagate": True,
       },
-      "game": {
-        "handlers": ["game"],
+      "WaitingRoom": {
+        "handlers": ["file"],
+        "level": "DEBUG",
+        "propagate": True,
+      },
+      "GameManager": {
+        "handlers": ["file"],
+        "level": "DEBUG",
+        "propagate": True,
+      },
+      "Game": {
+        "handlers": ["file"],
         "level": "DEBUG",
         "propagate": True,
       },
       "views": {
-        "handlers": ["views"],
+        "handlers": ["file"],
+        "level": "DEBUG",
+        "propagate": True,
+      },
+      "consumers": {
+        "handlers": ["file"],
         "level": "DEBUG",
         "propagate": True,
       },

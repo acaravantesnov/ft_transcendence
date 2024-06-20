@@ -46,6 +46,7 @@ class WaitingRoom:
             "user_left": user_left,
             "user_right": user_right
         })
+        logger.debug(f" [WaitingRoom] self.dispatched_games: {self.dispatched_games}")
         return {
             "room_name": room_name,
             "user_left": user_left,
@@ -53,6 +54,7 @@ class WaitingRoom:
         }
     
     def user_check_if_waiting_is_done(self, user_id):
+        logger.debug(f" [WaitingRoom] self.waaaiting_users: {self.waiting_users}")
         logger.debug(f" [WaitingRoom] user_check_if_waiting_is_done: {user_id} ")
         if self.check_waiting_room_condition():
             self.create_game()

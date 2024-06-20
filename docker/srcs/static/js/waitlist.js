@@ -19,7 +19,6 @@ document.getElementById('waitlistButton').addEventListener('click', function() {
 });
 
 
-
 async function checkwaitlist() {
 
     const username = await getCurrentUsername();

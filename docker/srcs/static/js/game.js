@@ -6,9 +6,9 @@ const rightScore = document.getElementById('right-score');
 const gameArea = document.getElementById('game-area');
 
 // /users/play/digarcia/room1/left/
-const username = window.location.pathname.split('/').slice(-3, -2)[0];
-const roomName = window.location.pathname.split('/').slice(-2, -1)[0];
-const side = window.location.pathname.split('/').slice(-1)[0];
+const username = window.location.pathname.split('/').slice(-4, -3)[0];
+const roomName = window.location.pathname.split('/').slice(-3, -2)[0];
+const side = window.location.pathname.split('/').slice(-2, -1)[0];
 console.log('username ', username);
 console.log('roomName ', roomName);
 console.log('side ', side);
