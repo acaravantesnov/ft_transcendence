@@ -69,8 +69,6 @@ var csrftoken = getCookie('csrftoken');
 
 document.getElementById('playButton').addEventListener('click', function() {
     var newGame = async () => {
-
-        const username = await getCurrentUsername();
     
         await fetch('/users/addGame/', {
             method: 'POST',
@@ -79,9 +77,9 @@ document.getElementById('playButton').addEventListener('click', function() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                player1: `${username}`,
+                player1: `${currentUsername}`,
                 player2: '',
-                winner: `${username}`,
+                winner: `${currentUsername}`,
                 date: '2021-06-01',
                 duration: 10,
                 player1_score: 7,

@@ -1,8 +1,8 @@
 document.querySelectorAll('.cmon').forEach(function(element) {
     element.addEventListener('click', (e) => {
         var checkIfLoggedIn = async (e) => {
-            const username = await getCurrentUsername();
-            if (username != 'Guest')
+
+            if (currentUsername != 'Guest')
             {
                 let str = e.target.href + username + '/';
                 const event = new CustomEvent('COMTRIGGER', { detail: { href: str } });
@@ -28,13 +28,17 @@ document.getElementById('brand').addEventListener('click', (e) => {
     route(e);
 });
 
-async function updateUsername() {
-    const username = await getCurrentUsername();
-    document.getElementById('offcanvasExampleLabel').innerHTML = username;
-};
+//set username variable to the current username
+let currentUsername = "";
 
-// updateUsername();
-// setInterval(updateUsername, 5000);
+async function updateCurrentUsername() {
+    currentUsername = await getCurrentUsername();
+    document.getElementById('offcanvasExampleLabel').innerHTML = currentUsername;
+    console.log("Updated Username: ", currentUsername); // For demonstration purposes
+}
+
+currentUsername = await getCurrentUsername();
+setInterval(updateCurrentUsername, 1000);
 
 document.getElementById('signOut').addEventListener('click', (e) => {
     async function signOut() {
@@ -91,13 +95,11 @@ const locationHandler = async () => {
 
     if (location == '/') // '/'
     {
-        const username = await getCurrentUsername();
-        const url = `/users/home/${username}`;
+        const url = `/users/home/${currentUsername}`;
         html = await fetch(url).then(res => res.text());
     }
     else if (location == '/users/home/') { // '/users/home/'
-        const username = await getCurrentUsername();
-        const url = `/users/home/${username}`;
+        const url = `/users/home/${currentUsername}`;
         html = await fetch(url).then(res => res.text());
     }
     else if (location.startsWith('/users/home/')) { // '/users/home/username'

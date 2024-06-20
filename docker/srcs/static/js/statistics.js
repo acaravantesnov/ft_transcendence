@@ -1,8 +1,6 @@
 var stats = async () => {
 
-    const username = await getCurrentUsername();
-
-    await fetch(`/users/statistics/${username}/`)
+    await fetch(`/users/statistics/${currentUsername}/`)
         .then(response => response.json())
         .then(data => {
             document.getElementById('gamesWon').textContent = data.gamesWon;
