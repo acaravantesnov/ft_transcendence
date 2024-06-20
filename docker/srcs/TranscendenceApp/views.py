@@ -162,6 +162,7 @@ def waitlist(request, username):
     return render(request, 'signIn.html', {'form': form})
 
 def play(request, username, room_name, side):
+    logger.debug(f" [views] play: {username}, {room_name}, {side} ")
     return render(request, 'game.html', {"username": username, "room_name": room_name, "side": side})
 
 def leaderboards(request, username):
@@ -181,12 +182,14 @@ def signOut(request):
 
 @api_view(['POST'])
 def addtowaitlist(request, username):
+    logger.debug(f" [views] addtowaitlist: {username} ")
     waiting_room.add_user(username)
     return JsonResponse({'status': 'success'})
 
 @api_view(['GET'])
 def checkwaitlist(request, username):
     response = waiting_room.user_check_if_waiting_is_done(username)
+    logger.debug(f" [views] checkwaitlist: {response} ")
     if response is None:
         return JsonResponse({'status': 'waiting'})
     return JsonResponse({'status': 'success', 'response': response})

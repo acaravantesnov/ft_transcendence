@@ -1,3 +1,5 @@
+let intervalId = null;
+
 async function addtowaitlist() {
 
     const username = await getCurrentUsername();
@@ -22,13 +24,14 @@ document.getElementById('waitlistButton').addEventListener('click', function() {
 async function checkwaitlist() {
 
     const username = await getCurrentUsername();
-
-    var response = await fetch(`/users/waitlist/checkwaitlist/${username}/`)
+    console.log(username);
+    const response = await fetch(`/users/waitlist/checkwaitlist/${username}/`)
         .then(response => response.json())
         .then(data => {
             return data;
         })
         .catch(error => console.error('Error fetching data:', error));
+    console.log(response);
 
     if (response.status == 'success') {
         let str = '';
@@ -39,6 +42,7 @@ async function checkwaitlist() {
         } else {
             str = '/users/play/' + username + '/' + response.response.room_name + '/spectator/';
         }
+        console.log(str);
         const event = new CustomEvent('WAITLISTTRIGGER', { detail: { href: str } });
         document.dispatchEvent(event);
     }
@@ -50,7 +54,12 @@ document.addEventListener('WAITLISTTRIGGER', (e) => {
         preventDefault: () => {},
         target: { href }
     };
+    if (intervalId !== null) {
+        clearInterval(intervalId);
+        console.log('Interval cleared');
+    }
+    console.log('Navigating to:', e.detail.href);
     route(event);
 });
 
-setInterval(checkwaitlist, 5000);
+intervalId = setInterval(checkwaitlist, 5000);

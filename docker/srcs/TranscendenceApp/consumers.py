@@ -8,10 +8,12 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from .game_manager import game_manager
 import logging
+import asyncio
 
 logger = logging.getLogger("consumers")
 
 class GameConsumer(AsyncWebsocketConsumer):
+    _lock = asyncio.Lock()
     async def connect(self):
         logger.debug(f" [GameConsumer] connect: {self.scope} ")
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -20,25 +22,26 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.room_group_name = f'game_{self.room_name}'
 
         # Join room group
-        logger.debug(f" [GameConsumer] Joining room group {self.room_group_name} ")
+        logger.debug(f" [GameConsumer] [{self.user_id}] Joining room group {self.room_group_name} ")
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
         await self.accept()
 
-        # Get or create game instance
-        logger.debug(f" [GameConsumer] Getting game instance for room {self.room_group_name} ")
-        self.game = game_manager.get_game(self.room_group_name, self.channel_layer)
-        
-        # Add user to the room
-        logger.debug(f" [GameConsumer] Adding user to room {self.room_group_name} ")
-        game_manager.add_user(self.room_group_name, self.side, self.user_id)
-        logger.debug(f" [GameConsumer] User added to room {self.room_group_name} ")
+        async with GameConsumer._lock:
+          # Get or create game instance
+          logger.debug(f" [GameConsumer] [{self.user_id}] Getting game instance for room {self.room_group_name} ")
+          self.game = game_manager.get_game(self.room_group_name, self.channel_layer)
+          
+          # Add user to the room
+          logger.debug(f" [GameConsumer] [{self.user_id}] Adding user to room {self.room_group_name} ")
+          game_manager.add_user(self.room_group_name, self.side, self.user_id)
+          logger.debug(f" [GameConsumer] [{self.user_id}] User added to room {self.room_group_name} ")
 
-        # Start the game if not already running
-        logger.debug(f" [GameConsumer] Starting game for room {self.room_group_name} ")
-        await self.game.start()
+          # Start the game if not already running
+          logger.debug(f" [GameConsumer] [{self.user_id}] Starting game for room {self.room_group_name} ")
+          await self.game.start()
 
         # Send initial game state
         await self.send(text_data=json.dumps({'type': 'game_state', 'state': self.game.get_state()}))

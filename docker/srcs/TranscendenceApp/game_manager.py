@@ -24,7 +24,7 @@ class GameManager:
         if room_group_name not in self.games:
             logger.debug(f" [GameManager] Creating new game for room {room_group_name} ")
             self.games[room_group_name] = Game(room_group_name, channel_layer)
-            self.user_counts[room_group_name] = 0
+            # self.user_counts[room_group_name] = 0
         return self.games[room_group_name]
 
     def add_user(self, room_group_name, side, user_id):
