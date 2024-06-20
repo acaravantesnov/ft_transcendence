@@ -1,9 +1,10 @@
 <div class="container">
 	<div class="row", style="font-family: Dosis">
-		<div class="col-sm-12 col-md-8">
-			<h4 class="display-2">Sign Up</h4>
-		</div>
-		<div class="col-sm-12 col-md-4"></div>
+        <center>
+            <div class="col-sm-12">
+                <h4 class="display-2">Sign Up</h4>
+            </div>
+        </center>
 	</div>
 </div>
 
@@ -12,7 +13,7 @@
 		<div class="col-md-12">
             <div class='jumbotron'>
                 <center>
-                    <div class="text-left" style"max-width:500px">
+                    <div class="text-left" style="max-width:500px">
                         <form id="mySignUpForm" onsubmit="submitSignUp(event);return false;">
                             {% csrf_token %}
                             {% for field in form %}

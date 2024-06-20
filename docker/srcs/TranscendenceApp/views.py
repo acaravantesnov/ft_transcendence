@@ -145,7 +145,7 @@ def statistics(request, username):
 def title(request):
     if request.user.is_authenticated:
         return render(request, 'title.html')
-    return redirect('signIn')
+    return redirect('home', username='Guest')
 
 def home(request, username):
     if request.user.is_authenticated and username != 'Guest':
