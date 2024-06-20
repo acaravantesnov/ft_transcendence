@@ -6,123 +6,73 @@ clients in the group.
 
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from asgiref.sync import sync_to_async
-import asyncio
-import aioredis
+from .game_manager import game_manager
 import logging
 
-logger = logging.getLogger("game")
+logger = logging.getLogger("consumers")
 
 class GameConsumer(AsyncWebsocketConsumer):
-
-    # Connect method for the initial request that comes in from the client.
     async def connect(self):
+        logger.debug(f" [GameConsumer] connect: {self.scope} ")
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'game_{self.room_name}'
-        logger.debug(f'room_group_name: {self.room_group_name}')
 
         # Join room group
+        logger.debug(f" [GameConsumer] Joining room group {self.room_group_name} ")
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
         await self.accept()
 
-        # Connect to Redis
-        self.redis = await aioredis.create_redis_pool('redis://localhost')
+        # Get or create game instance
+        logger.debug(f" [GameConsumer] Getting game instance for room {self.room_group_name} ")
+        self.game = game_manager.get_game(self.room_group_name, self.channel_layer)
+        
+        # Add user to the room
+        logger.debug(f" [GameConsumer] Adding user to room {self.room_group_name} ")
+        self.user_number = game_manager.add_user(self.room_group_name)
+        logger.debug(f" [GameConsumer] User number: {self.user_number} ")
 
-        # Get or set initial ball position
-        # TODO: It is not the best way to check if it is the first player as if you exit there will be a ball position saved, but noone running the game loop
-        ball_position = await self.get_ball_position()
-        if ball_position is None:
-            ball_position = {'x': 50, 'y': 50}
-            await self.set_ball_position(ball_position)
-            logger.debug(f'Started ball position for room {self.room_name} at {ball_position}')
-            is_first_player = True
-        else:
-            is_first_player = False  
+        # Start the game if not already running
+        logger.debug(f" [GameConsumer] Starting game for room {self.room_group_name} ")
+        await self.game.start()
 
-        # Send initial ball position
-        await self.send(text_data=json.dumps(ball_position))
+        # Send initial game state
+        await self.send(text_data=json.dumps({'type': 'game_state', 'state': self.game.get_state()}))
 
-        # Start the game loop
-        if is_first_player:
-          logger.debug('Starting game_loop')
-          self.game_task = asyncio.create_task(self.game_loop())
-          logger.debug('Started game_loop')
-
-    # Receive message from WebSocket (Client).
-    async def receive(self, text_data):
-        pass  # No need to handle client messages in this example
-    
-    # Disconnect method for when the client disconnects.
     async def disconnect(self, close_code):
-        logger.debug(f'Disconnecting from {self.room_name}')
         # Leave room group
+        logger.debug(f" [GameConsumer] disconnect: {self.scope} ")
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
 
-        # Cancel the game loop
-        # TODO: maybe it should check if there is still some people
-        self.game_task.cancel()
+        # Remove user from the room
+        logger.debug(f" [GameConsumer] Removing user from room {self.room_group_name} ")
+        game_manager.remove_user(self.room_group_name)
 
-        # Close Redis connection
-        self.redis.close()
-        await self.redis.wait_closed()
+    async def receive(self, text_data):
+        logger.debug(f" [GameConsumer] receive: {text_data} ")
+        data = json.loads(text_data)
+        if data['type'] == 'paddle':
+            logger.debug(f" [GameConsumer] Updating paddle for user {self.user_number} ")
+            if self.user_number == 1:
+                paddle = 'left'
+            elif self.user_number == 2:
+                paddle = 'right'
+            else:
+                return
+            speed = data['speed']
+            self.game.update_paddle(paddle, speed)
 
-    async def game_loop(self):
-      try:
-        logger.debug(f'Started game_loop {self.room_name}')
-        ball_position = await self.get_ball_position()
-        ball_speed = {'x': 2, 'y': 2}
-        # ball_speed = {'x': 20, 'y': 20}
-        ball_size = {'width': 50, 'height': 50}
-        screen_size = {'width': 800, 'height': 600}  # fixed size for all users
+    async def game_state(self, event):
+        # Called by the game instance to send the game state to the clients
+        ended = event['state']['game_over']['ended']
+        if ended:
+            logger.debug(f" [GameConsumer] Game ended, sending final state ")
+            # Save final state in the database
+            # ...
 
-        while True:
-            ball_position['x'] += ball_speed['x']
-            ball_position['y'] += ball_speed['y']
-
-            if (ball_position['x'] + ball_size['width'] >= screen_size['width'] or ball_position['x'] <= 0):
-                ball_speed['x'] *= -1
-
-            if (ball_position['y'] + ball_size['height'] >= screen_size['height'] or ball_position['y'] <= 0):
-                ball_speed['y'] *= -1
-
-            # Update ball position in Redis
-            await self.set_ball_position(ball_position)
-            logger.debug(f'Possition: {ball_position}')
-
-            # Broadcast ball position to room group
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'ball_position',
-                    'position': ball_position
-                }
-            )
-            logger.debug('Possition Shared')
-
-            await asyncio.sleep(0.03)  # 30 FPS
-            # await asyncio.sleep(1.0)  # 1 FPS
-      except asyncio.CancelledError:
-        logger.info('Game loop cancelled')
-      except Exception as e:
-        logger.error(f'Error in game_loop: {e}')
-
-
-    async def ball_position(self, event):
-        await self.send(text_data=json.dumps(event['position']))
-
-    async def get_ball_position(self):
-        ball_position = await self.redis.get(f'{self.room_group_name}_ball_position')
-        logger.debug(f'get_ball_position: {ball_position}')
-        if ball_position:
-            return json.loads(ball_position)
-        return None
-
-    async def set_ball_position(self, position):
-        logger.debug(f'set_ball_position: {position}')
-        await self.redis.set(f'{self.room_group_name}_ball_position', json.dumps(position))
+        await self.send(text_data=json.dumps({'type': 'game_state', 'state': event['state']}))

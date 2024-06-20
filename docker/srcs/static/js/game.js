@@ -1,42 +1,62 @@
-// document.addEventListener('DOMContentLoaded', function() {
-//     const ball = document.getElementById('ball');
-//     const gameArea = document.getElementById('game-area');
-//     const ballDiameter = 25;
-//     console.log('Path:', window.location.pathname);
+const ball = document.getElementById('ball');
+const leftPaddle = document.getElementById('left-paddle');
+const rightPaddle = document.getElementById('right-paddle');
+const leftScore = document.getElementById('left-score');
+const rightScore = document.getElementById('right-score');
+const gameArea = document.getElementById('game-area');
+const roomName = window.location.pathname.split('/').slice(-2, -1)[0];
+const socket = new WebSocket('ws://' + window.location.host + '/ws/game2/' + roomName + '/');
 
-//     const roomName = window.location.pathname.split('/').slice(-2, -1)[0];
+socket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    if (data.type === 'game_state') {
+        const state = data.state;
+        const scaleX = gameArea.clientWidth / 800;
+        const scaleY = gameArea.clientHeight / 600;
 
-//     // Log the room name
-//     console.log('Room name:', roomName);
-//     // Log the splitted path
-//     console.log('Splitted path:', window.location.pathname.split('/'));
-//     // Log the sliced path
-//     console.log('Sliced path:', window.location.pathname.split('/').slice(-2, -1));
-//     // Log the websocket URL
-//     console.log('Websocket URL:', 'ws://' + window.location.host + '/ws/game2/' + roomName + '/');
+        ball.style.left = (state.ball_position.x * scaleX) + 'px';
+        ball.style.top = (state.ball_position.y * scaleY) + 'px';
+        leftPaddle.style.left = (state.left_paddle.x * scaleX)+ 'px';
+        leftPaddle.style.top = (state.left_paddle.y * scaleY) + 'px';
+        rightPaddle.style.left = (state.right_paddle.x * scaleX) + 'px';
+        rightPaddle.style.top = (state.right_paddle.y * scaleY) + 'px';
+        leftScore.innerText = state.scores.left;
+        rightScore.innerText = state.scores.right;
+        console.log('game state', state);
+        if (state.game_over.ended) {
+            if (state.game_over.winner === 'left') {
+                alert('Left player won!');
+            } else {
+                alert('Right player won!');
+            }
+            window.location.href = '/';
+        }
+    }
+};
 
-//     const socket = new WebSocket('ws://' + window.location.host + '/ws/game2/' + roomName + '/');
+socket.onopen = function(e) {
+    socket.send(JSON.stringify({type: 'join'}));
+};
 
-//     socket.onmessage = function(e) {
-//         console.log('Message:', e.data);
-//         const data = JSON.parse(e.data);
-//         console.log('Data:', data);
-//         console.log('X:', data.x);
-//         console.log('Y:', data.y);
-//         ball.style.left = data.x + 'px';
-//         ball.style.top = data.y + 'px';
+document.addEventListener('keydown', function(e) {
+    console.log('keydown', e.key);
+    let speed = 0;
+    if (e.key === 'ArrowUp') {
+        speed = -5;
+    } else if (e.key === 'ArrowDown') {
+        speed = 5;
+    }
+    if (speed !== 0) {
+        socket.send(JSON.stringify({type: 'paddle', speed: speed}));
+    }
+});
 
-//         // Get the dimensions of the game area
-//         const gameAreaRect = gameArea.getBoundingClientRect();
-
-//         // Calculate the new positions with boundary checking
-//         let newLeft = Math.max(0, Math.min(gameAreaRect.width - ballDiameter, data.x));
-//         let newTop = Math.max(0, Math.min(gameAreaRect.height - ballDiameter, data.y));
-
-//         ball.style.left = newLeft + 'px';
-//         ball.style.top = newTop + 'px';
-//     };
-// });
+document.addEventListener('keyup', function(e) {
+    console.log('keyup', e.key);
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        socket.send(JSON.stringify({type: 'paddle', speed: 0}));
+    }
+});
 
 var csrftoken = getCookie('csrftoken');
 

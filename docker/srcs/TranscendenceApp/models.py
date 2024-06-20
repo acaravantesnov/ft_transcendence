@@ -22,7 +22,7 @@ What should the MyCustomUser model add to the default User model? (animeflv for 
 '''
 class MyCustomUser(AbstractUser):
     friends = models.ManyToManyField('self', blank=True)
-    
+
     def __str__(self):
         return self.username
 
@@ -43,4 +43,3 @@ class Game(models.Model):
         if self.winner not in [self.player1, self.player2, None]:
             raise ValueError("Winner must be either player1, player2, or None.")
         super().save(*args, **kwargs)
-
