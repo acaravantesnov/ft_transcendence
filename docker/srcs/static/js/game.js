@@ -4,8 +4,15 @@ const rightPaddle = document.getElementById('right-paddle');
 const leftScore = document.getElementById('left-score');
 const rightScore = document.getElementById('right-score');
 const gameArea = document.getElementById('game-area');
+
+// /users/play/digarcia/room1/left/
+const username = window.location.pathname.split('/').slice(-3, -2)[0];
 const roomName = window.location.pathname.split('/').slice(-2, -1)[0];
-const socket = new WebSocket('ws://' + window.location.host + '/ws/game2/' + roomName + '/');
+const side = window.location.pathname.split('/').slice(-1)[0];
+console.log('username ', username);
+console.log('roomName ', roomName);
+console.log('side ', side);
+const socket = new WebSocket('ws://' + window.location.host + '/ws/game2/' + username + '/' + roomName + '/' + side + '/');
 
 socket.onmessage = function(e) {
     const data = JSON.parse(e.data);

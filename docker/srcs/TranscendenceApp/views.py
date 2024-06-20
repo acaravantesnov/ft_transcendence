@@ -40,8 +40,10 @@ from rest_framework.decorators import api_view
 from .serializers import MyCustomUserSerializer, GameSerializer
 from .models import *
 from .forms import signUser, newUser
+from .waiting_room import waiting_room
 
 import logging
+
 
 logger = logging.getLogger("views")
 
@@ -153,11 +155,14 @@ def home(request, username):
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
-def play(request, username):
+def waitlist(request, username):
     if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'game.html')
+        return render(request, 'waitlist.html')
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
+
+def play(request, username, room_name, side):
+    return render(request, 'game.html', {"username": username, "room_name": room_name, "side": side})
 
 def leaderboards(request, username):
     if request.user.is_authenticated and username != 'Guest':
@@ -174,5 +179,15 @@ def signOut(request):
     auth.logout(request)
     return JsonResponse({'status': 'success'})
 
-def game(request, username):
-    return render(request, 'game.html', {"username": username})
+@api_view(['POST'])
+def addtowaitlist(request, username):
+    waiting_room.add_user(username)
+    return JsonResponse({'status': 'success'})
+
+@api_view(['GET'])
+def checkwaitlist(request, username):
+    response = waiting_room.user_check_if_waiting_is_done(username)
+    if response is None:
+        return JsonResponse({'status': 'waiting'})
+    return JsonResponse({'status': 'success', 'response': response})
+    

@@ -3,12 +3,25 @@ document.querySelectorAll('.cmon').forEach(function(element) {
         var checkIfLoggedIn = async (e) => {
             const username = await getCurrentUsername();
             if (username != 'Guest')
-                route(e);
+            {
+                let str = e.target.href + username + '/';
+                const event = new CustomEvent('COMTRIGGER', { detail: { href: str } });
+                document.dispatchEvent(event);
+            }
         }
 
         e.preventDefault();
         checkIfLoggedIn(e);
     });
+});
+
+document.addEventListener('COMTRIGGER', (e) => {
+    const { href } = e.detail;
+    const event = {
+        preventDefault: () => {},
+        target: { href }
+    };
+    route(event);
 });
 
 document.getElementById('brand').addEventListener('click', (e) => {
@@ -20,8 +33,8 @@ async function updateUsername() {
     document.getElementById('offcanvasExampleLabel').innerHTML = username;
 };
 
-updateUsername();
-setInterval(updateUsername, 5000);
+// updateUsername();
+// setInterval(updateUsername, 5000);
 
 document.getElementById('signOut').addEventListener('click', (e) => {
     async function signOut() {
@@ -90,10 +103,12 @@ const locationHandler = async () => {
     else if (location.startsWith('/users/home/')) { // '/users/home/username'
         html = await fetch(location).then(res => res.text());
     }
-    else if (location.startsWith('/users/game/')) { // '/users/game/username'
-        const username = location.split('/').pop();
-        const url = `/users/game/${username}`;
-        html = await fetch(url).then(res => res.text());
+    else if (location.startsWith('/users/waitlist/')) { // '/users/waitlist/username/'
+        console.log('location ', location);
+        html = await fetch(location).then(res => res.text());
+    }
+    else if (location.startsWith('/users/play/')) { // '/users/play/username/roomname/'
+        html = await fetch(location).then(res => res.text());
     }
     else { // routes
         const route = routes[location] || routes[404];

@@ -15,6 +15,8 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         logger.debug(f" [GameConsumer] connect: {self.scope} ")
         self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.side = self.scope['url_route']['kwargs']['side']
+        self.user_id = self.scope['url_route']['kwargs']['user_id']
         self.room_group_name = f'game_{self.room_name}'
 
         # Join room group
@@ -31,8 +33,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         
         # Add user to the room
         logger.debug(f" [GameConsumer] Adding user to room {self.room_group_name} ")
-        self.user_number = game_manager.add_user(self.room_group_name)
-        logger.debug(f" [GameConsumer] User number: {self.user_number} ")
+        game_manager.add_user(self.room_group_name, self.side, self.user_id)
+        logger.debug(f" [GameConsumer] User added to room {self.room_group_name} ")
 
         # Start the game if not already running
         logger.debug(f" [GameConsumer] Starting game for room {self.room_group_name} ")
@@ -51,21 +53,15 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         # Remove user from the room
         logger.debug(f" [GameConsumer] Removing user from room {self.room_group_name} ")
-        game_manager.remove_user(self.room_group_name)
+        game_manager.remove_user(self.room_group_name, self.side, self.user_id)
 
     async def receive(self, text_data):
         logger.debug(f" [GameConsumer] receive: {text_data} ")
         data = json.loads(text_data)
         if data['type'] == 'paddle':
-            logger.debug(f" [GameConsumer] Updating paddle for user {self.user_number} ")
-            if self.user_number == 1:
-                paddle = 'left'
-            elif self.user_number == 2:
-                paddle = 'right'
-            else:
-                return
+            logger.debug(f" [GameConsumer] Updating paddle for user {self.user_id} ")
             speed = data['speed']
-            self.game.update_paddle(paddle, speed)
+            self.game.update_paddle(self.side, speed)
 
     async def game_state(self, event):
         # Called by the game instance to send the game state to the clients

@@ -29,7 +29,7 @@ async function submitSignUp(event)
             const responseData = await response.json();
 
             if (responseData.status == 'success') {
-                const event = new CustomEvent('TRIGGER', { detail: { href: '/users/home/' } });
+                const event = new CustomEvent('SIGNUPTRIGGER', { detail: { href: '/users/home/' } });
                 document.dispatchEvent(event);
             } else {
                 let errorMessage;
@@ -46,8 +46,7 @@ async function submitSignUp(event)
     }
 }
 
-// Add an event listener for the custom 'TRIGGER' event outside the function to avoid re-registration
-document.addEventListener('TRIGGER', (e) => {
+document.addEventListener('SIGNUPTRIGGER', (e) => {
     const { href } = e.detail;
     const event = {
         preventDefault: () => {},

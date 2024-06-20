@@ -29,7 +29,7 @@ async function submitSignIn()
 
             if (responseData.status == 'success') {
                 let str = '/users/home/' + formObject.username;
-                const event = new CustomEvent('TRIGGER', { detail: { href: str } });
+                const event = new CustomEvent('SIGNINTRIGGER', { detail: { href: str } });
                 document.dispatchEvent(event);
             } else {
                 alert(responseData.message); // Show error message on failure
@@ -45,8 +45,7 @@ async function redirectSignUp(event)
     route(event);
 }
 
-// Add an event listener for the custom 'TRIGGER' event outside the function to avoid re-registration
-document.addEventListener('TRIGGER', (e) => {
+document.addEventListener('SIGNINTRIGGER', (e) => {
     const { href } = e.detail;
     const event = {
         preventDefault: () => {},
