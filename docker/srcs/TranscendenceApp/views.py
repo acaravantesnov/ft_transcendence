@@ -44,64 +44,50 @@ from .waiting_room import waiting_room
 
 import logging
 
-
 logger = logging.getLogger("views")
 
-def getUserInfo(request):
+
+# Normal views
+
+def title(request):
     if request.user.is_authenticated:
-        try:
-            user = MyCustomUser.objects.get(username=request.user.username)
-            return JsonResponse({
-                'username': user.username,
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'email': user.email,
-                'last_login': user.last_login,
-                'date_joined': user.date_joined,
-                'avatar': user.avatar.url,
-            })
-        except MyCustomUser.DoesNotExist:
-            return JsonResponse({'error': 'User does not exist'}, status=404)
-    else:
-        return JsonResponse({
-            'username': 'Guest',
-            'first_name': 'Guest',
-            'last_name': 'Guest',
-            'email': 'Guest',
-            'last_login': 'Guest',
-            'date_joined': 'Guest',
-            'avatar': 'default.png',
-        })
+        return render(request, 'title.html')
+    return redirect('home', username='Guest')
 
-@api_view(['GET'])
-def getData(request):
-    users = MyCustomUser.objects.all()
-    serializer = MyCustomUserSerializer(users, many=True)
-    return Response(serializer.data)
+def home(request, username):
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'title.html')
+    form = signUser()
+    return render(request, 'signIn.html', {'form': form})
 
-@api_view(['POST'])
-def checkCredentials(request):
-    username = request.data.get('username')
-    password = request.data.get('password')
-    
-    try:
-        user = MyCustomUser.objects.get(username=username)
-    except MyCustomUser.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'User not found'})
+def waitlist(request, username):
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'waitlist.html')
+    form = signUser()
+    return render(request, 'signIn.html', {'form': form})
 
-    if not user.is_active:
-        user.is_active = True
-        user.save()
-        print(f"Activated user '{username}'")
-    
-    
-    user = authenticate(username=username, password=password)
+def play(request, username, room_name, side):
+    logger.debug(f" [views] play: {username}, {room_name}, {side} ")
+    return render(request, 'game.html', {"username": username, "room_name": room_name, "side": side})
 
-    if user is not None:
-        login(request, user)
-        return JsonResponse({'status': 'success'})
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid Username or Password', 'username': username})
+def leaderboards(request, username):
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'leaderboards.html')
+    form = signUser()
+    return render(request, 'signIn.html', {'form': form})
+
+def profile(request, username):
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'profile.html')
+    form = signUser()
+    return render(request, 'signIn.html', {'form': form})
+
+def signUp(request):
+    form = newUser()
+    return render(request, "signUp.html", {"form": form})
+
+
+# CRUD API views
 
 @api_view(['POST'])
 def createUser(request):
@@ -136,18 +122,36 @@ def deleteUser(request, pk):
     user.delete()
     return Response('User successfully deleted!')
 
-@api_view(['POST'])
-def addGame(request):
-    request.data['player1'] = MyCustomUser.objects.get(username=request.data['player1']).pk
-    request.data['winner'] = MyCustomUser.objects.get(username=request.data['winner']).pk
-    serializer = GameSerializer(data=request.data)
 
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
+# API GET views
+
+@api_view(['GET'])
+def getUserInfo(request):
+    if request.user.is_authenticated:
+        try:
+            user = MyCustomUser.objects.get(username=request.user.username)
+            return JsonResponse({
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email,
+                'last_login': user.last_login,
+                'date_joined': user.date_joined,
+                'avatar': user.avatar.url,
+            })
+        except MyCustomUser.DoesNotExist:
+            return JsonResponse({'error': 'User does not exist'}, status=404)
     else:
-        return Response(serializer.errors)
-
+        return JsonResponse({
+            'username': 'Guest',
+            'first_name': 'Guest',
+            'last_name': 'Guest',
+            'email': 'Guest',
+            'last_login': 'Guest',
+            'date_joined': 'Guest',
+            'avatar': 'default.png',
+        })
+        
 @api_view(['GET'])
 def statistics(request, username):
     if (MyCustomUser.objects.filter(username=username).count() == 0):
@@ -163,42 +167,52 @@ def statistics(request, username):
             goals += game.player2_score
     return Response({'gamesWon': gamesWon.count(), 'gamesLost': gamesLost.count(), 'goals': goals})
 
-def title(request):
-    if request.user.is_authenticated:
-        return render(request, 'title.html')
-    return redirect('home', username='Guest')
+@api_view(['GET'])
+def checkwaitlist(request, username):
+    response = waiting_room.user_check_if_waiting_is_done(username)
+    logger.debug(f" [views] checkwaitlist: {response} ")
+    if response is None:
+        return JsonResponse({'status': 'waiting'})
+    return JsonResponse({'status': 'success', 'response': response})
 
-def home(request, username):
-    if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'title.html')
-    form = signUser()
-    return render(request, 'signIn.html', {'form': form})
 
-def profile(request, username):
-    if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'profile.html')
-    form = signUser()
-    return render(request, 'signIn.html', {'form': form})
+# API POST views
 
-def waitlist(request, username):
-    if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'waitlist.html')
-    form = signUser()
-    return render(request, 'signIn.html', {'form': form})
+@api_view(['POST'])
+def addGame(request):
+    request.data['player1'] = MyCustomUser.objects.get(username=request.data['player1']).pk
+    request.data['winner'] = MyCustomUser.objects.get(username=request.data['winner']).pk
+    serializer = GameSerializer(data=request.data)
 
-def play(request, username, room_name, side):
-    logger.debug(f" [views] play: {username}, {room_name}, {side} ")
-    return render(request, 'game.html', {"username": username, "room_name": room_name, "side": side})
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors)
 
-def leaderboards(request, username):
-    if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'leaderboards.html')
-    form = signUser()
-    return render(request, 'signIn.html', {'form': form})
+@api_view(['POST'])
+def checkCredentials(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    
+    try:
+        user = MyCustomUser.objects.get(username=username)
+    except MyCustomUser.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'})
 
-def signUp(request):
-    form = newUser()
-    return render(request, "signUp.html", {"form": form})
+    if not user.is_active:
+        user.is_active = True
+        user.save()
+        print(f"Activated user '{username}'")
+    
+    
+    user = authenticate(username=username, password=password)
+
+    if user is not None:
+        login(request, user)
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid Username or Password', 'username': username})
 
 @api_view(['POST'])
 def signOut(request):
@@ -211,11 +225,13 @@ def addtowaitlist(request, username):
     waiting_room.add_user(username)
     return JsonResponse({'status': 'success'})
 
+
+# API unused views
+
 @api_view(['GET'])
-def checkwaitlist(request, username):
-    response = waiting_room.user_check_if_waiting_is_done(username)
-    logger.debug(f" [views] checkwaitlist: {response} ")
-    if response is None:
-        return JsonResponse({'status': 'waiting'})
-    return JsonResponse({'status': 'success', 'response': response})
+def getData(request):
+    users = MyCustomUser.objects.all()
+    serializer = MyCustomUserSerializer(users, many=True)
+    return Response(serializer.data)
+
     
