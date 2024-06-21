@@ -12,9 +12,12 @@ urlpatterns = [
 
     path('waitlist/<str:username>/', views.waitlist, name="waitlist"),
     path('play/<str:username>/<str:room_name>/<str:side>/', views.play, name="play"),
-    
+    path('leaderboards/<str:username>/', views.leaderboards, name="leaderboards"),
+    path('profile/<str:username>/', views.profile, name="profile"),
     path('leaderboards/<str:username>', views.leaderboards, name="leaderboards"),
-    path('getCurrentUsername/', views.getCurrentUsername, name="getCurrentUsername"),
+    
+    path('getUserInfo/', views.getUserInfo, name="getUserInfo"),
+
     path('create', views.createUser),
     path('read/<str:pk>', views.readUser),
     path('update/<str:pk>', views.updateUser),

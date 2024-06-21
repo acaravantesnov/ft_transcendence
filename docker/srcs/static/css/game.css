@@ -1,0 +1,43 @@
+#game-area {
+    position: relative;
+    width: 80vmin;
+    height: 60vmin;
+    max-width: 100%;
+    max-height: 100%;
+    border: 2px solid #000;
+    background-color: #fff;
+}
+
+#ball {
+    position: absolute;
+    width: 1.25%;
+    height: 1.25%;
+    background-color: red;
+    border-radius: 50%;
+}
+
+.paddle {
+    position: absolute;
+    width: 1.25%;
+    height: 16.67%;
+    background-color: blue;
+}
+
+#left-paddle {
+    left: 0;
+}
+
+#right-paddle {
+    right: 0;
+}
+
+#scores {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    font-size: 2vmin;
+    font-weight: bold;
+}

@@ -1,0 +1,19 @@
+{% load static %}
+
+<div class="container card mb-4">
+    <div class="text-center mb-4">
+        <h1 id="avatar"></h1>
+    </div>
+    <div class="text-center">
+        <p id="username"></p>
+        <p id="email"></p>
+        <p id="first_name"></p>
+        <p id="last_name"></p>
+        <p id="last_login"></p>
+        <p id="date_joined"></p>
+    </div>
+</div>
+
+{% include "statistics.html" %}
+
+<script src="{% static 'js/profile.js' %}"></script>

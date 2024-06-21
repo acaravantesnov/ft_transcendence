@@ -47,12 +47,31 @@ import logging
 
 logger = logging.getLogger("views")
 
-@api_view(['GET'])
-def getCurrentUsername(request):
-    if (request.user.is_authenticated):
-        return JsonResponse({'username': request.user.username})
+def getUserInfo(request):
+    if request.user.is_authenticated:
+        try:
+            user = MyCustomUser.objects.get(username=request.user.username)
+            return JsonResponse({
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email,
+                'last_login': user.last_login,
+                'date_joined': user.date_joined,
+                'avatar': user.avatar.url,
+            })
+        except MyCustomUser.DoesNotExist:
+            return JsonResponse({'error': 'User does not exist'}, status=404)
     else:
-        return JsonResponse({'username': 'Guest'})
+        return JsonResponse({
+            'username': 'Guest',
+            'first_name': 'Guest',
+            'last_name': 'Guest',
+            'email': 'Guest',
+            'last_login': 'Guest',
+            'date_joined': 'Guest',
+            'avatar': 'default.png',
+        })
 
 @api_view(['GET'])
 def getData(request):
@@ -152,6 +171,12 @@ def title(request):
 def home(request, username):
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'title.html')
+    form = signUser()
+    return render(request, 'signIn.html', {'form': form})
+
+def profile(request, username):
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'profile.html')
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 

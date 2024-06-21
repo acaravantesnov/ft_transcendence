@@ -1,10 +1,15 @@
+var user = {
+    username: 'Guest',
+    avatar: 'default.png'
+};
+
 document.querySelectorAll('.cmon').forEach(function(element) {
     element.addEventListener('click', (e) => {
         var checkIfLoggedIn = async (e) => {
 
-            if (currentUsername != 'Guest')
+            if (user.username != 'Guest')
             {
-                let str = e.target.href + username + '/';
+                let str = e.target.href + user.username + '/';
                 const event = new CustomEvent('COMTRIGGER', { detail: { href: str } });
                 document.dispatchEvent(event);
             }
@@ -28,17 +33,21 @@ document.getElementById('brand').addEventListener('click', (e) => {
     route(e);
 });
 
-//set username variable to the current username
-let currentUsername = "";
-
-async function updateCurrentUsername() {
-    currentUsername = await getCurrentUsername();
-    document.getElementById('offcanvasExampleLabel').innerHTML = currentUsername;
-    console.log("Updated Username: ", currentUsername); // For demonstration purposes
+async function updateUser() {
+    try {
+        let res = await fetch('/users/getUserInfo/');
+        if (!res.ok) {
+            throw new Error('Network response was not ok');
+        }
+        user = await res.json();
+        document.getElementById('offcanvasExampleLabel').innerHTML = user.username;
+        document.getElementById('navbar-avatar').innerHTML = `<img src="/static/avatars/${user.avatar}" alt="logo" style="width: 50px; height: 50px;">`;
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
 }
 
-currentUsername = await getCurrentUsername();
-setInterval(updateCurrentUsername, 1000);
+setInterval(updateUser, 1000);
 
 document.getElementById('signOut').addEventListener('click', (e) => {
     async function signOut() {
@@ -95,21 +104,27 @@ const locationHandler = async () => {
 
     if (location == '/') // '/'
     {
-        const url = `/users/home/${currentUsername}`;
+        const url = `/users/home/${user.username}`;
         html = await fetch(url).then(res => res.text());
     }
     else if (location == '/users/home/') { // '/users/home/'
-        const url = `/users/home/${currentUsername}`;
+        const url = `/users/home/${user.username}`;
         html = await fetch(url).then(res => res.text());
     }
-    else if (location.startsWith('/users/home/')) { // '/users/home/username'
+    else if (location.startsWith('/users/home/')) { // '/users/home/<str:username>/'
         html = await fetch(location).then(res => res.text());
     }
-    else if (location.startsWith('/users/waitlist/')) { // '/users/waitlist/username/'
+    else if (location.startsWith('/users/waitlist/')) { // '/users/waitlist/<str:username>/'
         console.log('location ', location);
         html = await fetch(location).then(res => res.text());
     }
-    else if (location.startsWith('/users/play/')) { // '/users/play/username/roomname/'
+    else if (location.startsWith('/users/play/')) { // '/users/play/<str:username>/<str:room_name>/<str:side>/'
+        html = await fetch(location).then(res => res.text());
+    }
+    else if (location.startsWith('/users/leaderboards/')) { // '/users/leaderboards/<str:username>/'
+        html = await fetch(location).then(res => res.text());
+    }
+    else if (location.startsWith('/users/profile/')) { // '/users/profile/<str:username>/'
         html = await fetch(location).then(res => res.text());
     }
     else { // routes

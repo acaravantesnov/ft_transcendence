@@ -2,7 +2,7 @@ let intervalId = null;
 
 async function addtowaitlist() {
 
-    await fetch(`/users/waitlist/addtowaitlist/${currentUsername}/`, {
+    await fetch(`/users/waitlist/addtowaitlist/${user.username}/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -21,8 +21,8 @@ document.getElementById('waitlistButton').addEventListener('click', function() {
 
 async function checkwaitlist() {
 
-    console.log(currentUsername);
-    const response = await fetch(`/users/waitlist/checkwaitlist/${currentUsername}/`)
+    console.log(user.username);
+    const response = await fetch(`/users/waitlist/checkwaitlist/${user.username}/`)
         .then(response => response.json())
         .then(data => {
             return data;
@@ -32,12 +32,12 @@ async function checkwaitlist() {
 
     if (response.status == 'success') {
         let str = '';
-        if (response.response.user_left == currentUsername) {
-            str = '/users/play/' + currentUsername + '/' + response.response.room_name + '/left/';
-        } else if (response.response.user_right == currentUsername) {
-            str = '/users/play/' + currentUsername + '/' + response.response.room_name + '/right/';
+        if (response.response.user_left == user.username) {
+            str = '/users/play/' + user.username + '/' + response.response.room_name + '/left/';
+        } else if (response.response.user_right == user.username) {
+            str = '/users/play/' + user.username + '/' + response.response.room_name + '/right/';
         } else {
-            str = '/users/play/' + currentUsername + '/' + response.response.room_name + '/spectator/';
+            str = '/users/play/' + user.username + '/' + response.response.room_name + '/spectator/';
         }
         console.log(str);
         const event = new CustomEvent('WAITLISTTRIGGER', { detail: { href: str } });
