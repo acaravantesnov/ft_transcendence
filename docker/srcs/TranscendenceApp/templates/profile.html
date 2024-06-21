@@ -1,17 +1,21 @@
 {% load static %}
 
-<div class="container card mb-4">
-    <div class="text-center mb-4">
-        <h1 id="avatar"></h1>
-    </div>
-    <div class="text-center">
+<center>
+    <div class="container mt-5 mb-3">
+        <p id="avatar" class="pb-2"></p>
         <p id="username"></p>
-        <p id="email"></p>
-        <p id="first_name"></p>
-        <p id="last_name"></p>
-        <p id="last_login"></p>
-        <p id="date_joined"></p>
     </div>
+</center>
+
+<div class="col-12 mb-5" style="font-family: Dosis">
+    <div class="card card-body pt-4 pb-4">
+    <h5 class="card-title responsive-text-medium">My profile</h5>
+    <hr>
+    <span id="email"></span>
+    <span id="first_name"></span>
+    <span id="last_name"></span>
+    <span id="last_login"></span>
+    <span id="date_joined"></span>
 </div>
 
 {% include "statistics.html" %}

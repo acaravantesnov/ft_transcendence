@@ -47,6 +47,7 @@ import logging
 
 logger = logging.getLogger("views")
 
+@api_view(['GET'])
 def getUserInfo(request):
     if request.user.is_authenticated:
         try:
