@@ -14,7 +14,6 @@ document.querySelectorAll('.cmon').forEach(function(element) {
                 document.dispatchEvent(event);
             }
         }
-
         e.preventDefault();
         checkIfLoggedIn(e);
     });
@@ -47,7 +46,7 @@ async function updateUser() {
     }
 }
 
-setInterval(updateUser, 1000);
+setInterval(updateUser, 500);
 
 document.getElementById('signOut').addEventListener('click', (e) => {
     async function signOut() {
@@ -60,6 +59,7 @@ document.getElementById('signOut').addEventListener('click', (e) => {
         });
     }
     signOut();
+    closeOffcanvas();
     route(e);
 });
 

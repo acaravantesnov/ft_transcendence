@@ -8,9 +8,6 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib import auth
-#from django.http import HttpResponse
-
-# Create your views here.
 
 def welcome(request):
     if request.user.is_authenticated:

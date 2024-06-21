@@ -1,3 +1,5 @@
+console.log('WOW');
+
 async function submitSignIn()
 {
     const signInTrigger = document.getElementById('mySignInForm');
@@ -28,11 +30,12 @@ async function submitSignIn()
             const responseData = await response.json();
 
             if (responseData.status == 'success') {
+                successfulLoginToast();
                 let str = '/users/home/' + formObject.username;
                 const event = new CustomEvent('SIGNINTRIGGER', { detail: { href: str } });
                 document.dispatchEvent(event);
             } else {
-                alert(responseData.message); // Show error message on failure
+                unsuccessfulLoginToast(responseData.message);
             }
         } catch (error) {
             console.error('Error:', error);
@@ -53,3 +56,15 @@ document.addEventListener('SIGNINTRIGGER', (e) => {
     };
     route(event);
 });
+
+function successfulLoginToast()
+{
+    var toast = new bootstrap.Toast(document.getElementById('successfulLoginToast'))
+    toast.show()
+}
+
+function unsuccessfulLoginToast(message)
+{
+    var toast = new bootstrap.Toast(document.getElementById('unsuccessfulLoginToast'))
+    toast.show()
+}

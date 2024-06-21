@@ -37,3 +37,9 @@ function insertHTML(html, dest, append=false){
     // done!
     return true;
 }
+
+function closeOffcanvas() {
+    var myOffcanvas = document.getElementById('offcanvasExample');
+    var bsOffcanvas = bootstrap.Offcanvas.getInstance(myOffcanvas);
+    bsOffcanvas.hide();
+}
