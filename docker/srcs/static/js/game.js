@@ -5,7 +5,6 @@ const leftScore = document.getElementById('left-score');
 const rightScore = document.getElementById('right-score');
 const gameArea = document.getElementById('game-area');
 
-// /users/play/digarcia/room1/left/
 const username = window.location.pathname.split('/').slice(-4, -3)[0];
 const roomName = window.location.pathname.split('/').slice(-3, -2)[0];
 const side = window.location.pathname.split('/').slice(-2, -1)[0];
@@ -64,48 +63,3 @@ document.addEventListener('keyup', function(e) {
         socket.send(JSON.stringify({type: 'paddle', speed: 0}));
     }
 });
-
-var csrftoken = getCookie('csrftoken');
-
-document.getElementById('playButton').addEventListener('click', function() {
-    var newGame = async () => {
-    
-        await fetch('/users/addGame/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                player1: `${currentUsername}`,
-                player2: '',
-                winner: `${currentUsername}`,
-                date: '2021-06-01',
-                duration: 10,
-                player1_score: 7,
-                player2_score: 0}),
-        })
-        .then(response => response.json())
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    };
-
-    newGame();
-});
-
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}

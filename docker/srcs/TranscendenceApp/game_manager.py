@@ -1,11 +1,10 @@
 from .game import Game
 from .waiting_room import waiting_room
+from .serializers import GameSerializer
 
 import logging
 
 logger = logging.getLogger("GameManager")
-
-
 
 class GameManager:
     def __init__(self):
@@ -66,6 +65,19 @@ class GameManager:
         if room_group_name in self.games:
             logger.debug(f" [GameManager] Stopping game for room {room_group_name} ")
             await self.games[room_group_name].stop()
+            # Save game to database
+            serializer = GameSerializer(data={
+                'player1': self.left_user[room_group_name],
+                'player2': self.right_user[room_group_name],
+                'winner': self.games[room_group_name].game_over['winner'],
+                'duration': 0,
+                'player1_score': self.games[room_group_name].scores['left'],
+                'player2_score': self.games[room_group_name].scores['right']
+            })
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                logger.error(f" [GameManager] Error saving game to database: {serializer.errors} ")
             del self.games[room_group_name]
             logger.debug(f" [GameManager] Game stopped ")
 

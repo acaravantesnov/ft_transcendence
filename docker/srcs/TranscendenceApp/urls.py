@@ -28,7 +28,6 @@ urlpatterns = [
     path('waitlist/checkwaitlist/<str:username>/', views.checkwaitlist, name="checkwaitlist"),
     
     # API POST views
-    path('addGame/', views.addGame),
     path('checkCredentials/', views.checkCredentials, name="checkCredentials"),
     path('signUp/createUser/', views.createUser),
     path('signOut/', views.signOut, name="signOut"),
