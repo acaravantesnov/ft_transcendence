@@ -1,46 +1,10 @@
-document.querySelectorAll('.cmon').forEach(function(element) {
-    element.addEventListener('click', (e) => {
-        var checkIfLoggedIn = async (e) => {
-
-            if (user.username != 'Guest')
-            {
-                let str = e.target.href + user.username + '/';
-                const event = new CustomEvent('COMTRIGGER', { detail: { href: str } });
-                document.dispatchEvent(event);
-            }
-        }
-        e.preventDefault();
-        checkIfLoggedIn(e);
-    });
-});
-
-document.addEventListener('COMTRIGGER', (e) => {
-    const { href } = e.detail;
-    const event = {
-        preventDefault: () => {},
-        target: { href }
-    };
-    route(event);
-});
-
-document.getElementById('brand').addEventListener('click', (e) => {
-    route(e);
-});
-
-document.getElementById('signOut').addEventListener('click', (e) => {
-    async function signOut() {
-        await fetch('/users/signOut/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            }
-        });
-    }
-    signOut();
-    closeOffcanvas();
-    route(e);
-});
+const startsWithRoutes = [
+    '/users/home/',
+    '/users/waitlist/',
+    '/users/play/',
+    '/users/leaderboards/',
+    '/users/profile/'
+]
 
 var routes = {
     404: {
@@ -79,31 +43,12 @@ const locationHandler = async () => {
     if (location.length == 0) {
         location = '/';
     }
-    let html = '';
 
-    if (location == '/') // '/'
-    {
-        const url = `/users/home/${user.username}`;
-        html = await fetch(url).then(res => res.text());
+    let html = '';
+    if ((location == '/') || (location == '/users/home/')) {
+        html = await fetch(`/users/home/${user.username}`).then(res => res.text());
     }
-    else if (location == '/users/home/') { // '/users/home/'
-        const url = `/users/home/${user.username}`;
-        html = await fetch(url).then(res => res.text());
-    }
-    else if (location.startsWith('/users/home/')) { // '/users/home/<str:username>/'
-        html = await fetch(location).then(res => res.text());
-    }
-    else if (location.startsWith('/users/waitlist/')) { // '/users/waitlist/<str:username>/'
-        console.log('location ', location);
-        html = await fetch(location).then(res => res.text());
-    }
-    else if (location.startsWith('/users/play/')) { // '/users/play/<str:username>/<str:room_name>/<str:side>/'
-        html = await fetch(location).then(res => res.text());
-    }
-    else if (location.startsWith('/users/leaderboards/')) { // '/users/leaderboards/<str:username>/'
-        html = await fetch(location).then(res => res.text());
-    }
-    else if (location.startsWith('/users/profile/')) { // '/users/profile/<str:username>/'
+    else if (startsWithRoutes.some(route => location.startsWith(route))) {
         html = await fetch(location).then(res => res.text());
     }
     else { // routes
