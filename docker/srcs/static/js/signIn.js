@@ -1,5 +1,3 @@
-console.log('WOW');
-
 async function submitSignIn()
 {
     const signInTrigger = document.getElementById('mySignInForm');

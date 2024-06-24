@@ -1,6 +1,6 @@
 var user = {
     username: 'Guest',
-    avatar: 'default.png'
+    avatar: '/media/avatars/default.png'
 };
 
 async function updateUser() {
@@ -11,7 +11,7 @@ async function updateUser() {
         }
         user = await res.json();
         document.getElementById('offcanvasExampleLabel').innerHTML = user.username;
-        document.getElementById('navbar-avatar').innerHTML = `<img src="/static/avatars/${user.avatar}" alt="logo" style="width: 50px; height: 50px;">`;
+        document.getElementById('navbar-avatar').innerHTML = `<img src="${user.avatar}" alt="logo" style="width: 50px; height: 50px;">`;
     } catch (error) {
         console.error('Fetch error:', error);
     }

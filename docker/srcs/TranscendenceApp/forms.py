@@ -37,6 +37,12 @@ class newUser(forms.Form):
                                            'class':'form-control',
                                            'placeholder':'*******'
                                            }))
+    avatar = forms.ImageField(label="Avatar",
+                              widget=forms.FileInput(
+                                  attrs={
+                                      'class':'form-control'
+                                  }))
+    
 
 class signUser(forms.Form):
     username = forms.CharField(max_length=15, label="Username",

@@ -92,6 +92,7 @@ def signUp(request):
 @api_view(['POST'])
 def createUser(request):
     request.data['password'] = make_password(request.data['password'])
+    
     serializer = MyCustomUserSerializer(data=request.data)
 
     if serializer.is_valid():
@@ -149,7 +150,7 @@ def getUserInfo(request):
             'email': 'Guest',
             'last_login': 'Guest',
             'date_joined': 'Guest',
-            'avatar': 'default.png',
+            'avatar': '/media/avatars/default.png',
         })
         
 @api_view(['GET'])

@@ -5,7 +5,7 @@ document.querySelectorAll('.cmon').forEach(function(element) {
             if (user.username != 'Guest')
             {
                 let str = e.target.href + user.username + '/';
-                const event = new CustomEvent('COMTRIGGER', { detail: { href: str } });
+                const event = new CustomEvent('CMONTRIGGER', { detail: { href: str } });
                 document.dispatchEvent(event);
             }
         }
@@ -14,18 +14,24 @@ document.querySelectorAll('.cmon').forEach(function(element) {
     });
 });
 
-document.addEventListener('COMTRIGGER', (e) => {
+document.addEventListener('CMONTRIGGER', (e) => {
     const { href } = e.detail;
     const event = {
         preventDefault: () => {},
         target: { href }
     };
+    // If offcanvas is open, close it
+    if (document.querySelector('.offcanvas.show')) {
+        hideOffcanvas();
+    }
     route(event);
 });
 
 document.getElementById('brand').addEventListener('click', (e) => {
     route(e);
 });
+
+document.getElementById('navbar-avatar').addEventListener('click', showOffcanvas);
 
 document.getElementById('signOut').addEventListener('click', (e) => {
     async function signOut() {
@@ -38,6 +44,6 @@ document.getElementById('signOut').addEventListener('click', (e) => {
         });
     }
     signOut();
-    closeOffcanvas();
+    hideOffcanvas();
     route(e);
 });

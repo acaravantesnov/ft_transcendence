@@ -38,8 +38,40 @@ function insertHTML(html, dest, append=false){
     return true;
 }
 
-function closeOffcanvas() {
-    var myOffcanvas = document.getElementById('offcanvasExample');
-    var bsOffcanvas = bootstrap.Offcanvas.getInstance(myOffcanvas);
-    bsOffcanvas.hide();
+// Function to show the offcanvas
+function showOffcanvas() {
+    const offcanvas = document.getElementById('offcanvasExample');
+    const existingBackdrop = document.querySelector('.offcanvas-backdrop');
+
+    // Show offcanvas
+    offcanvas.classList.add('show');
+    offcanvas.style.display = 'block';
+
+    // Add backdrop if it doesn't exist
+    if (!existingBackdrop) {
+        const backdrop = document.createElement('div');
+        backdrop.className = 'offcanvas-backdrop fade show';
+        backdrop.addEventListener('click', hideOffcanvas); // Add event listener to hide on click
+        document.body.appendChild(backdrop);
+    }
+}
+
+// Function to hide the offcanvas
+function hideOffcanvas() {
+    const offcanvas = document.getElementById('offcanvasExample');
+    const backdrop = document.querySelector('.offcanvas-backdrop');
+
+    // Hide offcanvas
+    offcanvas.classList.remove('show');
+    offcanvas.style.display = 'none';
+
+    // Remove backdrop
+    if (backdrop) {
+        backdrop.classList.remove('show');
+        backdrop.classList.add('fade-out');
+        backdrop.removeEventListener('click', hideOffcanvas); // Remove event listener
+        setTimeout(() => {
+            backdrop.remove();
+        }, 150); // Matches the fade-out duration
+    }
 }

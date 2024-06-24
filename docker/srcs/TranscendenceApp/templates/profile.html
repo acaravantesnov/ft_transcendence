@@ -16,6 +16,14 @@
     <span id="last_name"></span>
     <span id="last_login"></span>
     <span id="date_joined"></span>
+    <form action="" method=POST enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_avatar">Avatar</label>
+            <input type="file" name="avatar" id="id_avatar" class="form-control">
+        </div>
+        <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
 </div>
 
 {% include "statistics.html" %}

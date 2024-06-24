@@ -1,48 +1,43 @@
-async function submitSignUp(event)
-{
+async function submitSignUp(event) {
     event.preventDefault();
-    const signUpTrigger = document.getElementById('mySignUpForm');
-    if (signUpTrigger) {
-        // Gather form data
-        const formData = new FormData(event.target);
+    const formData = new FormData();
 
-        // Convert form data to a JSON object
-        const formObject = {};
-        formData.forEach((value, key) => {
-            formObject[key] = value;
+    // Append fields individually
+    formData.append('username', document.getElementById('id_username').value);
+    formData.append('first_name', document.getElementById('id_first_name').value);
+    formData.append('last_name', document.getElementById('id_last_name').value);
+    formData.append('email', document.getElementById('id_email').value);
+    formData.append('password', document.getElementById('id_password').value);
+    formData.append('confirm_password', document.getElementById('id_confirm_password').value);
+    formData.append('avatar', document.getElementById('id_avatar').files[0]);
+
+    try {
+        const response = await fetch('/users/signUp/createUser/', {
+            method: 'POST',
+            body: formData,
         });
 
-        try {
-            const response = await fetch('createUser/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-                },
-                body: JSON.stringify(formObject)
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const responseData = await response.json();
-
-            if (responseData.status == 'success') {
-                const event = new CustomEvent('SIGNUPTRIGGER', { detail: { href: '/users/home/' } });
-                document.dispatchEvent(event);
-            } else {
-                let errorMessage;
-                for (let key in responseData.message) {
-                    if (responseData.message.hasOwnProperty(key)) {
-                        errorMessage += `\n${key}: ${responseData.message[key][0]}`;
-                    }
-                }
-                alert(errorMessage);
-            }
-        } catch (error) {
-            console.error('Error:', error);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+
+        const responseData = await response.json();
+
+        if (responseData.status === 'success') {
+            const event = new CustomEvent('SIGNUPTRIGGER', { detail: { href: '/users/home/' } });
+            document.dispatchEvent(event);
+        } else {
+            let errorMessage = '';
+            for (let key in responseData.message) {
+                if (responseData.message.hasOwnProperty(key)) {
+                    errorMessage += `\n${key}: ${responseData.message[key][0]}`;
+                }
+            }
+            alert(errorMessage);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while signing up. Please try again later.');
     }
 }
 
