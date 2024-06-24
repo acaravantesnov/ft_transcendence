@@ -3,6 +3,7 @@ async function submitSignUp(event) {
     const formData = new FormData();
 
     // Append fields individually
+    formData.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
     formData.append('username', document.getElementById('id_username').value);
     formData.append('first_name', document.getElementById('id_first_name').value);
     formData.append('last_name', document.getElementById('id_last_name').value);
@@ -11,6 +12,9 @@ async function submitSignUp(event) {
     formData.append('confirm_password', document.getElementById('id_confirm_password').value);
     if (document.getElementById('id_avatar').files.length > 0) {
         formData.append('avatar', document.getElementById('id_avatar').files[0]);
+    }
+    else {
+        formData.append('avatar', '/avatars/default.png');
     }
 
     try {

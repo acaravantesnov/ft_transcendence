@@ -89,17 +89,26 @@ def signUp(request):
 
 # CRUD API views
 
+# @api_view(['POST'])
+# def createUser(request):
+#     request.data['password'] = make_password(request.data['password'])
+    
+#     serializer = MyCustomUserSerializer(data=request.data)
+
+#     if serializer.is_valid():
+#         serializer.save()
+#         return JsonResponse({'status': 'success'})
+#     else:
+#         return JsonResponse({'status': 'error', 'message': serializer.errors})
+    
 @api_view(['POST'])
 def createUser(request):
-    request.data['password'] = make_password(request.data['password'])
-    
-    serializer = MyCustomUserSerializer(data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
+    form = newUser(request.POST, request.FILES)
+    if form.is_valid():
+        form.save()
         return JsonResponse({'status': 'success'})
-    else:
-        return JsonResponse({'status': 'error', 'message': serializer.errors})
+    return JsonResponse({'status': 'error', 'message': form.errors})
+        
 
 @api_view(['GET'])
 def readUser(request, pk):
