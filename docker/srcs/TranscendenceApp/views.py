@@ -86,6 +86,12 @@ def signUp(request):
     form = newUser()
     return render(request, "signUp.html", {"form": form})
 
+def leaderboards(request, username):
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'leaderboards.html')
+    form = signUser()
+    return render(request, 'signIn.html', {'form': form})
+
 
 # CRUD API views
 
@@ -163,8 +169,25 @@ def getUserInfo(request):
         })
         
 @api_view(['GET'])
-def leaderboards(request):
-    return Response({'leaderboards': 'leaderboards'})
+def getLeaderboards(request):
+    users = MyCustomUser.objects.all()
+    leaderboard = []
+    rank = 1
+    for user in users:
+        games = Game.objects.filter(player1__username=user.username) | Game.objects.filter(player2__username=user.username)
+        gamesWon = games.filter(winner__username=user.username)
+        gamesLost = games.exclude(winner__username=user.username)
+        goals = 0
+        for game in games:
+            if game.player1.username == user.username:
+                goals += game.player1_score
+            else:
+                goals += game.player2_score
+        score = gamesWon.count() * 10 - gamesLost.count() * 5 + goals
+        leaderboard.append({'rank': rank, 'username': user.username, 'score': score})
+        rank += 1
+    leaderboard = sorted(leaderboard, key=lambda x: x['score'], reverse=True)
+    return JsonResponse(leaderboard, safe=False)
         
 @api_view(['GET'])
 def statistics(request, username):
@@ -179,7 +202,6 @@ def statistics(request, username):
             goals += game.player1_score
         else:
             goals += game.player2_score
-    # Each game won is worth 10 points, each game lost is worth -5 points, and each goal is worth 1 point
     score = gamesWon.count() * 10 - gamesLost.count() * 5 + goals
     return Response({'gamesWon': gamesWon.count(), 'gamesLost': gamesLost.count(), 'goals': goals, 'score': score})
 
