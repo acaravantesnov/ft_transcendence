@@ -154,6 +154,10 @@ def getUserInfo(request):
         })
         
 @api_view(['GET'])
+def leaderboards(request):
+    return Response({'leaderboards': 'leaderboards'})
+        
+@api_view(['GET'])
 def statistics(request, username):
     if (MyCustomUser.objects.filter(username=username).count() == 0):
         return Response({'error': 'User not found'})
@@ -166,7 +170,9 @@ def statistics(request, username):
             goals += game.player1_score
         else:
             goals += game.player2_score
-    return Response({'gamesWon': gamesWon.count(), 'gamesLost': gamesLost.count(), 'goals': goals})
+    # Each game won is worth 10 points, each game lost is worth -5 points, and each goal is worth 1 point
+    score = gamesWon.count() * 10 - gamesLost.count() * 5 + goals
+    return Response({'gamesWon': gamesWon.count(), 'gamesLost': gamesLost.count(), 'goals': goals, 'score': score})
 
 @api_view(['GET'])
 def checkwaitlist(request, username):

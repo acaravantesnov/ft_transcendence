@@ -9,7 +9,9 @@ async function submitSignUp(event) {
     formData.append('email', document.getElementById('id_email').value);
     formData.append('password', document.getElementById('id_password').value);
     formData.append('confirm_password', document.getElementById('id_confirm_password').value);
-    formData.append('avatar', document.getElementById('id_avatar').files[0]);
+    if (document.getElementById('id_avatar').files.length > 0) {
+        formData.append('avatar', document.getElementById('id_avatar').files[0]);
+    }
 
     try {
         const response = await fetch('/users/signUp/createUser/', {

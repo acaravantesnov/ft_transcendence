@@ -45,5 +45,12 @@ document.getElementById('signOut').addEventListener('click', (e) => {
     }
     signOut();
     hideOffcanvas();
+    successfulLogoutToast();
     route(e);
 });
+
+function successfulLogoutToast()
+{
+    var toast = new bootstrap.Toast(document.getElementById('successfulLogoutToast'))
+    toast.show()
+}

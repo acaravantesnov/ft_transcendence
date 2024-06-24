@@ -24,6 +24,7 @@ urlpatterns = [
     
     # API GET views
     path('getUserInfo/', views.getUserInfo, name="getUserInfo"),
+    path('leaderboards/', views.leaderboards, name="leaderboards"),
     path('statistics/<str:username>/', views.statistics, name="statistics"),
     path('waitlist/checkwaitlist/<str:username>/', views.checkwaitlist, name="checkwaitlist"),
     
