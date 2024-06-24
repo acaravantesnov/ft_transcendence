@@ -30,6 +30,7 @@ async function submitSignUp(event) {
         const responseData = await response.json();
 
         if (responseData.status === 'success') {
+            successfulSignUpToast();
             const event = new CustomEvent('SIGNUPTRIGGER', { detail: { href: '/users/home/' } });
             document.dispatchEvent(event);
         } else {
@@ -39,11 +40,11 @@ async function submitSignUp(event) {
                     errorMessage += `\n${key}: ${responseData.message[key][0]}`;
                 }
             }
-            alert(errorMessage);
+            unsuccessfulSignUpToast(errorMessage);
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred while signing up. Please try again later.');
+        unsuccessfulSignUpToast('An error occurred while signing up. Please try again later.');
     }
 }
 
@@ -55,3 +56,16 @@ document.addEventListener('SIGNUPTRIGGER', (e) => {
     };
     route(event);
 });
+
+function unsuccessfulSignUpToast(message)
+{
+    var toast = new bootstrap.Toast(document.getElementById('unsuccessfulSignUpToast'))
+    document.getElementById('unsuccessfulSignUp').textContent = message;
+    toast.show()
+}
+
+function successfulSignUpToast()
+{
+    var toast = new bootstrap.Toast(document.getElementById('successfulSignUpToast'))
+    toast.show()
+}
