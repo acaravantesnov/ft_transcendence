@@ -6,7 +6,7 @@
 #    By: acaravan <acaravan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/13 17:01:21 by mortega-          #+#    #+#              #
-#    Updated: 2024/06/10 20:44:22 by acaravan         ###   ########.fr        #
+#    Updated: 2024/06/25 14:05:47 by acaravan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,6 @@ down:
 destroy:
 	$(docker_compose) -f $(docker_yml) down -v $(c)
 
-# Call script again?
 recreate: destroy up
 
 ps:
@@ -49,8 +48,11 @@ login-db:
 open-db:
 	$(docker_compose) -f $(docker_yml) exec db psql -U postgres
 
-login-prj:
+login-app:
 	$(docker_compose) -f $(docker_yml) exec djangoapp /bin/bash
+
+login-nginx:
+	$(docker_compose) -f $(docker_yml) exec reverse-proxy /bin/bash
 
 runserver:
 	$(docker_compose) -f $(docker_yml) exec djangoapp python manage.py runserver $(HOST):$(PORT)

@@ -1,0 +1,55 @@
+<div class="container">
+	<div class="row", style="font-family: Dosis">
+        <center>
+            <div class="col-sm-12">
+                <h4 class="display-2">Sign Up</h4>
+            </div>
+        </center>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+            <div class='jumbotron'>
+                <center>
+                    <div class="text-left" style="max-width:500px">
+                        <form id="mySignUpForm" onsubmit="submitSignUp(event);return false;" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class='form-group'>
+                                <label for="id_username">Username</label>
+                                {{ form.username }}
+                            </div>
+                            <div class='form-group'>
+                                <label for="id_first_name">First Name</label>
+                                {{ form.first_name }}
+                            </div>
+                            <div class='form-group'>
+                                <label for="id_last_name">Last Name</label>
+                                {{ form.last_name }}
+                            </div>
+                            <div class='form-group'>
+                                <label for="id_email">Email</label>
+                                {{ form.email }}
+                            </div>
+                            <div class='form-group'>
+                                <label for="id_password">Password</label>
+                                {{ form.password }}
+                            </div>
+                            <div class='form-group'>
+                                <label for="id_confirm_password">Password Confirmation</label>
+                                {{ form.confirm_password }}
+                            </div>
+                            <div class='form-group'>
+                                <label for="id_avatar">Avatar</label>
+                                {{ form.avatar }}
+                            </div>
+                            <br>
+                            <center><button type="submit" class="btn btn-success btn-lg">Sign Up</button></center>
+                        </form>
+                    </div>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>

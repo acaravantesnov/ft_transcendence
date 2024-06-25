@@ -1,12 +1,23 @@
 services:
-  djangoapp:
-    container_name: djangoapp
-    build: .
+  reverse-proxy:
+    container_name: reverse-proxy
+    build: ./reverse-proxy
     restart: always
     ports:
-      - "8000:8000"
+      - "8080:443"
+    networks:
+      - net
+    depends_on:
+      - djangoapp
+    env_file: .env
+
+  djangoapp:
+    container_name: djangoapp
+    build: ./djangoapp
+    restart: always
     expose:
       - "5432"
+      - "8000"
     networks:
       - net
     env_file: .env

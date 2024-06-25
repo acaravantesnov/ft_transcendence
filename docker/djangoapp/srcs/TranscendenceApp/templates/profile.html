@@ -1,0 +1,31 @@
+{% load static %}
+
+<div class="container scrollable mb-3">
+    <center>
+        <p id="avatar" class="pb-2"></p>
+        <p id="username"></p>
+    </center>
+</div>
+
+<div class="container col-12 mb-5" style="font-family: Dosis">
+    <div class="card card-body pt-4 pb-4">
+    <h3 class="card-title responsive-text-medium">My profile</h3>
+    <hr>
+    <span id="email"></span>
+    <span id="first_name"></span>
+    <span id="last_name"></span>
+    <span id="last_login"></span>
+    <span id="date_joined"></span>
+    <form action="" method=POST enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_avatar">Avatar</label>
+            <input type="file" name="avatar" id="id_avatar" class="form-control">
+        </div>
+        <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
+</div>
+
+{% include "statistics.html" %}
+
+<script src="{% static 'js/profile.js' %}"></script>

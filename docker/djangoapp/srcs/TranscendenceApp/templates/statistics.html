@@ -1,0 +1,28 @@
+{% load static %}
+
+<div class="container col-12 mt-4">
+    <div class="card card-body pt-4 pb-4">
+        <h3 class="card-title responsive-text-medium">Statistics</h3>
+        <hr>
+        <div class="row", style="font-family: Dosis">
+            <div class="col">
+                <h5>Games Won</h5>
+                <p id="gamesWon"></p>
+            </div>
+            <div class="col">
+                <h5>Games Lost</h5>
+                <p id="gamesLost"></p>
+            </div>
+            <div class="col">
+                <h5>Goals</h5>
+                <p id="goals"></p>
+            </div>
+            <div class="col">
+                <h5>Score</h5>
+                <p id="score"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/statistics.js' %}"></script>
