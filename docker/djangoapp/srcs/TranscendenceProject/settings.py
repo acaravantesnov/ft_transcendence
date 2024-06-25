@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',   # Serving static files like CSS, JavaScript, images.
     'TranscendenceApp',             # Our app.
     'rest_framework',               # REST API.
-    'django_extensions',
 ]
 
 #redis
@@ -231,7 +230,3 @@ LOGGING = {
       },
     }
 }
-
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True

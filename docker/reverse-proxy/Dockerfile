@@ -1,6 +1,6 @@
 FROM nginx
 
-COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+COPY conf/nginx.conf /etc/nginx/nginx.conf
 
 RUN apt-get update && apt-get install -y vim openssl
 
