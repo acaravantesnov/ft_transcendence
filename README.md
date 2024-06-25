@@ -834,3 +834,31 @@ getData()
 - **Django Basics**: https://www.youtube.com/watch?v=xv_bwpA_aEA&list=PL-51WBLyFTg2vW-_6XBoUpE7vpmoR3ztO
 
 - **Django Channels and WebSockets**: https://www.youtube.com/watch?v=F4nwRQPXD8w
+
+---
+
+# Estado actual
+
+- SSL con reverse proxy nginx en contenedor aparte, falla new ws (wss?)
+
+https://42born2code.slack.com/archives/CN9RHKQHW/p1706013956439879
+
+- Estaría guay certificar el ssl con lets encrypt. Parece que hay bastante gente que lo ha usado.
+
+https://42born2code.slack.com/archives/CMX2R5JSW/p1719254852770949
+
+- SSL entre front y back? 
+
+https://42born2code.slack.com/archives/C01HH8S372T/p1717948801476869
+
+- Leaderboards ya muestra los jugadores ordenados por score.
+
+- Parece que ya funciona siempre lo de las migraciones. Por lo visto djangoapp intentaba hacer las migraciones cuando aún no estaba configurado postgresql, le he añadido un sleep al entrypoint.
+
+- Falta poder editar info del usuario en My profile (incluido avatar).
+
+- Falta apartado Social (mycustomuser tiene friends).
+
+- Mejorar responsiveness, y estaría guay añadir botón para modo oscuro (siendo todo en blanco y negro es bastante facil con CSS).
+
+- Backdrop del offcanvas no funciona como me gustaría (se queda).

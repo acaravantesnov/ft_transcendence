@@ -11,7 +11,7 @@ const side = window.location.pathname.split('/').slice(-2, -1)[0];
 console.log('username ', username);
 console.log('roomName ', roomName);
 console.log('side ', side);
-const socket = new WebSocket('ws://' + window.location.host + '/ws/game2/' + username + '/' + roomName + '/' + side + '/');
+const socket = new WebSocket('wss://' + window.location.host + '/ws/game2/' + username + '/' + roomName + '/' + side + '/');
 
 socket.onmessage = function(e) {
     const data = JSON.parse(e.data);
