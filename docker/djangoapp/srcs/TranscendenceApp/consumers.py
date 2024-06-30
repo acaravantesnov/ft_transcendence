@@ -68,8 +68,11 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.game.update_paddle(self.side, speed)
 
     async def game_state(self, event):
+        # logger.debug(f"[GameConsumer] game_state: {event} ")
+        # When is this called?
         # Called by the game instance to send the game state to the clients
         ended = event['state']['game_over']['ended']
+        # logger.debug(f" [GameConsumer] Score: {event['state']['scores']} Ended: {ended} ")
         if ended:
             logger.debug(f" [GameConsumer] Game ended, sending final state ")
             # Save final state in the database

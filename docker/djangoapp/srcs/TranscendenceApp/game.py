@@ -47,10 +47,13 @@ class Game:
     
     def check_end_game(self):
         if self.game_over['ended']:
+            logger.debug(f" [Game] Returning Game over: {self.game_over['winner']} ")
             return True
         if self.scores['left'] >= 3:
+            logger.debug(f" [Game] Game over: left ")
             self.game_over = {'ended': True, 'winner': 'left'}
         elif self.scores['right'] >= 3:
+            logger.debug(f" [Game] Game over: right ")
             self.game_over = {'ended': True, 'winner': 'right'}
         return False
       
@@ -106,6 +109,7 @@ class Game:
             logger.debug(f" [Game] Stopping game loop ")
             self.running = False
             await self.task
+        self.scores = {'left': 0, 'right': 0}
 
     def get_state(self):
         return {

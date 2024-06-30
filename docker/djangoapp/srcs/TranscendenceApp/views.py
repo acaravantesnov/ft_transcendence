@@ -60,15 +60,11 @@ def home(request, username):
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
-def waitlist(request, username):
+def play(request, username):
     if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'waitlist.html')
+        return render(request, 'game.html', {"username": username})
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
-
-def play(request, username, room_name, side):
-    logger.debug(f" [views] play: {username}, {room_name}, {side} ")
-    return render(request, 'game.html', {"username": username, "room_name": room_name, "side": side})
 
 def leaderboards(request, username):
     if request.user.is_authenticated and username != 'Guest':

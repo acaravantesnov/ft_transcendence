@@ -10,8 +10,7 @@ urlpatterns = [
     # Normal views
     path('', views.title, name="title"),
     path('home/<str:username>', views.home, name="home"),
-    path('waitlist/<str:username>/', views.waitlist, name="waitlist"),
-    path('play/<str:username>/<str:room_name>/<str:side>/', views.play, name="play"),
+    path('play/<str:username>/', views.play, name="play"),
     path('leaderboards/<str:username>/', views.leaderboards, name="leaderboards"),
     path('profile/<str:username>/', views.profile, name="profile"),
     path('signUp/', views.signUp, name="signUp"),

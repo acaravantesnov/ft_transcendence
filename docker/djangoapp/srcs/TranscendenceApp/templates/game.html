@@ -1,21 +1,23 @@
 {% load static %}
 
-<div class="container">
-    <div class="row top-buffer" style="font-family: Dosis">
-        <div class="col-12">
-            <div class="card card-body pt-4 pb-4">
-                <div id="game-area">
-                    <div id="scores">
-                        <div id="left-score">0</div>
-                        <div id="right-score">0</div>
+    <div class="container">
+        <div class="row top-buffer" style="font-family: Dosis">
+            <div class="col-12">
+                <div class="card card-body pt-4 pb-4">
+                    <button type="button" id="waitlistButton" class="btn btn-success">ADD TO WAIT LIST</button>
+                    
+                    <div id="game-area" style="display: none;">
+                        <div id="scores">
+                            <div id="left-score">0</div>
+                            <div id="right-score">0</div>
+                        </div>
+                        <div id="ball"></div>
+                        <div id="left-paddle" class="paddle"></div>
+                        <div id="right-paddle" class="paddle"></div>
                     </div>
-                    <div id="ball"></div>
-                    <div id="left-paddle" class="paddle"></div>
-                    <div id="right-paddle" class="paddle"></div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script src="{% static 'js/game.js' %}"></script>
+    <script src="{% static 'js/game.js' %}"></script>
