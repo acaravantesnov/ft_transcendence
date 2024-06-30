@@ -57,7 +57,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         # Remove user from the room
         logger.debug(f" [GameConsumer] Removing user from room {self.room_group_name} ")
         
-        game_manager.remove_user(self.room_group_name, self.side, self.user_id)
+        await game_manager.remove_user(self.room_group_name, self.side, self.user_id)
 
     async def receive(self, text_data):
         logger.debug(f" [GameConsumer] receive: {text_data} ")

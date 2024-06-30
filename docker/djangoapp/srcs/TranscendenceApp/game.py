@@ -31,7 +31,8 @@ class Game:
 
     async def game_loop(self):
         logger.debug(f" [Game] game_loop: {self.room_group_name} ")
-        while self.running and not self.check_end_game():
+        while self.running:
+            self.check_end_game()
             self.update_positions()
             await self.check_collisions()
 
@@ -108,7 +109,13 @@ class Game:
         if self.running:
             logger.debug(f" [Game] Stopping game loop ")
             self.running = False
-            await self.task
+            logger.debug(f" [Game] Cancelling task ")
+            if self.task:
+                logger.debug(f" [Game] Cancelling task ")
+                self.task.cancel()
+                logger.debug(f" [Game] Task cancelled ")
+            else:
+                logger.debug(f" [Game] Task is None ")
         self.scores = {'left': 0, 'right': 0}
 
     def get_state(self):

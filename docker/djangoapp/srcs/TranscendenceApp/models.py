@@ -27,6 +27,13 @@ class MyCustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
+    @classmethod
+    async def get_user_by_username(cls, username):
+        try:
+            return await cls.objects.aget(username=username)
+        except cls.DoesNotExist:
+            return None
+
 class Game(models.Model):
     player1 = models.ForeignKey(MyCustomUser, on_delete=models.CASCADE, related_name='player1', null=True)
     player2 = models.ForeignKey(MyCustomUser, on_delete=models.CASCADE, related_name='player2', null=True)

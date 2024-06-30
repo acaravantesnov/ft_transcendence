@@ -1,6 +1,7 @@
 from .game import Game
 from .waiting_room import waiting_room
 from .serializers import GameSerializer
+from .models import MyCustomUser
 
 import logging
 
@@ -18,6 +19,9 @@ class GameManager:
         #Dictionary to save what user is on the right
         self.right_user = {}
 
+        self.left_user_connected = {}
+        self.right_user_connected = {}
+
     def get_game(self, room_group_name, channel_layer):
         logger.debug(f" [GameManager] get_game: {room_group_name} ")
         if room_group_name not in self.games:
@@ -30,14 +34,16 @@ class GameManager:
         logger.debug(f" [GameManager] add_user: {room_group_name}, {side}, {user_id} ")
         if side == "right":
             self.right_user[room_group_name] = user_id
+            self.right_user_connected[room_group_name] = True
             return 0
         elif side == "left":
             self.left_user[room_group_name] = user_id
+            self.left_user_connected[room_group_name] = True
             return 0
         logger.debug(f" [GameManager] User not added to room {room_group_name} ")
         return 1
 
-    def remove_user(self, room_group_name, side, user_id):
+    async def remove_user(self, room_group_name, side, user_id):
     #     logger.debug(f" [GameManager] remove_user: {room_group_name} ")
     #     if room_group_name in self.user_counts:
     #         logger.debug(f" [GameManager] Removing user from room {room_group_name} ")
@@ -48,14 +54,17 @@ class GameManager:
     #             logger.debug(f" [GameManager] Game stopped ")
           logger.debug(f" [GameManager] remove_user: {room_group_name} ")
           if side == "left":
-              del self.left_user[room_group_name]
+              self.left_user_connected[room_group_name] = False
           elif side == "right":
-              del self.right_user[room_group_name]
+              self.right_user_connected[room_group_name] = False
 
           # If no users left in the room, stop the game
-          if room_group_name not in self.left_user and room_group_name not in self.right_user:
+          if not self.left_user_connected[room_group_name] and not self.right_user_connected[room_group_name]:
               logger.debug(f" [GameManager] No users left in room {room_group_name}, stopping game ")
-              asyncio.create_task(self.stop_game(room_group_name))
+              #asyncio.create_task(self.stop_game(room_group_name))
+              #   await self.stop_game(room_group_name)
+              #asyncio.create_task(self.stop_game(room_group_name))
+              await self.stop_game(room_group_name)
               logger.debug(f" [GameManager] Game stopped ")
               waiting_room.delete_game(room_group_name)
 
@@ -65,19 +74,34 @@ class GameManager:
         if room_group_name in self.games:
             logger.debug(f" [GameManager] Stopping game for room {room_group_name} ")
             await self.games[room_group_name].stop()
-            # Save game to database
+            logger.debug(f" [GameManager] Getting players ")
+            player_left = await MyCustomUser.get_user_by_username(self.left_user[room_group_name])
+            logger.debug(f" [GameManager] left player: {player_left} ")
+            player_right = await MyCustomUser.get_user_by_username(self.right_user[room_group_name])
+            logger.debug(f" [GameManager] right player: {player_right} ")
+            player_winner = player_left if self.games[room_group_name].game_over['winner'] == 'left' else player_right
+            logger.debug(f" [GameManager] winner: {plater_winner}, game_over: {self.games[room_group_name].game_over['winner']} ")
+            logger.debug(f" [GameManager] Saving game to database ")
             serializer = GameSerializer(data={
-                'player1': self.left_user[room_group_name],
-                'player2': self.right_user[room_group_name],
-                'winner': self.games[room_group_name].game_over['winner'],
+                'player1': player_left,
+                'player2': player_right,
+                'winner': player_winner,
                 'duration': 0,
                 'player1_score': self.games[room_group_name].scores['left'],
                 'player2_score': self.games[room_group_name].scores['right']
             })
+            logger.debug(f" [GameManager] Game data: {serializer} ")
             if serializer.is_valid():
+                logger.debug(f" [GameManager] Game data valid ")
                 serializer.save()
+                logger.debug(f" [GameManager] Game saved ")
             else:
                 logger.error(f" [GameManager] Error saving game to database: {serializer.errors} ")
+            logger.debug(f" [GameManager] Deleting game instance")
+            del self.left_user[room_group_name]
+            del self.right_user[room_group_name]
+            del self.left_user_connected[room_group_name]
+            del self.right_user_connected[room_group_name]
             del self.games[room_group_name]
             logger.debug(f" [GameManager] Game stopped ")
 
