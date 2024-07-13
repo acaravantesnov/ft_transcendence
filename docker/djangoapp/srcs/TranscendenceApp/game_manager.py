@@ -2,6 +2,7 @@ from .game import Game
 from .waiting_room import waiting_room
 from .serializers import GameSerializer
 from .models import MyCustomUser
+from asgiref.sync import sync_to_async
 
 import logging
 
@@ -70,39 +71,50 @@ class GameManager:
 
 
     async def stop_game(self, room_group_name):
-        logger.debug(f" [GameManager] stop_game: {room_group_name} ")
-        if room_group_name in self.games:
-            logger.debug(f" [GameManager] Stopping game for room {room_group_name} ")
-            await self.games[room_group_name].stop()
-            logger.debug(f" [GameManager] Getting players ")
-            player_left = await MyCustomUser.get_user_by_username(self.left_user[room_group_name])
-            logger.debug(f" [GameManager] left player: {player_left} ")
-            player_right = await MyCustomUser.get_user_by_username(self.right_user[room_group_name])
-            logger.debug(f" [GameManager] right player: {player_right} ")
-            player_winner = player_left if self.games[room_group_name].game_over['winner'] == 'left' else player_right
-            logger.debug(f" [GameManager] winner: {plater_winner}, game_over: {self.games[room_group_name].game_over['winner']} ")
-            logger.debug(f" [GameManager] Saving game to database ")
-            serializer = GameSerializer(data={
-                'player1': player_left,
-                'player2': player_right,
-                'winner': player_winner,
-                'duration': 0,
-                'player1_score': self.games[room_group_name].scores['left'],
-                'player2_score': self.games[room_group_name].scores['right']
-            })
-            logger.debug(f" [GameManager] Game data: {serializer} ")
-            if serializer.is_valid():
-                logger.debug(f" [GameManager] Game data valid ")
-                serializer.save()
-                logger.debug(f" [GameManager] Game saved ")
-            else:
-                logger.error(f" [GameManager] Error saving game to database: {serializer.errors} ")
-            logger.debug(f" [GameManager] Deleting game instance")
-            del self.left_user[room_group_name]
-            del self.right_user[room_group_name]
-            del self.left_user_connected[room_group_name]
-            del self.right_user_connected[room_group_name]
-            del self.games[room_group_name]
-            logger.debug(f" [GameManager] Game stopped ")
+        try:
+            logger.debug(f" [GameManager] stop_game: {room_group_name} ")
+            if room_group_name in self.games:
+                logger.debug(f" [GameManager] Stopping game for room {room_group_name} ")
+                await self.games[room_group_name].stop()
+                logger.debug(f" [GameManager] Getting players ")
+                player_left = await MyCustomUser.get_user_by_username(self.left_user[room_group_name])
+                logger.debug(f" [GameManager] left player: {player_left} ")
+                player_right = await MyCustomUser.get_user_by_username(self.right_user[room_group_name])
+                logger.debug(f" [GameManager] right player: {player_right} ")
+                player_winner = player_left if self.games[room_group_name].game_over['winner'] == 'left' else player_right
+                logger.debug(f" [GameManager] winner: {player_winner}, game_over: {self.games[room_group_name].game_over['winner']} ")
+                logger.debug(f" [GameManager] Saving game to database ")
+                game_data = {
+                    'player1': player_left.pk,
+                    'player2': player_right.pk,
+                    'winner': player_winner.pk,
+                    'duration': 0,
+                    'player1_score': self.games[room_group_name].scores['left'],
+                    'player2_score': self.games[room_group_name].scores['right']
+                }
+                logger.debug(f" [GameManager] Game data: {game_data} ")
+                try:
+                    # The problem was that the serializer has to run in a sync function and we are 
+                    # in an async function. This is why we have to use sync_to_async
+                    serializer = GameSerializer(data=game_data)
+                    logger.debug(f" [GameManager] Game data: {serializer} ")
+                    is_valid = await sync_to_async(serializer.is_valid)()
+                    if is_valid:
+                        logger.debug(f" [GameManager] Game data valid ")
+                        await sync_to_async(serializer.save)()
+                        logger.debug(f" [GameManager] Game saved ")
+                    else:
+                        logger.error(f" [GameManager] Error saving game to database: {serializer.errors} ")
+                except Exception as e:
+                    logger.error(f" [GameManager] Catched Error saving game to database: {e} ")
+                logger.debug(f" [GameManager] Deleting game instance")
+                del self.left_user[room_group_name]
+                del self.right_user[room_group_name]
+                del self.left_user_connected[room_group_name]
+                del self.right_user_connected[room_group_name]
+                del self.games[room_group_name]
+                logger.debug(f" [GameManager] Game stopped ")
+        except Exception as e:
+            logger.error(f" [GameManager] Error stopping game: {e} ")
 
 game_manager = GameManager()

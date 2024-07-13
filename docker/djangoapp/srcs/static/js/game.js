@@ -12,27 +12,15 @@ const rightScore = document.getElementById('right-score');
 const gameArea = document.getElementById('game-area');
 const waitlistButton = document.getElementById('waitlistButton');
 
-
-// Utility function to get CSRF token
-function getCSRFToken() {
-    const cookieValue = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('csrftoken='))
-        ?.split('=')[1];
-    return cookieValue;
-}
-
 // Waitlist functions
 async function addToWaitlist() {
     try {
-        const csrftoken = getCSRFToken();
         const response = await fetch(`/users/waitlist/addtowaitlist/${user.username}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
-            },
-            credentials: 'include' // This ensures cookies are sent with the request
+                'X-CSRFToken': getCookie('csrftoken')
+            }
         });
         const data = await response.json();
         if (response.ok) {
@@ -129,8 +117,3 @@ function init() {
 }
 
 init();
-
-// Utility function
-function getCookie(name) {
-    // Implementation of getCookie function
-}
