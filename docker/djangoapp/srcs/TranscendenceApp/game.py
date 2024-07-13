@@ -11,7 +11,7 @@ class Game:
         self.room_group_name = room_group_name
         self.channel_layer = channel_layer
         self.ball_position = {'x': 400, 'y': 300}
-        self.ball_speed = {'x': 2, 'y': 2}
+        self.ball_speed = {'x': 3, 'y': 2}
         self.ball_size = {'width': 10, 'height': 10}
         self.screen_size = {'width': 800, 'height': 600}
         self.paddle_size = {'width': 10, 'height': 100}
@@ -80,11 +80,15 @@ class Game:
           if self.ball_position['x'] <= self.left_paddle['x'] + self.paddle_size['width'] and self.ball_position['x'] >= self.left_paddle['x']:
               if self.left_paddle['y'] <= self.ball_position['y'] <= self.left_paddle['y'] + self.paddle_size['height']:
                   self.ball_speed['x'] *= -1
+                  # Increase speed if paddle is moving in the same direction as the ball and decrease if moving in the opposite direction
+                  self.ball_speed['y'] += self.left_paddle['speed'] / 3
 
         if self.ball_speed['x'] > 0: # Right paddle
           if self.ball_position['x'] + self.ball_size['width'] >= self.right_paddle['x'] and self.ball_position['x'] + self.ball_size['width'] <= self.right_paddle['x'] + self.paddle_size['width']:
               if self.right_paddle['y'] <= self.ball_position['y'] <= self.right_paddle['y'] + self.paddle_size['height']:
                   self.ball_speed['x'] *= -1
+                  # Increase speed if paddle is moving in the same direction as the ball and decrease if moving in the opposite direction
+                  self.ball_speed['y'] += self.right_paddle['speed'] / 3
         
         # Ball out of bounds
         if self.ball_position['x'] <= 0:
@@ -121,6 +125,7 @@ class Game:
     def get_state(self):
         return {
             'ball_position': self.ball_position,
+            'ball_speed': self.ball_speed,
             'left_paddle': self.left_paddle,
             'right_paddle': self.right_paddle,
             'scores': self.scores,
