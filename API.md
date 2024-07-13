@@ -1,7 +1,7 @@
 # API Documentation
 
 ## Base URLs
-- **HTTPS Base URL:** `https://ft_transcendence`
+- **HTTPS Base URL:** `https://ft_transcendence/users`
 - **WSS Base URL:** `wss://ws/game2`
 
 ## HTTPS Endpoints
@@ -68,6 +68,10 @@ TODO: Add ball velocity for AI
       "x": 0.5,
       "y": 0.5
     },
+    "ball_speed": {
+      "x": 2.0,
+      "y": 2.0
+    },
     "left_paddle": {
       "x": 0.5,
       "y": 0.5,
@@ -101,8 +105,3 @@ When a user presses a key to move the paddle
   "speed": 5
 }
 ```
-
-
-#TODO next day:
-- remove waitlist files, path, url,...
-- make game stop
