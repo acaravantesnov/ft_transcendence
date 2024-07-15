@@ -60,4 +60,5 @@ async def game_connection(username, room_name, side, replay_buffer, wss_url):
         print("Reconnecting in 1 seconds...")
         await asyncio.sleep(1)
     agent.save_model()
+    replay_buffer.save_buffer()
 

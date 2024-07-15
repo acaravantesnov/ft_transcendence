@@ -6,71 +6,53 @@ import torch.optim as optim
 from replay_buffer import ReplayBuffer
 import os
 
-#model 1
-# class DQNet(nn.Module):
-#     def __init__(self, input_dim, output_dim):
-#         super(DQNet, self).__init__()
-#         self.fc1 = nn.Linear(input_dim, 64)
-#         self.fc2 = nn.Linear(64, 64)
-#         self.fc3 = nn.Linear(64, output_dim)
-    
-#     def forward(self, x):
-          # leakyRely(fc())
-#         x = torch.nn.functional.leaky_relu(self.fc1(x))
-          # leakyRely(fc())
-#         x = torch.nn.functional.leaky_relu(self.fc2(x))
-#         return self.fc3(x)
-
-
-#model 2
 class DQNet(nn.Module):
     def __init__(self, input_dim, output_dim):
         super(DQNet, self).__init__()
 
-        # fc layers
         self.fc1 = nn.Linear(input_dim, 64)
         self.fc2 = nn.Linear(64, 64)
         self.fc3 = nn.Linear(64, output_dim)
 
-        # BatchNorm1d
         self.bn0 = nn.BatchNorm1d(input_dim)
         self.bn1 = nn.BatchNorm1d(64)
     
     def forward(self, x):
-        # BatchNorm1d
         x = self.bn0(x)
-
-        # tanh(fc())
         x = torch.nn.functional.tanh(self.fc1(x))
-
-        # BatchNorm1d
         x = self.bn1(x)
-
-        # tanh(fc())
         x = torch.nn.functional.tanh(self.fc2(x))
-
         return self.fc3(x)
 
 class Agent:
-    def __init__(self, side, replay_buffer, input_dim = 7, output_dim = 3, discount_factor=0.95, epsilon=0.1, lr=0.005, batch_size=128, model_path = "model.pt"):
+    def __init__(self, side, replay_buffer, input_dim=7, output_dim=3, discount_factor=0.95, epsilon=0.1, lr=0.001, batch_size=128, model_path="model.pt", tau=0.05):
         self.side = side
         self.replay_buffer = replay_buffer
         self.discount_factor = discount_factor
         self.epsilon = epsilon
         self.batch_size = batch_size
         self.action_space = [-5, 0, 5]
+        self.tau = tau
 
-        #self.model = DQNet(input_dim, output_dim)
         self.model = DQNet(input_dim, output_dim)
-        # if saved model exists, load it
+        self.target_model = DQNet(input_dim, output_dim)
+        
         if os.path.exists(model_path):
-          print(" [Agent] Loading model from: ", model_path)
-          self.model.load_state_dict(torch.load(model_path))
+            print(" [Agent] Loading model from: ", model_path)
+            self.model.load_state_dict(torch.load(model_path))
         else:
-          print(" [Agent] No model found at: ", model_path)
+            print(" [Agent] No model found at: ", model_path)
+
+        self.target_model.load_state_dict(self.model.state_dict())
+        self.target_model.eval()
         self.model.eval()
-        self.optimizer = optim.Adam(self.model.parameters(), lr=lr, weight_decay=0.0005)
+
+        self.optimizer = optim.Adam(self.model.parameters(), lr=lr, weight_decay=0.001)
         self.loss_fn = nn.MSELoss()
+
+    def update_target_model(self):
+        for target_param, param in zip(self.target_model.parameters(), self.model.parameters()):
+            target_param.data.copy_(self.tau * param.data + (1.0 - self.tau) * target_param.data)
 
     def Q_a(self, state, action):
         state_tensor = torch.tensor(state, dtype=torch.float32).unsqueeze(0)
@@ -79,12 +61,12 @@ class Agent:
 
     def Q_max(self, state):
         state_tensor = torch.tensor(state, dtype=torch.float32).unsqueeze(0)
+        self.model.eval()
         q_values = self.model(state_tensor)
         max_action = torch.argmax(q_values).item()
         max_q_value = torch.max(q_values).item()
-        print(" [Agent] q_values: ", q_values)
-        print(" [Agent] max_action: ", max_action)
-        print(" [Agent] max_q_value: ", max_q_value)
+        print(" [Agent] Q_values: ", q_values)
+        print(" [Agent] Q_max: ", max_action, max_q_value)
         return max_action, max_q_value
 
     def decide_action(self, state):
@@ -99,42 +81,28 @@ class Agent:
           print(" [Agent] Training step, with buffer size: ", self.replay_buffer.size())
           for i in range(15):
             self.train_step(self.batch_size)
+          self.update_target_model()
         return action
 
     def train_step(self, batch_size):
         if self.replay_buffer.size() < batch_size:
             return
 
+        self.model.train()
         states, actions, rewards, next_states = self.replay_buffer.get_batch(batch_size)
         states = torch.tensor(states, dtype=torch.float32)
         actions = torch.tensor(actions, dtype=torch.int64)
         rewards = torch.tensor(rewards, dtype=torch.float32)
         next_states = torch.tensor(next_states, dtype=torch.float32)
 
-        # print(" [Agent] states shape: ", states.shape)
-        # print(" [Agent] actions shape: ", actions.shape)
-        # print(" [Agent] rewards shape: ", rewards.shape)
-        # print(" [Agent] next_states shape: ", next_states.shape)
-    
-        # [Agent] states shape:  torch.Size([32, 7])
-        # [Agent] actions shape:  torch.Size([32, 3])
-        # [Agent] rewards shape:  torch.Size([32])
-        # [Agent] next_states shape:  torch.Size([32, 7])
-
-        # print(" [Agent] model(states) shape: ", self.model(states).shape)
-        # [Agent] model(states) shape:  torch.Size([32, 3])
-
-        # actions is one hot encoded (32, 3)
-        
         current_q_values = torch.sum(self.model(states) * actions, dim=1)
-        next_q_values = self.model(next_states).max(1)[0].detach()
+        next_q_values = self.target_model(next_states).max(1)[0].detach()
         target_q_values = rewards + (self.discount_factor * next_q_values)
 
         loss = self.loss_fn(current_q_values, target_q_values)
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
-
 
     def save_model(self):
         torch.save(self.model.state_dict(), "model.pt")
