@@ -60,10 +60,10 @@ class GameConsumer(AsyncWebsocketConsumer):
         await game_manager.remove_user(self.room_group_name, self.side, self.user_id)
 
     async def receive(self, text_data):
-        logger.debug(f" [GameConsumer] receive: {text_data} ")
+        #logger.debug(f" [GameConsumer] receive: {text_data} ")
         data = json.loads(text_data)
         if data['type'] == 'paddle':
-            logger.debug(f" [GameConsumer] Updating paddle for user {self.user_id} ")
+            #logger.debug(f" [GameConsumer] Updating paddle for user {self.user_id} ")
             speed = data['speed']
             self.game.update_paddle(self.side, speed)
 

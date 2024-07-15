@@ -193,17 +193,22 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': "debug.log",
         },
+        'file2': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': "debug2.log",
+        },
     },
-    "handlers":{
-      "file":{
-        "level": "DEBUG",
-        "class": "logging.FileHandler",
-        "filename": "debug.log",
-      }
-    },
+    # "handlers":{
+    #   "file":{
+    #     "level": "DEBUG",
+    #     "class": "logging.FileHandler",
+    #     "filename": "debug.log",
+    #   }
+    # },
     'loggers': {
       "django": {
-        "handlers": ["file"],
+        "handlers": ["file2"],
         "level": "DEBUG",
         "propagate": True,
       },
