@@ -61,27 +61,27 @@ class ReplayBuffer:
 
     def calculate_reward(self, prev_state, state, prev_action):
         reward = 0
-        if state['scores']['left'] > prev_state['scores']['left']:
-            reward += 15
+        # if state['scores']['left'] > prev_state['scores']['left']:
+        #     reward += 15
         if state['scores']['right'] > prev_state['scores']['right']:
             reward -= 30
         if reward == 0: 
             if state['ball_speed']['x'] > 0 and prev_state['ball_speed']['x'] < 0:
                 reward += 4
         if prev_action != 0:
-            reward -= 0.2
+            reward -= 0.5
         return reward
 
     @staticmethod
     def state_dict_to_vector(state):
-        return [state['ball_position']['x'] / 800.0, state['ball_position']['y'] / 600.0, state['ball_speed']['x'], state['ball_speed']['y'], state['left_paddle']['y'] / 600.0, state['right_paddle']['y'] / 600.0, state['right_paddle']['speed'] / 5.0]
+        return [state['ball_position']['x'] / 800.0, state['ball_position']['y'] / 600.0, state['ball_speed']['x'], state['ball_speed']['y'], state['left_paddle']['y'] / 600.0]
 
     def get_batch(self, batch_size):
         batch = random.sample(self.buffer, batch_size)
         states, actions, rewards, next_states, _ = zip(*batch)
         states_vector = [ReplayBuffer.state_dict_to_vector(state) for state in states]
         next_states_vector = [ReplayBuffer.state_dict_to_vector(state) for state in next_states]
-        actions_vector = [[1, 0, 0] if action == -5 else [0, 1, 0] if action == 0 else [0, 0, 1] for action in actions]
+        actions_vector = [[1, 0, 0] if action < 0 else [0, 1, 0] if action == 0 else [0, 0, 1] for action in actions]
         return np.array(states_vector), np.array(actions_vector), np.array(rewards), np.array(next_states_vector)
 
     def save_buffer(self):
@@ -92,7 +92,11 @@ class ReplayBuffer:
     def load_buffer(self):
         if os.path.exists(self.buffer_path):
             with open(self.buffer_path, "rb") as f:
-                self.buffer = pickle.load(f)
+                buffer_copy = pickle.load(f)
             print(" [ReplayBuffer] Buffer loaded from ", self.buffer_path)
+            print(" [ReplayBuffer] Recalculating rewards...")
+            for prev_state, prev_action, _, state, action in buffer_copy:
+                reward = self.calculate_reward(prev_state, state, prev_action)
+                self.buffer.append((prev_state, prev_action, reward, state, action))
         else:
             print(" [ReplayBuffer] No buffer found at ", self.buffer_path)

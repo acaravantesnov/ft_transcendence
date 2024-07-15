@@ -11,21 +11,21 @@ class DQNet(nn.Module):
         super(DQNet, self).__init__()
 
         self.fc1 = nn.Linear(input_dim, 64)
-        self.fc2 = nn.Linear(64, 64)
-        self.fc3 = nn.Linear(64, output_dim)
+        self.fc2 = nn.Linear(64, 16)
+        self.fc3 = nn.Linear(16, output_dim)
 
-        self.bn0 = nn.BatchNorm1d(input_dim)
-        self.bn1 = nn.BatchNorm1d(64)
+        # self.bn0 = nn.BatchNorm1d(input_dim)
+        # self.bn1 = nn.BatchNorm1d(64)
     
     def forward(self, x):
-        x = self.bn0(x)
+        # x = self.bn0(x)
         x = torch.nn.functional.tanh(self.fc1(x))
-        x = self.bn1(x)
+        # x = self.bn1(x)
         x = torch.nn.functional.tanh(self.fc2(x))
         return self.fc3(x)
 
 class Agent:
-    def __init__(self, side, replay_buffer, input_dim=7, output_dim=3, discount_factor=0.95, epsilon=0.1, lr=0.001, batch_size=128, model_path="model.pt", tau=0.05):
+    def __init__(self, side, replay_buffer, input_dim=5, output_dim=3, discount_factor=0.9, epsilon=0.1, lr=0.0005, batch_size=256, model_path="model.pt", tau=0.3, tau_decay=0.995, tau_min=0.02):
         self.side = side
         self.replay_buffer = replay_buffer
         self.discount_factor = discount_factor
@@ -33,6 +33,8 @@ class Agent:
         self.batch_size = batch_size
         self.action_space = [-5, 0, 5]
         self.tau = tau
+        self.tau_decay = tau_decay
+        self.tau_min = tau_min
 
         self.model = DQNet(input_dim, output_dim)
         self.target_model = DQNet(input_dim, output_dim)
@@ -50,9 +52,12 @@ class Agent:
         self.optimizer = optim.Adam(self.model.parameters(), lr=lr, weight_decay=0.001)
         self.loss_fn = nn.MSELoss()
 
+        self.loss_per_step = 0
+
     def update_target_model(self):
         for target_param, param in zip(self.target_model.parameters(), self.model.parameters()):
             target_param.data.copy_(self.tau * param.data + (1.0 - self.tau) * target_param.data)
+        self.tau = max(self.tau * self.tau_decay, self.tau_min)
 
     def Q_a(self, state, action):
         state_tensor = torch.tensor(state, dtype=torch.float32).unsqueeze(0)
@@ -79,7 +84,7 @@ class Agent:
 
         if self.replay_buffer.size() >= self.batch_size:
           print(" [Agent] Training step, with buffer size: ", self.replay_buffer.size())
-          for i in range(15):
+          for i in range(50):
             self.train_step(self.batch_size)
           self.update_target_model()
         return action
@@ -100,6 +105,7 @@ class Agent:
         target_q_values = rewards + (self.discount_factor * next_q_values)
 
         loss = self.loss_fn(current_q_values, target_q_values)
+        self.loss_per_step = loss.item()
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
