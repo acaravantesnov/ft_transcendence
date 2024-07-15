@@ -7,7 +7,7 @@ class ReplayBuffer:
         self.buffer = deque(maxlen=buffer_size)
         self.prev_state = None
         self.prev_action = None
-    
+
     def add (self, state, action):
         if self.prev_state is None or self.prev_action is None:
             self.prev_state = state
@@ -15,27 +15,26 @@ class ReplayBuffer:
             return
         prev_state = self.prev_state
         prev_action = self.prev_action
-        reward = self.calculate_reward(prev_state, state)
+        reward = self.calculate_reward(prev_state, state, prev_action)
         self.buffer.append((prev_state, prev_action, reward, state, action))
+        with open("state.txt", "w") as f:
+            f.write(f"{prev_state}, {prev_action}, {reward}")
         self.prev_state = state
         self.prev_action = action
         print(" [ReplayBuffer] Buffer size: ", len(self.buffer))
-        print(" [ReplayBuffer] Added to buffer: ", prev_state, prev_action, reward, state, action)
+        #print(" [ReplayBuffer] Added to buffer: ", prev_state, prev_action, reward, state, action)
+        # Save state to file
 
-        # Mirror state
-        mirrored_state = self.mirror_state(state)
-        mirrored_prev_state = self.mirror_state(prev_state)
-        mirrored_prev_action = state['right_paddle']['speed']
-        mirrored_reward = self.calculate_reward(mirrored_prev_state, mirrored_state)
-        self.buffer.append((mirrored_prev_state, mirrored_prev_action, mirrored_reward, mirrored_state, mirrored_prev_action))
-        print(" [ReplayBuffer] Buffer size: ", len(self.buffer))
-        print(" [ReplayBuffer] Added to buffer: ", mirrored_prev_state, mirrored_prev_action, mirrored_reward, mirrored_state, mirrored_prev_action)
-
-    
-    def sample(self, batch_size):
-        batch = random.sample(self.buffer, batch_size)
-        states, actions, rewards, next_states = zip(*batch)
-        return np.array(states), np.array(actions), np.array(rewards), np.array(next_states)
+        # # Mirror state
+        # mirrored_state = self.mirror_state(state)
+        # mirrored_prev_state = self.mirror_state(prev_state)
+        # mirrored_prev_action = state['right_paddle']['speed']
+        # mirrored_reward = self.calculate_reward(mirrored_prev_state, mirrored_state, mirrored_prev_action)
+        # self.buffer.append((mirrored_prev_state, mirrored_prev_action, mirrored_reward, mirrored_state, mirrored_prev_action))
+        # print(" [ReplayBuffer] Buffer size: ", len(self.buffer))
+        # # print(" [ReplayBuffer] Added to buffer: ", mirrored_prev_state, mirrored_prev_action, mirrored_reward, mirrored_state, mirrored_prev_action)
+        # with open("state.txt", "a") as f:
+        #     f.write(f"{mirrored_prev_state}, {mirrored_prev_action}, {mirrored_reward}")
 
     def size(self):
         return len(self.buffer)
@@ -76,7 +75,7 @@ class ReplayBuffer:
         return mirrored_state
 
 
-    def calculate_reward(self, prev_state, state):
+    def calculate_reward(self, prev_state, state, prev_action):
         reward = 0
 
         # Reward for scoring a point
@@ -90,22 +89,26 @@ class ReplayBuffer:
         # Reward for bouncing ball on own paddle
         if reward == 0: #Only if no one scored
           if state['ball_speed']['x'] > 0 and prev_state['ball_speed']['x'] < 0:
-              reward += 2
+              reward += 3
+
+        # A bit of penalty for moving paddle
+        if prev_action != 0:
+            reward -= 0.1
 
         return reward
 
-    def state_dict_to_vector(self, state):
+    def state_dict_to_vector(state):
         return [state['ball_position']['x'] / 800.0, state['ball_position']['y'] / 600.0, state['ball_speed']['x'], state['ball_speed']['y'], state['left_paddle']['y'] / 600.0, state['right_paddle']['y'] / 600.0, state['right_paddle']['speed'] / 5.0]
 
     def get_batch(self, batch_size):
         batch = random.sample(self.buffer, batch_size)
-        states, actions, rewards, next_states = zip(*batch)
+        states, actions, rewards, next_states, _ = zip(*batch)
         states_vector = []
         for state in states:
-            states_vector.append(self.state_dict_to_vector(state))
+            states_vector.append(ReplayBuffer.state_dict_to_vector(state))
         next_states_vector = []
         for state in next_states:
-            next_states_vector.append(self.state_dict_to_vector(state))
+            next_states_vector.append(ReplayBuffer.state_dict_to_vector(state))
         actions_vector = []
         for action in actions:
             if action == -5:

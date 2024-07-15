@@ -52,10 +52,10 @@ class Game:
         if self.game_over['ended']:
             logger.debug(f" [Game] Returning Game over: {self.game_over['winner']} ")
             return True
-        if self.scores['left'] >= 3:
+        if self.scores['left'] >= 30:
             logger.debug(f" [Game] Game over: left ")
             self.game_over = {'ended': True, 'winner': 'left'}
-        elif self.scores['right'] >= 3:
+        elif self.scores['right'] >= 30:
             logger.debug(f" [Game] Game over: right ")
             self.game_over = {'ended': True, 'winner': 'right'}
         return False
