@@ -13,6 +13,7 @@ urlpatterns = [
     path('play/<str:username>/', views.play, name="play"),
     path('leaderboards/<str:username>/', views.leaderboards, name="leaderboards"),
     path('profile/<str:username>/', views.profile, name="profile"),
+    path('profile/<str:username>/friends', views.profile, name="friends"),
     path('signUp/', views.signUp, name="signUp"),
 
     # CRUD API views

@@ -88,6 +88,21 @@ def leaderboards(request, username):
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
+def friends(request, username):
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'friends.html')
+    form = signUser()
+    return render(request, 'signIn.html', {"form", form})
+
+def search(request):
+    if request.is_ajax():
+        if request.user.is_authenticated and username != 'Guest':
+            friends = request.user.friends
+            return JsonResponse(friends)
+    else:
+        return JsonResponse({'status': 'error', 'message': form.errors})
+
+
 
 # CRUD API views
 
@@ -184,6 +199,24 @@ def getLeaderboards(request):
         rank += 1
     leaderboard = sorted(leaderboard, key=lambda x: x['score'], reverse=True)
     return JsonResponse(leaderboard, safe=False)
+
+@api_view(['GET'])
+def getFriendsList(request, username):
+    if (MyCustomUser.objets.filter(username=username).count() == 0):
+        return Response({'error': 'User not found'})
+    friendlist = []
+    order = 1
+    user = MyCustomUser.objects.filter(username=username)
+    friends = user.friends
+    for friend in friends:
+        status = False
+        if friend.status == True:
+            status = True
+        friendlist.append({'No.': order, 'username': friend.username, 'status': status})
+        order += 1
+    return JsonResponse(friends, safe=False)
+
+
         
 @api_view(['GET'])
 def statistics(request, username):
@@ -244,6 +277,7 @@ def checkCredentials(request):
 
     if user is not None:
         login(request, user)
+        user.status = True
         return JsonResponse({'status': 'success'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid Username or Password', 'username': username})
@@ -251,6 +285,7 @@ def checkCredentials(request):
 @api_view(['POST'])
 def signOut(request):
     auth.logout(request)
+    user.status = False
     return JsonResponse({'status': 'success'})
 
 @api_view(['POST'])
