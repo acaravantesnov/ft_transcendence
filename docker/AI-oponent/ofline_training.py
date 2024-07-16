@@ -6,8 +6,8 @@ from agent import Agent  # Ensure this imports your modified Agent class
 from config import BUFFER_SIZE
 
 def main():
-    batch_size = 248
-    num_epochs = 3000  # Set the number of epochs you want to train for
+    batch_size = 512
+    num_epochs = 1500  # Set the number of epochs you want to train for
 
     # Initialize the replay buffer and agent
     replay_buffer = ReplayBuffer(buffer_size=BUFFER_SIZE)

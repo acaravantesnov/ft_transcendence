@@ -6,26 +6,45 @@ import torch.optim as optim
 from replay_buffer import ReplayBuffer
 import os
 
+#model2
+# class DQNet(nn.Module):
+#     def __init__(self, input_dim, output_dim):
+#         super(DQNet, self).__init__()
+
+#         self.fc1 = nn.Linear(input_dim, 128)
+#         self.fc2 = nn.Linear(128, 32) #64, 16
+#         self.fc3 = nn.Linear(32, output_dim)
+
+#         self.bn0 = nn.BatchNorm1d(input_dim)
+#         # self.bn1 = nn.BatchNorm1d(64)
+    
+#     def forward(self, x):
+#         x = self.bn0(x)
+#         x = torch.nn.functional.tanh(self.fc1(x))
+#         # x = self.bn1(x)
+#         x = torch.nn.functional.tanh(self.fc2(x))
+#         return self.fc3(x)
+
 class DQNet(nn.Module):
     def __init__(self, input_dim, output_dim):
         super(DQNet, self).__init__()
 
-        self.fc1 = nn.Linear(input_dim, 64)
-        self.fc2 = nn.Linear(64, 16)
-        self.fc3 = nn.Linear(16, output_dim)
+        self.fc1 = nn.Linear(input_dim, 128)
+        self.fc2 = nn.Linear(128, 32) #64, 16
+        self.fc3 = nn.Linear(32, output_dim)
 
-        # self.bn0 = nn.BatchNorm1d(input_dim)
+        self.bn0 = nn.BatchNorm1d(input_dim)
         # self.bn1 = nn.BatchNorm1d(64)
     
     def forward(self, x):
-        # x = self.bn0(x)
+        x = self.bn0(x)
         x = torch.nn.functional.tanh(self.fc1(x))
         # x = self.bn1(x)
         x = torch.nn.functional.tanh(self.fc2(x))
         return self.fc3(x)
 
 class Agent:
-    def __init__(self, side, replay_buffer, input_dim=5, output_dim=3, discount_factor=0.95, epsilon=0.05, lr=0.0005, batch_size=256, model_path="model.pt", tau=0.3, tau_decay=0.995, tau_min=0.05):
+    def __init__(self, side, replay_buffer, input_dim=5, output_dim=3, discount_factor=0.95, epsilon=0.0, lr=0.0005, batch_size=256, model_path="model.pt", tau=0.6, tau_decay=0.995, tau_min=0.05):
         self.side = side
         self.replay_buffer = replay_buffer
         self.discount_factor = discount_factor
@@ -49,7 +68,7 @@ class Agent:
         self.target_model.eval()
         self.model.eval()
 
-        self.optimizer = optim.Adam(self.model.parameters(), lr=lr, weight_decay=0.0001)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=lr, weight_decay=0.00003)
         self.loss_fn = nn.MSELoss()
 
         self.loss_per_step = 0

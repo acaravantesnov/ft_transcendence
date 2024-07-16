@@ -79,6 +79,8 @@ class ReplayBuffer:
                 reward += 10
                 # distance_ball_to_paddle = abs(state['left_paddle']['y'] + 75 - state['ball_position']['y']) / 75.0
                 # reward += 10 * abs(1 - distance_ball_to_paddle) ** 0.5
+                # if abs(state['ball_speed']['y']) > abs(prev_state['ball_speed']['y']):
+                #     reward += 5
         if prev_action != 0:
             reward -= 0.2
         return reward

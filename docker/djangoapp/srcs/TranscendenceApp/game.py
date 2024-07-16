@@ -52,10 +52,10 @@ class Game:
         if self.game_over['ended']:
             logger.debug(f" [Game] Returning Game over: {self.game_over['winner']} ")
             return True
-        if self.scores['left'] >= 60:
+        if self.scores['left'] >= 150:
             logger.debug(f" [Game] Game over: left ")
             self.game_over = {'ended': True, 'winner': 'left'}
-        elif self.scores['right'] >= 60:
+        elif self.scores['right'] >= 150:
             logger.debug(f" [Game] Game over: right ")
             self.game_over = {'ended': True, 'winner': 'right'}
         return False
@@ -92,7 +92,11 @@ class Game:
                 self.ball_speed['x'] *= -1
                 # Increase speed if paddle is moving in the same direction as the ball and decrease if moving in the opposite direction
                 # self.ball_speed['y'] += self.right_paddle['speed'] / 3
-                self.ball_speed['y'] += random.choice([-4/3, 4/3, 0, 0])
+                # self.ball_speed['y'] += random.choice([-4/3, 4/3, 0, 0])
+                if self.ball_speed['y'] > 0:
+                  self.ball_speed['y'] += random.choice([0.0, 1.0])
+                else:
+                  self.ball_speed['y'] -= random.choice([0.0, 1.0])
 
         
         # Ball out of bounds
