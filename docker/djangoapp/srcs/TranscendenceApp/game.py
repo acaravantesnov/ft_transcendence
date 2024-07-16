@@ -12,10 +12,10 @@ class Game:
         self.room_group_name = room_group_name
         self.channel_layer = channel_layer
         self.ball_position = {'x': 400, 'y': 300}
-        self.ball_speed = {'x': 3, 'y': 2}
+        self.ball_speed = {'x': 4, 'y': 2}
         self.ball_size = {'width': 10, 'height': 10}
         self.screen_size = {'width': 800, 'height': 600}
-        self.paddle_size = {'width': 10, 'height': 100}
+        self.paddle_size = {'width': 10, 'height': 150}
         self.left_paddle = {'x': 30, 'y': 250, 'speed': 0}
         self.right_paddle = {'x': 760, 'y': 250, 'speed': 0}
         self.scores = {'left': 0, 'right': 0}
@@ -52,10 +52,10 @@ class Game:
         if self.game_over['ended']:
             logger.debug(f" [Game] Returning Game over: {self.game_over['winner']} ")
             return True
-        if self.scores['left'] >= 30:
+        if self.scores['left'] >= 60:
             logger.debug(f" [Game] Game over: left ")
             self.game_over = {'ended': True, 'winner': 'left'}
-        elif self.scores['right'] >= 30:
+        elif self.scores['right'] >= 60:
             logger.debug(f" [Game] Game over: right ")
             self.game_over = {'ended': True, 'winner': 'right'}
         return False
@@ -87,10 +87,13 @@ class Game:
 
         if self.ball_speed['x'] > 0: # Right paddle
           if self.ball_position['x'] + self.ball_size['width'] >= self.right_paddle['x'] and self.ball_position['x'] + self.ball_size['width'] <= self.right_paddle['x'] + self.paddle_size['width']:
-              if self.right_paddle['y'] <= self.ball_position['y'] <= self.right_paddle['y'] + self.paddle_size['height']:
-                  self.ball_speed['x'] *= -1
-                  # Increase speed if paddle is moving in the same direction as the ball and decrease if moving in the opposite direction
-                  self.ball_speed['y'] += self.right_paddle['speed'] / 3
+              #if self.right_paddle['y'] <= self.ball_position['y'] <= self.right_paddle['y'] + self.paddle_size['height']:
+              if random.random() < 0.4:
+                self.ball_speed['x'] *= -1
+                # Increase speed if paddle is moving in the same direction as the ball and decrease if moving in the opposite direction
+                # self.ball_speed['y'] += self.right_paddle['speed'] / 3
+                self.ball_speed['y'] += random.choice([-4/3, 4/3, 0, 0])
+
         
         # Ball out of bounds
         if self.ball_position['x'] <= 0:
@@ -104,9 +107,9 @@ class Game:
         self.ball_position = {'x': self.screen_size['width'] // 2, 'y': self.screen_size['height'] // 2}
         # Speed depends on who scored last and a bit of randomness
         if last_scored == 'left':
-            x = -2
+            x = -4
         else:
-            x = 2
+            x = 4
         y = random.choice([-2, 2])
         self.ball_speed = {'x': x, 'y': y}
 

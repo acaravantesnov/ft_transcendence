@@ -19,7 +19,7 @@
 .paddle {
     position: absolute;
     width: 1.25%;
-    height: 16.67%;
+    height: 25.0%;
     background-color: blue;
 }
 

@@ -96,8 +96,8 @@ waitlistButton.addEventListener('click', addToWaitlist);
 
 document.addEventListener('keydown', (e) => {
     let speed = 0;
-    if (e.key === 'ArrowUp') speed = -5;
-    else if (e.key === 'ArrowDown') speed = 5;
+    if (e.key === 'ArrowUp') speed = -3;
+    else if (e.key === 'ArrowDown') speed = 3;
     
     if (speed !== 0 && socket) {
         socket.send(JSON.stringify({type: 'paddle', speed}));

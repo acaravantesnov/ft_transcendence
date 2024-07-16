@@ -25,13 +25,13 @@ class DQNet(nn.Module):
         return self.fc3(x)
 
 class Agent:
-    def __init__(self, side, replay_buffer, input_dim=5, output_dim=3, discount_factor=0.9, epsilon=0.1, lr=0.0005, batch_size=256, model_path="model.pt", tau=0.3, tau_decay=0.995, tau_min=0.02):
+    def __init__(self, side, replay_buffer, input_dim=5, output_dim=3, discount_factor=0.95, epsilon=0.05, lr=0.0005, batch_size=256, model_path="model.pt", tau=0.3, tau_decay=0.995, tau_min=0.05):
         self.side = side
         self.replay_buffer = replay_buffer
         self.discount_factor = discount_factor
         self.epsilon = epsilon
         self.batch_size = batch_size
-        self.action_space = [-5, 0, 5]
+        self.action_space = [-3, 0, 3]
         self.tau = tau
         self.tau_decay = tau_decay
         self.tau_min = tau_min
@@ -49,7 +49,7 @@ class Agent:
         self.target_model.eval()
         self.model.eval()
 
-        self.optimizer = optim.Adam(self.model.parameters(), lr=lr, weight_decay=0.001)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=lr, weight_decay=0.0001)
         self.loss_fn = nn.MSELoss()
 
         self.loss_per_step = 0
@@ -75,18 +75,18 @@ class Agent:
         return max_action, max_q_value
 
     def decide_action(self, state):
-        # if random.random() < self.epsilon or self.replay_buffer.size() < self.batch_size:
-        #     action = random.choice(self.action_space)
-        # else:
-        best_action, _ = self.Q_max(ReplayBuffer.state_dict_to_vector(state))
-        action = self.action_space[best_action]
+        if random.random() < self.epsilon or self.replay_buffer.size() < self.batch_size:
+            action = random.choice(self.action_space)
+        else:
+            best_action, _ = self.Q_max(ReplayBuffer.state_dict_to_vector(state))
+            action = self.action_space[best_action]
         self.replay_buffer.add(state, action)
 
-        if self.replay_buffer.size() >= self.batch_size:
-          print(" [Agent] Training step, with buffer size: ", self.replay_buffer.size())
-          for i in range(50):
-            self.train_step(self.batch_size)
-          self.update_target_model()
+        # if self.replay_buffer.size() >= self.batch_size:
+        #   print(" [Agent] Training step, with buffer size: ", self.replay_buffer.size())
+        #   for i in range(50):
+        #     self.train_step(self.batch_size)
+        #   self.update_target_model()
         return action
 
     def train_step(self, batch_size):
@@ -100,8 +100,18 @@ class Agent:
         rewards = torch.tensor(rewards, dtype=torch.float32)
         next_states = torch.tensor(next_states, dtype=torch.float32)
 
+        # current_q_values = torch.sum(self.model(states) * actions, dim=1)
+        # next_q_values = self.target_model(next_states).max(1)[0].detach()
+        # target_q_values = rewards + (self.discount_factor * next_q_values)
+
+
+        # Double DQN: current Q-values and next Q-values using both networks
         current_q_values = torch.sum(self.model(states) * actions, dim=1)
-        next_q_values = self.target_model(next_states).max(1)[0].detach()
+        next_state_actions = self.model(next_states).detach().max(1)[1].unsqueeze(1)
+        # print(self.target_model(next_states).shape)
+        # print(next_state_actions[0:3])
+        # print()
+        next_q_values = self.target_model(next_states).gather(1, next_state_actions).squeeze(1)
         target_q_values = rewards + (self.discount_factor * next_q_values)
 
         loss = self.loss_fn(current_q_values, target_q_values)

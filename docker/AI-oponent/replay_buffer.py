@@ -24,6 +24,15 @@ class ReplayBuffer:
         self.prev_state = state
         self.prev_action = action
         print(" [ReplayBuffer] Buffer size: ", len(self.buffer))
+
+        # # Mirror state
+        # mirrored_state = self.mirror_state(state)
+        # mirrored_prev_state = self.mirror_state(prev_state)
+        # mirrored_prev_action = state['right_paddle']['speed']
+        # mirrored_reward = self.calculate_reward(mirrored_prev_state, mirrored_state, mirrored_prev_action)
+        # self.buffer.append((mirrored_prev_state, mirrored_prev_action, mirrored_reward, mirrored_state, mirrored_prev_action))
+        # print(" [ReplayBuffer] Buffer size: ", len(self.buffer))
+        # # print(" [ReplayBuffer] Added to buffer: ", mirrored_prev_state, mirrored_prev_action, mirrored_reward, mirrored_state, mirrored_prev_action)
     
     def size(self):
         return len(self.buffer)
@@ -67,9 +76,11 @@ class ReplayBuffer:
             reward -= 30
         if reward == 0: 
             if state['ball_speed']['x'] > 0 and prev_state['ball_speed']['x'] < 0:
-                reward += 4
+                reward += 10
+                # distance_ball_to_paddle = abs(state['left_paddle']['y'] + 75 - state['ball_position']['y']) / 75.0
+                # reward += 10 * abs(1 - distance_ball_to_paddle) ** 0.5
         if prev_action != 0:
-            reward -= 0.5
+            reward -= 0.2
         return reward
 
     @staticmethod
