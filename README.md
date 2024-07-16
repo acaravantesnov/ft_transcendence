@@ -862,3 +862,7 @@ https://42born2code.slack.com/archives/C01HH8S372T/p1717948801476869
 - Mejorar responsiveness, y estaría guay añadir botón para modo oscuro (siendo todo en blanco y negro es bastante facil con CSS).
 
 - Backdrop del offcanvas no funciona como me gustaría (se queda).
+
+- Mejorar el SPA. Si se intenta recargar una pagina que no es / , debería cargar todo desde el principio, en lugar de devolver solo el html interior. La idea es que en las views que hacen render, distingan si la petición es de un fetch, o de chrome (ambas peticiones son GET), de modo que se devuelva solo el html interior o la página entera.
+
+- Checkear que es inmune a inyecciones SQL. He hecho alguna prueba y parece que los formularios de django ya lo gestionan.
