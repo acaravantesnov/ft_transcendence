@@ -25,6 +25,10 @@ import os
 #         x = torch.nn.functional.tanh(self.fc2(x))
 #         return self.fc3(x)
 
+#model3(2) : 50, 26
+#model3(3) : 50, 21
+#model3(7) : 60, 30
+
 class DQNet(nn.Module):
     def __init__(self, input_dim, output_dim):
         super(DQNet, self).__init__()
