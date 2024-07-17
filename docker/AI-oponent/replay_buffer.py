@@ -87,7 +87,7 @@ class ReplayBuffer:
 
     @staticmethod
     def state_dict_to_vector(state):
-        return [state['ball_position']['x'] / 800.0, state['ball_position']['y'] / 600.0, state['ball_speed']['x'], state['ball_speed']['y'], state['left_paddle']['y'] / 600.0]
+        return [(state['ball_position']['x'] - 400.0) / 200.0, (state['ball_position']['y'] - 300.0) / 150.0, state['ball_speed']['x'] / 4.0, state['ball_speed']['y'] / 3.2, (state['left_paddle']['y'] - 300.0) / 150.0]
 
     def get_batch(self, batch_size):
         batch = random.sample(self.buffer, batch_size)
@@ -96,6 +96,12 @@ class ReplayBuffer:
         next_states_vector = [ReplayBuffer.state_dict_to_vector(state) for state in next_states]
         actions_vector = [[1, 0, 0] if action < 0 else [0, 1, 0] if action == 0 else [0, 0, 1] for action in actions]
         return np.array(states_vector), np.array(actions_vector), np.array(rewards), np.array(next_states_vector)
+
+
+    def calculate_average_states_vector(self):
+        states = [state for state, _, _, _, _ in self.buffer]
+        states_vector = [ReplayBuffer.state_dict_to_vector(state) for state in states]
+        return np.mean(states_vector, axis=0), np.std(states_vector, axis=0)
 
     def save_buffer(self):
         with open(self.buffer_path, "wb") as f:

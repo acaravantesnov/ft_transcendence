@@ -30,21 +30,34 @@ class DQNet(nn.Module):
         super(DQNet, self).__init__()
 
         self.fc1 = nn.Linear(input_dim, 128)
-        self.fc2 = nn.Linear(128, 32) #64, 16
-        self.fc3 = nn.Linear(32, output_dim)
+        self.fc2 = nn.Linear(128, 32)
+        self.fc3 = nn.Linear(32, 32)
+        self.fc4 = nn.Linear(32, output_dim)
 
-        self.bn0 = nn.BatchNorm1d(input_dim)
-        # self.bn1 = nn.BatchNorm1d(64)
+        # self.bn0 = nn.BatchNorm1d(input_dim)
+        self.bn1 = nn.BatchNorm1d(128)
+        self.bn2 = nn.BatchNorm1d(32)
+        self.bn3 = nn.BatchNorm1d(32)
+
+        #self.out_multiplier = nn.Parameter(torch.tensor(30.0))
     
     def forward(self, x):
-        x = self.bn0(x)
-        x = torch.nn.functional.tanh(self.fc1(x))
+        x = self.fc1(x)
         # x = self.bn1(x)
-        x = torch.nn.functional.tanh(self.fc2(x))
-        return self.fc3(x)
+        x = torch.nn.functional.leaky_relu(x)
+        x = self.fc2(x)
+        # x = self.bn2(x)
+        # x = torch.nn.functional.leaky_relu(x)
+        # x = self.fc3(x)
+        # x = self.bn3(x)
+        x = torch.nn.functional.leaky_relu(x)
+        x = self.fc4(x)
+        # x = torch.nn.functional.tanh(x)
+        # x = x * 20.0
+        return x
 
 class Agent:
-    def __init__(self, side, replay_buffer, input_dim=5, output_dim=3, discount_factor=0.95, epsilon=0.0, lr=0.0005, batch_size=256, model_path="model.pt", tau=0.6, tau_decay=0.995, tau_min=0.05):
+    def __init__(self, side, replay_buffer, input_dim=5, output_dim=3, discount_factor=0.85, epsilon=0.0, lr=0.0002, batch_size=256, model_path="model.pt", tau=0.4, tau_decay=0.995, tau_min=0.1):
         self.side = side
         self.replay_buffer = replay_buffer
         self.discount_factor = discount_factor
