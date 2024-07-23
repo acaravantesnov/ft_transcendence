@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',   # Serving static files like CSS, JavaScript, images.
     'TranscendenceApp',             # Our app.
     'rest_framework',               # REST API.
-    'DashboardApp',                    # dashboard app
 ]
 
 #redis

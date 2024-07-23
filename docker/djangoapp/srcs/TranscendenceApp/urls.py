@@ -14,6 +14,7 @@ urlpatterns = [
     path('leaderboards/<str:username>/', views.leaderboards, name="leaderboards"),
     path('profile/<str:username>/', views.profile, name="profile"),
     path('signUp/', views.signUp, name="signUp"),
+    path('dashboard/<str:username>/', views.dashboard, name="dashboard"),
 
     # CRUD API views
     path('create', views.createUser), # API POST
@@ -32,4 +33,6 @@ urlpatterns = [
     path('signUp/createUser/', views.createUser),
     path('signOut/', views.signOut, name="signOut"),
     path('waitlist/addtowaitlist/<str:username>/', views.addtowaitlist, name="addtowaitlist"),
+
+    
 ]

@@ -1,0 +1,59 @@
+{% load static %}
+
+
+<div class="container">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Dashboard</h1>
+        <hr class="my-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Partidas Ganadas</h5>
+                        <p class="card-text display-1">{{ games_won }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Partidas Perdidas</h5>
+                        <p class="card-text display-1">{{ games_lost }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2 class="mt-5">Desglose por Oponentes</h2>
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Oponente</th>
+                <th>Partidas Ganadas</th>
+                <th>Partidas Perdidas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for opponent in opponents_won %}
+                <tr>
+                    <td>
+                        {% if opponent.player1 != user.id %}
+                            {{ opponent.player1.username }}
+                        {% else %}
+                            {{ opponent.player2.username }}
+                        {% endif %}
+                    </td>
+                    <td>{{ opponent.total }}</td>
+                    <td>0</td>
+                </tr>
+            {% endfor %}
+            {% for opponent in opponents_lost %}
+                <tr>
+                    <td>{{ opponent.winner.username }}</td>
+                    <td>0</td>
+                    <td>{{ opponent.total }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
