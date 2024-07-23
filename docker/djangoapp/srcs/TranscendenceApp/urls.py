@@ -25,6 +25,7 @@ urlpatterns = [
     # API GET views
     path('getUserInfo/', views.getUserInfo, name="getUserInfo"),
     path('getLeaderboards/', views.getLeaderboards, name="getLeaderboards"),
+    path('getDashboard/<str:username>/', views.getDashboard, name="getDashboard"),
     path('statistics/<str:username>/', views.statistics, name="statistics"),
     path('waitlist/checkwaitlist/<str:username>/', views.checkwaitlist, name="checkwaitlist"),
     
@@ -36,3 +37,4 @@ urlpatterns = [
 
     
 ]
+
