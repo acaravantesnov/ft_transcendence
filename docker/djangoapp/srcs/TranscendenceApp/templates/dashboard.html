@@ -1,89 +1,52 @@
 {% load static %}
 
-
-<!--<div class="container">
-    <div class="jumbotron text-center">
-        <h1 class="display-4">Dashboard</h1>
-        <hr class="my-4">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Partidas Ganadas</h5>
-                        <p class="card-text display-1">{{ games_won }}</p>
-                    </div>
-                </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Dashboard</h1>
+        <div class="row mb-4">
+            <div class="col-md-6 text-center">
+                <h2 class="display-4">Games Won: <span id="games-won" class="text-success">0</span></h2>
             </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Partidas Perdidas</h5>
-                        <p class="card-text display-1">{{ games_lost }}</p>
-                    </div>
-                </div>
+            <div class="col-md-6 text-center">
+                <h2 class="display-4">Games Lost: <span id="games-lost" class="text-danger">0</span></h2>
             </div>
         </div>
+        <div>
+            <h3 class="mb-3">Games Details</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Player 1</th>
+                            <th>Player 2</th>
+                            <th>Winner</th>
+                            <th>Date</th>
+                            <th>Duration</th>
+                            <th>Player 1 Score</th>
+                            <th>Player 2 Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="games-list">
+                        <tr>
+                            <td colspan="7" class="text-center">No games played yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="username" style="display: none;">{{ username }}</div>
     </div>
-    <h2 class="mt-5">Desglose por Oponentes</h2>
-    <table class="table table-bordered mt-3">
-        <thead>
-            <tr>
-                <th>Oponente</th>
-                <th>Partidas Ganadas</th>
-                <th>Partidas Perdidas</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for opponent in opponents_won %}
-                <tr>
-                    <td>
-                        {% if opponent.player1 != user.id %}
-                            {{ opponent.player1.username }}
-                        {% else %}
-                            {{ opponent.player2.username }}
-                        {% endif %}
-                    </td>
-                    <td>{{ opponent.total }}</td>
-                    <td>0</td>
-                </tr>
-            {% endfor %}
-            {% for opponent in opponents_lost %}
-                <tr>
-                    <td>{{ opponent.winner.username }}</td>
-                    <td>0</td>
-                    <td>{{ opponent.total }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>-->
-
-
-<body>
-    <h1>Dashboard</h1>
-    <div>
-        <h2>Games Won: <span id="games-won"></span></h2>
-        <h2>Games Lost: <span id="games-lost"></span></h2>
-    </div>
-    <div>
-        <h3>Games Details</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Player 1</th>
-                    <th>Player 2</th>
-                    <th>Winner</th>
-                    <th>Date</th>
-                    <th>Duration</th>
-                    <th>Player 1 Score</th>
-                    <th>Player 2 Score</th>
-                </tr>
-            </thead>
-            <tbody id="games-list"></tbody>
-        </table>
-    </div>
-    <div id="username" style="display: none;">{{ username }}</div>
-
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{% static 'js/dashboard.js' %}"></script>
 </body>
-
+</html>

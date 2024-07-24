@@ -102,7 +102,7 @@ def leaderboards(request, username):
 #    form = signUser()
 #    return render(request, 'signIn.html', {'form': form})
 
-def dashboard(request):
+def dashboard(request, username):
     return render(request, 'dashboard.html', {'username': request.user.username})
 
 
