@@ -97,7 +97,7 @@ def friends(request, username):
 def search(request):
     if request.is_ajax():
         if request.user.is_authenticated and username != 'Guest':
-            friends = request.user.friends
+            friends = request.user.friends.filter(nombre__startswith= request.GET['nombre']).values('nombre', 'id')
             return JsonResponse(friends)
     else:
         return JsonResponse({'status': 'error', 'message': form.errors})
@@ -179,6 +179,26 @@ def getUserInfo(request):
             'avatar': '/media/avatars/default.png',
         })
         
+
+@api_view(['GET'])
+def getUsers(request):
+    users = []
+    all_users = MyCustomUser.objects.all()
+    for user in all_users:
+        if not user.is_superuser:
+            if user != request.user and user not in request.user.friends.all():
+                users.append({'id': user.id, 'username': user.username})
+    return JsonResponse(users, safe=False)
+
+@api_view(['GET'])
+def getRequests(request, username):
+    requests = []
+    all_requests = Friend_Request.objects.filter(to_user__username=username)
+    for req in all_requests:
+        requests.append({'id': req.id, 'from_username': req.from_user.username, 'to_username': req.to_user.username})
+    return JsonResponse(requests, safe=False)
+
+
 @api_view(['GET'])
 def getLeaderboards(request):
     users = MyCustomUser.objects.all()
@@ -200,21 +220,38 @@ def getLeaderboards(request):
     leaderboard = sorted(leaderboard, key=lambda x: x['score'], reverse=True)
     return JsonResponse(leaderboard, safe=False)
 
+def send_friend_request(request, userID):
+    from_user = request.user
+    to_user = MyCustomUser.objects.get(id=userID)
+    friend_request, created = Friend_Request.objects.get_or_create(
+            from_user=from_user, to_user=to_user)
+    if created:
+        return HttpResponse(' friend request sent ')
+    else:
+        return HttpResponse(' friend request was already sent ')
+
+def accept_friend_request(request, requestID):
+    friend_request = Friend_Request.objects.get(id=requestID)
+    if friend_request.to_user == request.user:
+        friend_request.to_user.friends.add(friend_request.from_user)
+        friend_request.from_user.friends.add(friend_request.to_user)
+        friend_request.delete()
+        return HttpResponse(' friend request accepted ')
+    else:
+        return HttpResponse(' friend request not accepted ')
+
 @api_view(['GET'])
-def getFriendsList(request, username):
-    if (MyCustomUser.objets.filter(username=username).count() == 0):
+def getFriendList(request, username):
+    if (MyCustomUser.objects.filter(username=username).count() == 0):
         return Response({'error': 'User not found'})
     friendlist = []
     order = 1
-    user = MyCustomUser.objects.filter(username=username)
-    friends = user.friends
+    user = MyCustomUser.objects.get(username=username)
+    friends = user.friends.all()
     for friend in friends:
-        status = False
-        if friend.status == True:
-            status = True
-        friendlist.append({'No.': order, 'username': friend.username, 'status': status})
+        friendlist.append({'order': order, 'username': friend.username, 'stat': friend.status})
         order += 1
-    return JsonResponse(friends, safe=False)
+    return JsonResponse(friendlist, safe=False)
 
 
         

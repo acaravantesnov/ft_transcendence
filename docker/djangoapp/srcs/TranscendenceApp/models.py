@@ -22,7 +22,7 @@ What should the MyCustomUser model add to the default User model? (animeflv for 
 '''
 class MyCustomUser(AbstractUser):
     avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png')
-    friends = models.ManyToManyField('self', blank=True)
+    friends = models.ManyToManyField("MyCustomUser", blank=True)
     status = False
 
     def __str__(self):
@@ -34,6 +34,12 @@ class MyCustomUser(AbstractUser):
             return await cls.objects.aget(username=username)
         except cls.DoesNotExist:
             return None
+
+class Friend_Request(models.Model):
+    from_user = models.ForeignKey(
+            MyCustomUser, related_name='from_user', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(
+            MyCustomUser, related_name='to_user', on_delete=models.CASCADE)
 
 class Game(models.Model):
     player1 = models.ForeignKey(MyCustomUser, on_delete=models.CASCADE, related_name='player1', null=True)

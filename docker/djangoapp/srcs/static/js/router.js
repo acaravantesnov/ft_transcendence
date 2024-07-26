@@ -3,7 +3,8 @@ const startsWithRoutes = [
     '/users/waitlist/',
     '/users/play/',
     '/users/leaderboards/',
-    '/users/profile/'
+    '/users/profile/',
+    '/users/friends/'
 ]
 
 var routes = {
@@ -55,6 +56,7 @@ const locationHandler = async () => {
         const route = routes[location] || routes[404];
         html = await fetch(route.urlPattern).then(res => res.text());
     }
+	window.alert(route);
 
     insertHTML(html, document.getElementById('content'));
 }
