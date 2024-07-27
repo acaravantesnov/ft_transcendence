@@ -50,6 +50,37 @@ logger = logging.getLogger("views")
 # Normal views
 
 def title(request):
+    MyCustomUser.objects.get_or_create(
+            username="AI",
+            first_name="diegoantolin",
+            last_name="galaxyBrain",
+            email="AI@dagDag.mad",
+            password="tutu")
+    MyCustomUser.objects.get_or_create(
+            username="mortega",
+            first_name="Manuel",
+            last_name="Ortega",
+            email="mortega@42.fr",
+            password="42")
+    MyCustomUser.objects.get_or_create(
+            username="dgarcia",
+            first_name="diego",
+            last_name="garcia",
+            email="digarcia@42.fr",
+            password="42")
+    MyCustomUser.objects.get_or_create(
+            username="acaravan",
+            first_name="Alberrto",
+            last_name="Caravantes",
+            email="acaravan@42.fr",
+            password="42")
+    MyCustomUser.objects.get_or_create(
+            username="alaguila",
+            first_name="Alex",
+            last_name="Aguila",
+            email="alaguila@42.fr",
+            password="42")
+
     if request.user.is_authenticated:
         return render(request, 'title.html')
     return redirect('home', username='Guest')
@@ -339,5 +370,3 @@ def getData(request):
     users = MyCustomUser.objects.all()
     serializer = MyCustomUserSerializer(users, many=True)
     return Response(serializer.data)
-
-    

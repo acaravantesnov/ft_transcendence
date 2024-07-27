@@ -10,31 +10,25 @@
                     </div>
                 </div>
 		<div id="searchbox" class="search">
-			<form action="#">
-                		<input type="text"
-                    			placeholder=" Search usuarios"
-                    			name="search">
-                		<button>
-                    			<i class="fa fa-search"
-                        		style="font-size: 18px;">
-                    			</i>
-                		</button>
+			<form autocomplate="off" action="/action_page.php">
+				<div class="autocomplate" style="width:300px;">
+					<input id="myInput" type="text" name="Users" placeholder="jaimito">
+				</div>
+				<input type="submit">
             		</form>
         	</div>
 		</br>
 		<div class="row">
 			<div class="col-12">
 				<table class="table table-striped table-hover" id="userTable">
-					<ul class="all_users">
-						{% for user in all_users %}
-						{% if not user.is_superuser %}
-						{% if user not in request.user.friends.all and user != request.user %}
-						<h1>{{user}} <a href="/send_friend_request/{{user.id}}">Send friend request</a></h1>
-						{% endif %}
-						{% endif %}
-						{% endfor %}
-					</ul>
-                            		<tbody id="usersbox"></tbody>
+	                            <thead>
+        	                        <tr>
+                	                    <th scope="col">Rank</th>
+                        	            <th scope="col">Username</th>
+                                	    <th scope="col">Status</th>
+                               		</tr>
+				    </thead>
+				    <tbody id="usersbox"></tbody>
 				</table>
 			</div>
 		</div>
@@ -43,9 +37,6 @@
 			<div class="col-12">
 				<table class="table table-striped table-hover" id="requestTable">
 					<ul class="all_friend_requests">
-						{% for request in all_friend_requests %}
-						<h1>{{friend_request.from_user}} <a href="/accept_friend_request/{{friend_request.id}}">Accept friend request</a></h1>
-						{% endfor %}
 					</ul>
                             		<tbody id="requestsbox"></tbody>
 				</table>
