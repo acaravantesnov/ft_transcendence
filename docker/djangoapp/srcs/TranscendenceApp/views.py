@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages, auth
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Q
+from rest_framework import status
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import make_password
@@ -202,7 +203,7 @@ def getLeaderboards(request):
     leaderboard = sorted(leaderboard, key=lambda x: x['score'], reverse=True)
     return JsonResponse(leaderboard, safe=False)
 
-api_view(['GET'])
+@api_view(['GET'])
 def getDashboard(request, username):
     if request.user.is_authenticated and username != 'Guest':
         user = request.user

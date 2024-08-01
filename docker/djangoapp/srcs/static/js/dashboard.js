@@ -1,13 +1,17 @@
-document.addEventListener('DOMContentLoaded', function() {
+//document.addEventListener('DOMContentLoaded', function() {
+async function dashboard () {
+    console.log('DOM fully loaded and parsed');
     const username = document.getElementById('username').textContent;
+    console.log('Username:', username);
 
-    fetch(`getDashboard/${username}/`)
+    fetch(`/users/getDashboard/${username}/`)
         .then(response => response.json())
         .then(data => {
             document.getElementById('games-won').textContent = data.games_won || 0;
             document.getElementById('games-lost').textContent = data.games_lost || 0;
 
             const gamesList = document.getElementById('games-list');
+            gamesList.innerHTML = '';
             if (data.games_list.length === 0) {
                 gamesList.innerHTML = '<tr><td colspan="7" class="text-center">No games played yet</td></tr>';
             } else {
@@ -27,4 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => console.error('Error fetching dashboard data:', error));
-});
+}
+
+dashboard();
+//});
