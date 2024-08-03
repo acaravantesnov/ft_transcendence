@@ -15,8 +15,8 @@ urlpatterns = [
     path('profile/<str:username>/', views.profile, name="profile"),
     path('friends/<str:username>/', views.friends, name="friends"),
     path('signUp/', views.signUp, name="signUp"),
-    path('send_friend_request/<int:userID>/', views.send_friend_request, name='send_friend_request'),
-    path('accept_friend_request/<int:requestID>/', views.accept_friend_request, name='accept_friend_request'),
+    path('editProfile/', views.editProfile, name="editProfile"),
+    path('changePassword/', views.changePassword, name="newPassword"),
 
     # CRUD API views
     path('create', views.createUser), # API POST
@@ -38,4 +38,9 @@ urlpatterns = [
     path('signUp/createUser/', views.createUser),
     path('signOut/', views.signOut, name="signOut"),
     path('waitlist/addtowaitlist/<str:username>/', views.addtowaitlist, name="addtowaitlist"),
+    path('send_friend_request/<int:userID>/', views.send_friend_request, name='send_friend_request'),
+    path('accept_friend_request/<int:requestID><str:accepted>/', views.accept_friend_request, name='accept_friend_request'),
+    path('editProfile/upadateProfile/<str:username>/', views.editProfile),
+    path('changePassword/upadatePassword/<str:username>/', views.changePassword),
+
 ]

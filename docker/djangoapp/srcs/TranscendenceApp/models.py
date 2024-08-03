@@ -23,7 +23,7 @@ What should the MyCustomUser model add to the default User model? (animeflv for 
 class MyCustomUser(AbstractUser):
     avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png')
     friends = models.ManyToManyField("MyCustomUser", blank=True)
-    status = False
+    status = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username

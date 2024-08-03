@@ -4,7 +4,12 @@ const startsWithRoutes = [
     '/users/play/',
     '/users/leaderboards/',
     '/users/profile/',
-    '/users/friends/'
+    '/users/friends/',
+    '/users/send_friend_request/',
+    '/users/accept_friend_request/',
+    '/users/signOut/',
+    '/users/editProfile/',
+    '/users/changePassword/',
 ]
 
 var routes = {
@@ -22,6 +27,11 @@ var routes = {
         urlPattern: '/users/signUp/',
         title: 'Sign Up',
         description: 'Sign Up'
+    },
+    '/users/editProfile/': {
+	urlPattern: '/users/editProfile/',
+	title: 'Update Profile',
+	description: 'Update Profile'
     },
 }
 

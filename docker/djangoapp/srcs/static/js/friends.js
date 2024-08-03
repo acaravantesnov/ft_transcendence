@@ -26,17 +26,51 @@ async function friend_requests (){
 	const response = await fetch(`/users/getRequests/${user.username}`);
    	const data = await response.json();
 	const tableBody = document.getElementById('requestTable').getElementsByTagName('tbody')[0];
+	    if (data.length != 0) {
+		const a = document.createElement("h2");
+		a.setAttribute("class", "text-center");
+		a.innerHTML = "Requests";
+		tableBody.parentNode.parentNode.before(a);
+		const b = document.createElement("thead");
+		r = b.insertRow();
+		const ra = r.insertCell(0);
+		ra.setAttribute("scope", "col");
+		ra.outerHTML = "<th>Rank</th>";
+		const player = r.insertCell(1);
+		player.setAttribute("scope", "col");
+		player.outerHTML = "<th>Player</th>";
+		const add = r.insertCell(2);
+		add.setAttribute("scope", "col");
+		add.outerHTML = "<th>Accept</th>";
+		
+		tableBody.before(b);
+	    }
 	data.forEach(element => {
 		const row = tableBody.insertRow();
-		const from_username = row.insertCell(0);
-		const newButton = row.insertCell(1);
-		const to_username = row.insertCell(2);
-		const newLink = document.createElement("a");
+		const rank = row.insertCell(0);
+		const from_username = row.insertCell(1);
+		const buttons = row.insertCell(2);
 		from_username.textContent = element.from_username;
-		to_username.textContent = element.to_username;
-		newLink.innerHTML = "AcceptRequest";
-		newLink.setAttribute("href", "/users/accept_friend_request/"+element.id);
-		newButton.appendChild(newLink);
+		rank.textContent = element.id;
+
+		buttons.setAttribute("class", "in-line");
+		const accept = document.createElement("button");
+		accept.setAttribute("type", "button");
+		accept.setAttribute("class", "btn btn-success");
+		accept.setAttribute("onclick", `accept_request(${element.id}, "accepted")`);
+		const check = document.createElement("i");
+		check.setAttribute("class", "fa fa-check");
+		accept.appendChild(check);
+		buttons.appendChild(accept);
+
+		const reject = document.createElement("button");
+		reject.setAttribute("type", "button");
+		reject.setAttribute("class", "btn btn-danger");
+		reject.setAttribute("onclick", `accept_request(${element.id}, "rejected")`);
+		const cross = document.createElement("i");
+		cross.setAttribute("class", "fa fa-times");
+		reject.appendChild(cross);
+		buttons.appendChild(reject);
 
 	});
 	    } catch (error) {
@@ -58,7 +92,10 @@ async function friends (){
 		const stat = row.insertCell(2);
 		rank.textContent = element.order;
 		username.textContent = element.username;
-		stat.textContent = element.stat;
+		const circle = document.createElement("button");
+		if (element.stat == true) { circle.setAttribute("class", "btn btn-success btn-circle"); }
+		else { circle.setAttribute("class", "btn btn-danger btn-circle"); }
+		stat.appendChild(circle);
 	});
 	    } catch (error) {
 	    console.error('Error:', error);
@@ -72,102 +109,130 @@ async function autocomplete(inp) {
 	var arr = [];
 	const response = await fetch('/users/getUsers/');
    	const data = await response.json();
-
+	
 	data.forEach(element => {
 		arr.push(element.username)
 	});
 
-	var currentFocus;
-
 	inp.addEventListener("input", function(e) {
 
+		var val = this.value;
 
-		var a, b, i, val = this.value;
-
-		
 		closeAllLists();
 		if (!val) { return false; }
-		currentFocus = -1;
 
-		a = document.createElement("div");
-		a.setAttribute("id", this.id + "autocomplete-list");
-		a.setAttribute("class", "autocomplete-items");
-		this.parentNode.appendChild(a);
-
-		for (i = 0; i < arr.length; i++) {
-			if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-				b = document.createElement("div");
-				b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-				b.innerHTML += arr[i].substr(val.length);
-				b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-				
-				b.addEventListener("click", function(e) {
-					inp.value = this.getElementByTagName("input")[0].value;
-					closeAllLists();
-				});
-				a.appendChild(b);
-				const tableBody = document.getElementById('userTable').getElementsByTagName('tbody')[0];
-				data.forEach(element => {
-					const row = tableBody.insertRow();
-					const username = row.insertCell(0);
-					const newButton = row.insertCell(1);
-					const newLink = document.createElement("a");
-					username.textContent = element.username;
-					newLink.innerHTML = "SendRequest";
-					newLink.setAttribute("href", "/users/send_friend_request/"+element.id);
-					newButton.appendChild(newLink);
-				});
-
-			}
-		}
-	});
-
-	inp.addEventListener("keydown", function(e) {
-		var x = document.getElementById(this.id + "autocomplete-list");
-
-		if (x) x = x.getElementByTagName("div");
-		if (e.keyCode == 40) {
-			currentFocus++;
-			addActive(x);
-		} else if (e.keyCode == 38) {
-			currentFocus--;
-			addActive(x);
-		} else if (e.keyCode == 13) {
-			e.preventDefault();
-			if (currentFocus > -1) {
-				if (x) x[currentFocus].click();
-			}
-		}
-	});
-
-	function addActive(x) {
-		if (!x) return false;
-		removeActive(x);
-
-		if (currentFocus >= x.length) currentFocus = 0;
-		if (currentFocus < 0) currentFocus = (x.length - 1);
-		x[currentFocus].classList.add("autocomplete-active");
-	}
-	function removeActive(x) {
-		for (var i = 0; i < x.length; i++) {
-			x[i].classList.remove("autocomplete-active");
-		}
-	}
-	function closeAllLists(elmnt) {
-		var x = document.getElementsByClassName("autocomplete-items");
 		const tableBody = document.getElementById('userTable').getElementsByTagName('tbody')[0];
-		for (var i = 0; i < x.length; i++) {
-			if (elmnt != x[i] && elmnt != inp) {
-				x[i].parentNode.removeChild(x[i]);
-				tableBody.deleteRow(i);
+		const a = document.createElement("h2");
+		a.setAttribute("class", "text-center");
+		a.innerHTML = "Users";
+		tableBody.parentNode.before(a);
+		const b = document.createElement("thead");
+		r = b.insertRow();
+		const ra = r.insertCell(0);
+		ra.setAttribute("scope", "col");
+		ra.outerHTML = "<th>Rank</th>";
+		const player = r.insertCell(1);
+		player.setAttribute("scope", "col");
+		player.outerHTML = "<th>Player</th>";
+		const add = r.insertCell(2);
+		add.setAttribute("scope", "col");
+		add.outerHTML = "<th>Add</th>";
+		
+		tableBody.before(b);
+
+
+
+		for (var i = 0; i < arr.length; i++) {
+			if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+				data.forEach(element => {
+					var flag = false;
+					if (arr[i] == element.username) {
+					const row = tableBody.insertRow();
+					const rank = row.insertCell(0);
+					const username = row.insertCell(1);
+					const newButton = row.insertCell(2);
+					rank.textContent = element.id;
+					username.textContent = element.username;
+					
+					const button = document.createElement("button");
+					button.innerHTML = "+";
+					button.setAttribute("type", "button");
+					button.setAttribute("class", "btn btn-primary");
+					button.setAttribute("onclick", `send_request(${element.id})`);
+					newButton.appendChild(button);
+					}
+				});
+
 			}
 		}
-	}
+	});
 
-	document.addEventListener("click", function (e) {
-		closeAllLists(e.target);
-	})
+	function closeAllLists(elmnt) {
+		const tableBody = document.getElementById('userTable').getElementsByTagName('tbody')[0];
+		const table = document.getElementById('userTable').getElementsByTagName('thead')[0];
+		const title = document.getElementById('userTable').parentNode.getElementsByTagName('h2')[0];
+		const l = tableBody.rows.length;
+
+		for (var i = 0; i < l; i++) {
+			tableBody.deleteRow(0);
+		}
+		if (title) { title.remove(); }
+		if (table) { table.remove(); }
+	}
 }
+
+async function send_request(userID) {
+
+	const responseReq = await fetch(`/users/send_friend_request/${userID}/`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRFToken': getCookie('csrftoken')
+		}
+	});
+	const data = await responseReq.json();
+
+	if (data.status === 'success') { sentRequestToast(); } else { notSentRequestToast(); }
+}
+
+async function accept_request(requestID, accepted) {
+
+	const responseReq = await fetch(`/users/accept_friend_request/${requestID}${accepted}/`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRFToken': getCookie('csrftoken')
+		}
+	});
+	const data = await responseReq.json();
+
+	if (data.status === "success") { acceptedRequestToast(); } else { rejectedRequestToast(); }
+}
+
+
+function notSentRequestToast() {
+	
+	var toast = new bootstrap.Toast(document.getElementById('notSentRequestToast'));
+	toast.show();
+}
+
+function sentRequestToast() {
+
+	var toast = new bootstrap.Toast(document.getElementById('sentRequestToast'));
+	toast.show();
+}
+function rejectedRequestToast() {
+	
+	var toast = new bootstrap.Toast(document.getElementById('rejectedRequestToast'));
+	toast.show();
+}
+
+function acceptedRequestToast() {
+
+	var toast = new bootstrap.Toast(document.getElementById('acceptedRequestToast'));
+	toast.show();
+}
+
 
 //users();
 friend_requests();

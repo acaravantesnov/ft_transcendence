@@ -50,37 +50,6 @@ logger = logging.getLogger("views")
 # Normal views
 
 def title(request):
-    MyCustomUser.objects.get_or_create(
-            username="AI",
-            first_name="diegoantolin",
-            last_name="galaxyBrain",
-            email="AI@dagDag.mad",
-            password="tutu")
-    MyCustomUser.objects.get_or_create(
-            username="mortega",
-            first_name="Manuel",
-            last_name="Ortega",
-            email="mortega@42.fr",
-            password="42")
-    MyCustomUser.objects.get_or_create(
-            username="dgarcia",
-            first_name="diego",
-            last_name="garcia",
-            email="digarcia@42.fr",
-            password="42")
-    MyCustomUser.objects.get_or_create(
-            username="acaravan",
-            first_name="Alberrto",
-            last_name="Caravantes",
-            email="acaravan@42.fr",
-            password="42")
-    MyCustomUser.objects.get_or_create(
-            username="alaguila",
-            first_name="Alex",
-            last_name="Aguila",
-            email="alaguila@42.fr",
-            password="42")
-
     if request.user.is_authenticated:
         return render(request, 'title.html')
     return redirect('home', username='Guest')
@@ -113,6 +82,15 @@ def signUp(request):
     form = newUser()
     return render(request, "signUp.html", {"form": form})
 
+def editProfile(request):
+    if request.user.is_authenticated:
+        form = updateUser()
+    return render(request, 'editProfile.html', {'form': form})
+
+def changePassword(request):
+    form = newPassword()
+    return render(request, 'changePassword.html', {'form': form})
+
 def leaderboards(request, username):
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'leaderboards.html')
@@ -124,15 +102,6 @@ def friends(request, username):
         return render(request, 'friends.html')
     form = signUser()
     return render(request, 'signIn.html', {"form", form})
-
-def search(request):
-    if request.is_ajax():
-        if request.user.is_authenticated and username != 'Guest':
-            friends = request.user.friends.filter(nombre__startswith= request.GET['nombre']).values('nombre', 'id')
-            return JsonResponse(friends)
-    else:
-        return JsonResponse({'status': 'error', 'message': form.errors})
-
 
 
 # CRUD API views
@@ -217,7 +186,7 @@ def getUsers(request):
     all_users = MyCustomUser.objects.all()
     for user in all_users:
         if not user.is_superuser:
-            if user != request.user and user not in request.user.friends.all():
+            if user != request.user and user.username != "AI" and user not in request.user.friends.all():
                 users.append({'id': user.id, 'username': user.username})
     return JsonResponse(users, safe=False)
 
@@ -251,25 +220,6 @@ def getLeaderboards(request):
     leaderboard = sorted(leaderboard, key=lambda x: x['score'], reverse=True)
     return JsonResponse(leaderboard, safe=False)
 
-def send_friend_request(request, userID):
-    from_user = request.user
-    to_user = MyCustomUser.objects.get(id=userID)
-    friend_request, created = Friend_Request.objects.get_or_create(
-            from_user=from_user, to_user=to_user)
-    if created:
-        return HttpResponse(' friend request sent ')
-    else:
-        return HttpResponse(' friend request was already sent ')
-
-def accept_friend_request(request, requestID):
-    friend_request = Friend_Request.objects.get(id=requestID)
-    if friend_request.to_user == request.user:
-        friend_request.to_user.friends.add(friend_request.from_user)
-        friend_request.from_user.friends.add(friend_request.to_user)
-        friend_request.delete()
-        return HttpResponse(' friend request accepted ')
-    else:
-        return HttpResponse(' friend request not accepted ')
 
 @api_view(['GET'])
 def getFriendList(request, username):
@@ -346,14 +296,17 @@ def checkCredentials(request):
     if user is not None:
         login(request, user)
         user.status = True
+        user.save()
         return JsonResponse({'status': 'success'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid Username or Password', 'username': username})
 
 @api_view(['POST'])
 def signOut(request):
-    auth.logout(request)
-    user.status = False
+    #user = MyCustomerUser.objects.get(request.data.get('username'))
+    #user.status = False
+    #user.save()
+    #auth.logout(request)
     return JsonResponse({'status': 'success'})
 
 @api_view(['POST'])
@@ -361,6 +314,48 @@ def addtowaitlist(request, username):
     logger.debug(f" [views] addtowaitlist: {username} ")
     waiting_room.add_user(username)
     return JsonResponse({'status': 'success'})
+
+@api_view(['POST'])
+def send_friend_request(request, userID):
+    from_user = request.user
+    to_user = MyCustomUser.objects.get(id=userID)
+    friend_request, created = Friend_Request.objects.get_or_create(
+            from_user=from_user, to_user=to_user)
+    if created:
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error'})
+
+@api_view(['POST'])
+def accept_friend_request(request, requestID, accepted):
+    friend_request = Friend_Request.objects.get(id=requestID)
+    if friend_request.to_user == request.user and accepted=="accepted":
+        friend_request.to_user.friends.add(friend_request.from_user)
+        friend_request.from_user.friends.add(friend_request.to_user)
+        friend_request.delete()
+        return JsonResponse({'status': 'success'})
+    else:
+        friend_request.delete()
+        return JsonResponse({'status': 'error'})
+
+@api_view(['POST'])
+def updateProfile(request, username):
+    newUsername = request.data.username
+    first_name = request.data.first_name
+    last_name = request.data.first_name
+    email = request.data.email
+    user = MyCustomUser.objects.get(username=username)
+
+    user.username = newUsername
+    user.first_name = first_name
+    user.last_name = last_name
+    user.email = email
+    if user.save():
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'})
+
+#@api_view(['POST'])
+#def newPassword(request, username):
 
 
 # API unused views
