@@ -11,4 +11,5 @@ websocket_urlpatterns = [
         # self.user_id = self.scope['url_route']['kwargs']['user_id']
     # const socket = new WebSocket('ws://' + window.location.host + '/ws/game2/digarcia/' + roomName + '/left/');
     re_path(r'ws/game2/(?P<user_id>\w+)/(?P<room_name>\w+)/(?P<side>\w+)/$', consumers.GameConsumer.as_asgi()),
+#    re_path(r'profile/(?P<str:username>/friends/)', search, name='searchFriends'),
 ]

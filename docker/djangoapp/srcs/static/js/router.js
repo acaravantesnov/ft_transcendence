@@ -3,7 +3,13 @@ const startsWithRoutes = [
     '/users/waitlist/',
     '/users/play/',
     '/users/leaderboards/',
-    '/users/profile/'
+    '/users/profile/',
+    '/users/friends/',
+    '/users/send_friend_request/',
+    '/users/accept_friend_request/',
+    '/users/signOut/',
+    '/users/editProfile/',
+    '/users/changePassword/',
 ]
 
 var routes = {
@@ -21,6 +27,11 @@ var routes = {
         urlPattern: '/users/signUp/',
         title: 'Sign Up',
         description: 'Sign Up'
+    },
+    '/users/editProfile/': {
+	urlPattern: '/users/editProfile/',
+	title: 'Update Profile',
+	description: 'Update Profile'
     },
 }
 
@@ -55,6 +66,7 @@ const locationHandler = async () => {
         const route = routes[location] || routes[404];
         html = await fetch(route.urlPattern).then(res => res.text());
     }
+	window.alert(route);
 
     insertHTML(html, document.getElementById('content'));
 }

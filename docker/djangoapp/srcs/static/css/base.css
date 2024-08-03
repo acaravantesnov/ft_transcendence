@@ -116,3 +116,13 @@ main {
 .btn-image:active img {
     opacity: 0.8; /* Optional: add a visual cue when the image is clicked */
 }
+
+.btn-circle {
+	width: 15px;
+	height: 15px;
+	padding: 6px 0px;
+	border-radius: 10px;
+	text-align: center;
+	font-size: 8px;
+	line-height: 1.42857;
+}
