@@ -36,7 +36,7 @@ urlpatterns = [
     # API POST views
     path('checkCredentials/', views.checkCredentials, name="checkCredentials"),
     path('signUp/createUser/', views.createUser),
-    path('signOut/', views.signOut, name="signOut"),
+    path('signOut/<str:username>/', views.signOut, name="signOut"),
     path('waitlist/addtowaitlist/<str:username>/', views.addtowaitlist, name="addtowaitlist"),
     path('send_friend_request/<int:userID>/', views.send_friend_request, name='send_friend_request'),
     path('accept_friend_request/<int:requestID><str:accepted>/', views.accept_friend_request, name='accept_friend_request'),

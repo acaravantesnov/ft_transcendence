@@ -302,11 +302,11 @@ def checkCredentials(request):
         return JsonResponse({'status': 'error', 'message': 'Invalid Username or Password', 'username': username})
 
 @api_view(['POST'])
-def signOut(request):
-    #user = MyCustomerUser.objects.get(request.data.get('username'))
-    #user.status = False
-    #user.save()
-    #auth.logout(request)
+def signOut(request, username):
+    user = MyCustomUser.objects.get(username=username)
+    user.status = False
+    user.save()
+    auth.logout(request)
     return JsonResponse({'status': 'success'})
 
 @api_view(['POST'])
@@ -357,6 +357,9 @@ def updateProfile(request, username):
 #@api_view(['POST'])
 #def newPassword(request, username):
 
+#@api_view(['POST'])
+#def updateAvatar(request):
+    
 
 # API unused views
 
