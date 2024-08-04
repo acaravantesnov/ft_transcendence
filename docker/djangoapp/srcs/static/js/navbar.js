@@ -42,7 +42,7 @@ document.getElementById('signOut').addEventListener('click', (e) => {
 
 async function signOut() {
 	
-	const a = await fetch('/users/signOut/', {
+	const a = await fetch(`/users/signOut/${user.username}/`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

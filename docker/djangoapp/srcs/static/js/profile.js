@@ -9,8 +9,8 @@ document.getElementById('date_joined').innerHTML = `<h5>Date joined: </h5>${user
 
 document.getElementById('avatar').innerHTML = `<img src="${user.avatar}" alt="logo" class="image-center" style="width: 15vh; height: 15vh;">`;
 
-document.getElementById('edit_profile').getElementsByTagName('a')[0].setAttribute("href", "/users/editProfile/");
-document.getElementById('change_password').getElementsByTagName('a')[0].setAttribute("href", `/users/changePassword/${user.username}`);
+//document.getElementById('edit_profile').getElementsByTagName('a')[0].setAttribute("href", "/users/editProfile/");
+//document.getElementById('change_password').getElementsByTagName('a')[0].setAttribute("href", `/users/changePassword/${user.username}`);
 //document.getElementById('choose_avatar').getElementsByTagName('a')[0].setAttribute("href", `/users/editProfile/${user.username}`);
 
 
@@ -26,7 +26,7 @@ async function updateAvatar() {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				'X-CSRFToken': 
+				'X-CSRFToken': formData('csrfmiddlewaretoken'), 
 			},
 			body: formData,
 		});
