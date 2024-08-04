@@ -66,7 +66,7 @@ const locationHandler = async () => {
         const route = routes[location] || routes[404];
         html = await fetch(route.urlPattern).then(res => res.text());
     }
-	window.alert(route);
+//	window.alert(route);
 
     insertHTML(html, document.getElementById('content'));
 }

@@ -306,7 +306,7 @@ def signOut(request):
     #user = MyCustomerUser.objects.get(request.data.get('username'))
     #user.status = False
     #user.save()
-    #auth.logout(request)
+    auth.logout(request)
     return JsonResponse({'status': 'success'})
 
 @api_view(['POST'])
@@ -357,6 +357,9 @@ def updateProfile(request, username):
 #@api_view(['POST'])
 #def newPassword(request, username):
 
+#@api_view(['POST'])
+#def updateAvatar(request):
+    
 
 # API unused views
 

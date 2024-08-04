@@ -23,7 +23,7 @@
 
 	    <button id="choose_avatar" type="button" class="btn btn-primary"><a>Choose your avatar</a></button>
     </div>
-    <form action="" method=POST enctype="multipart/form-data">
+    <form onsubmit="updateAvatar();return false;" method=POST enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
             <label for="id_avatar">Avatar</label>
