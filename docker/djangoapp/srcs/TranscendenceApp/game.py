@@ -120,7 +120,7 @@ class Game:
                 logger.debug(f" [Game] Task cancelled ")
             else:
                 logger.debug(f" [Game] Task is None ")
-        self.scores = {'left': 0, 'right': 0}
+        #self.scores = {'left': 0, 'right': 0}
 
     def get_state(self):
         return {
