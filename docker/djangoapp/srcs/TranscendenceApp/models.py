@@ -54,6 +54,13 @@ class Game(models.Model):
         return f'{self.player1} vs {self.player2}'
     
     def save(self, *args, **kwargs):
+        print(f"Player 1: {self.player1}")
+        print(f"Player 2: {self.player2}")
+        print(f"Winner: {self.winner}")
+        print(f"Date: {self.date}")
+        print(f"Duration: {self.duration}")
+        print(f"Player 1 Score: {self.player1_score}")
+        print(f"Player 2 Score: {self.player2_score}")
         # Ensure that the winner is one of the players or None
         if self.winner not in [self.player1, self.player2, None]:
             raise ValueError("Winner must be either player1, player2, or None.")

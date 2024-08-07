@@ -6,6 +6,8 @@ In sime frameworks it is called an action, but in Django it is called a view.
 from django.shortcuts import render, redirect
 from django.contrib import messages, auth
 from django.http import HttpResponse, JsonResponse
+from django.db.models import Q
+from rest_framework import status
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import make_password
@@ -94,20 +96,11 @@ def friends(request, username):
     form = signUser()
     return render(request, 'signIn.html', {"form", form})
 
+def dashboard(request, username):
+    return render(request, 'dashboard.html', {'username': request.user.username})
+
 
 # CRUD API views
-
-# @api_view(['POST'])
-# def createUser(request):
-#     request.data['password'] = make_password(request.data['password'])
-    
-#     serializer = MyCustomUserSerializer(data=request.data)
-
-#     if serializer.is_valid():
-#         serializer.save()
-#         return JsonResponse({'status': 'success'})
-#     else:
-#         return JsonResponse({'status': 'error', 'message': serializer.errors})
     
 @api_view(['POST'])
 def createUser(request):
@@ -213,6 +206,35 @@ def getLeaderboards(request):
         rank += 1
     return JsonResponse(leaderboard, safe=False)
 
+@api_view(['GET'])
+def getDashboard(request, username):
+    if request.user.is_authenticated and username != 'Guest':
+        user = request.user
+        games_won = Game.objects.filter(winner=user).count()
+        games_lost = Game.objects.filter(Q(player1=user) | Q(player2=user)).exclude(winner=user).count()
+
+        games_details = Game.objects.filter(Q(player1=user) | Q(player2=user)).select_related('player1', 'player2', 'winner')
+        games_list = [
+            {
+                'player1': game.player1.username,
+                'player2': game.player2.username,
+                'winner': game.winner.username if game.winner else 'None',
+                'date': game.date,
+                'duration': str(game.duration),
+                'player1_score': game.player1_score,
+                'player2_score': game.player2_score,
+            }
+            for game in games_details
+        ]
+
+        data = {
+            'games_won': games_won,
+            'games_lost': games_lost,
+            'games_list': games_list,
+        }
+        return Response(data, status=status.HTTP_200_OK)
+    else:
+        return Response({'detail': 'Authentication credentials were not provided or username is Guest.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['GET'])
 def getFriendList(request, username):
@@ -227,8 +249,6 @@ def getFriendList(request, username):
         order += 1
     return JsonResponse(friendlist, safe=False)
 
-
-        
 @api_view(['GET'])
 def statistics(request, username):
     if (MyCustomUser.objects.filter(username=username).count() == 0):

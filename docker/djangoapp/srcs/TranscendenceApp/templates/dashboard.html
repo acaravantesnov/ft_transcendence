@@ -1,0 +1,44 @@
+{% load static %}
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Dashboard</h1>
+        <div class="row mb-4">
+            <div class="col-md-6 text-center">
+                <h2 class="display-4">Games Won: <span id="games-won" class="text-success">0</span></h2>
+            </div>
+            <div class="col-md-6 text-center">
+                <h2 class="display-4">Games Lost: <span id="games-lost" class="text-danger">0</span></h2>
+            </div>
+        </div>
+        <div>
+            <h3 class="mb-3">Games Details</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Player 1</th>
+                            <th>Player 2</th>
+                            <th>Winner</th>
+                            <th>Date</th>
+                            <th>Duration</th>
+                            <th>Player 1 Score</th>
+                            <th>Player 2 Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="games-list">
+                        <tr>
+                            <td colspan="7" class="text-center">No games played yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="username" style="display: none;">{{ username }}</div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+</html>
