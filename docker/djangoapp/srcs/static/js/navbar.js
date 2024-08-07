@@ -8,6 +8,12 @@ document.querySelectorAll('.cmon').forEach(function(element) {
                 const event = new CustomEvent('CMONTRIGGER', { detail: { href: str } });
                 document.dispatchEvent(event);
             }
+            else if (e.target.href.endsWith('leaderboards/'))
+            {
+                let str = e.target.href + 'Guest/';
+                const event = new CustomEvent('CMONTRIGGER', { detail: { href: str } });
+                document.dispatchEvent(event);
+            }
         }
         e.preventDefault();
         checkIfLoggedIn(e);
@@ -34,20 +40,24 @@ document.getElementById('brand').addEventListener('click', (e) => {
 document.getElementById('navbar-avatar').addEventListener('click', showOffcanvas);
 
 document.getElementById('signOut').addEventListener('click', (e) => {
-    async function signOut() {
-        await fetch('/users/signOut/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            }
-        });
-    }
-    signOut();
-    hideOffcanvas();
-    successfulLogoutToast();
-    route(e);
+	signOut();
+	hideOffcanvas();
+	successfulLogoutToast();
+	route(e);
 });
+
+async function signOut() {
+	
+	const a = await fetch(`/users/signOut/${user.username}/`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRFToken': getCookie('csrftoken'),
+		}
+	});
+	const data = await a.json();
+	console.log(data);
+}
 
 function successfulLogoutToast()
 {

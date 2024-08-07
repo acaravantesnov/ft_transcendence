@@ -83,6 +83,71 @@ class newUser(forms.ModelForm):
             instance.save()
         return instance
 
+
+class updateUser(forms.Form):
+    username = forms.CharField(max_length=15, label="Username",
+                                widget=forms.TextInput(
+                                    attrs={
+                                        'class':'form-control',
+                                        'placeholder':'username',
+                                }))
+    first_name = forms.CharField(label="First Name",
+                                widget=forms.PasswordInput(
+                                    attrs={
+                                        'class':'form-control',
+                                        'placeholder':'Juanito'
+                                }))
+    last_name = forms.CharField(label="Last Name",
+                                widget=forms.TextInput(
+                                    attrs={
+                                        'class':'form-control',
+                                        'placeholder':'Garcia'
+                                }))
+    email = forms.CharField(label="Email",
+                                widget=forms.TextInput(
+                                    attrs={
+                                        'class':'form-control',
+                                        'placeholder':'newMail@42.fr'
+                                }))
+
+
+class newPassword(forms.ModelForm):
+    last_password = forms.CharField(label="Current password", widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '********'}))
+    confirm_password = forms.CharField(label="Repeat password", widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '********'}))
+    
+    class Meta:
+        model = MyCustomUser
+        fields = ['password']
+        widgets = {
+            'password': forms.PasswordInput(attrs={'class':'form-control', 'placeholder':'*******'}),
+        }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password'].required = True
+        self.fields['last_password'].required = True
+        self.fields['confirm_password'].required = True
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        password = cleaned_data.get("last_password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if last_password: 
+            if password and confirm_password:
+                if password != confirm_password:
+                    self.add_error('confirm_password', "Passwords do not match. Please enter matching passwords.")
+        return cleaned_data
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.set_password(self.cleaned_data["password"])
+        if commit:
+            instance.save()
+        return instance
+
+
 class signUser(forms.Form):
     username = forms.CharField(max_length=15, label="Username",
                                 widget=forms.TextInput(
