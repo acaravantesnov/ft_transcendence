@@ -68,12 +68,6 @@ def play(request, username):
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
-def leaderboards(request, username):
-    if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'leaderboards.html')
-    form = signUser()
-    return render(request, 'signIn.html', {'form': form})
-
 def profile(request, username):
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'profile.html')
@@ -84,11 +78,23 @@ def signUp(request):
     form = newUser()
     return render(request, "signUp.html", {"form": form})
 
+def editProfile(request):
+    if request.user.is_authenticated:
+        form = updateUser()
+    return render(request, 'editProfile.html', {'form': form})
+
+def changePassword(request):
+    form = newPassword()
+    return render(request, 'changePassword.html', {'form': form})
+
 def leaderboards(request, username):
+    return render(request, 'leaderboards.html')
+
+def friends(request, username):
     if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'leaderboards.html')
+        return render(request, 'friends.html')
     form = signUser()
-    return render(request, 'signIn.html', {'form': form})
+    return render(request, 'signIn.html', {"form", form})
 
 def dashboard(request, username):
     return render(request, 'dashboard.html', {'username': request.user.username})
@@ -157,6 +163,26 @@ def getUserInfo(request):
             'avatar': '/media/avatars/default.png',
         })
         
+
+@api_view(['GET'])
+def getUsers(request):
+    users = []
+    all_users = MyCustomUser.objects.all()
+    for user in all_users:
+        if not user.is_superuser:
+            if user != request.user and user.username != "AI" and user not in request.user.friends.all():
+                users.append({'id': user.id, 'username': user.username})
+    return JsonResponse(users, safe=False)
+
+@api_view(['GET'])
+def getRequests(request, username):
+    requests = []
+    all_requests = Friend_Request.objects.filter(to_user__username=username)
+    for req in all_requests:
+        requests.append({'id': req.id, 'from_username': req.from_user.username, 'to_username': req.to_user.username})
+    return JsonResponse(requests, safe=False)
+
+
 @api_view(['GET'])
 def getLeaderboards(request):
     users = MyCustomUser.objects.all()
@@ -174,8 +200,10 @@ def getLeaderboards(request):
                 goals += game.player2_score
         score = gamesWon.count() * 10 - gamesLost.count() * 5 + goals
         leaderboard.append({'rank': rank, 'username': user.username, 'score': score})
-        rank += 1
     leaderboard = sorted(leaderboard, key=lambda x: x['score'], reverse=True)
+    for user in leaderboard:
+        user['rank'] = rank
+        rank += 1
     return JsonResponse(leaderboard, safe=False)
 
 @api_view(['GET'])
@@ -207,6 +235,19 @@ def getDashboard(request, username):
         return Response(data, status=status.HTTP_200_OK)
     else:
         return Response({'detail': 'Authentication credentials were not provided or username is Guest.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+def getFriendList(request, username):
+    if (MyCustomUser.objects.filter(username=username).count() == 0):
+        return Response({'error': 'User not found'})
+    friendlist = []
+    order = 1
+    user = MyCustomUser.objects.get(username=username)
+    friends = user.friends.all()
+    for friend in friends:
+        friendlist.append({'order': order, 'username': friend.username, 'stat': friend.status})
+        order += 1
+    return JsonResponse(friendlist, safe=False)
 
 @api_view(['GET'])
 def statistics(request, username):
@@ -267,12 +308,17 @@ def checkCredentials(request):
 
     if user is not None:
         login(request, user)
+        user.status = True
+        user.save()
         return JsonResponse({'status': 'success'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid Username or Password', 'username': username})
 
 @api_view(['POST'])
-def signOut(request):
+def signOut(request, username):
+    user = MyCustomUser.objects.get(username=username)
+    user.status = False
+    user.save()
     auth.logout(request)
     return JsonResponse({'status': 'success'})
 
@@ -282,6 +328,51 @@ def addtowaitlist(request, username):
     waiting_room.add_user(username)
     return JsonResponse({'status': 'success'})
 
+@api_view(['POST'])
+def send_friend_request(request, userID):
+    from_user = request.user
+    to_user = MyCustomUser.objects.get(id=userID)
+    friend_request, created = Friend_Request.objects.get_or_create(
+            from_user=from_user, to_user=to_user)
+    if created:
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error'})
+
+@api_view(['POST'])
+def accept_friend_request(request, requestID, accepted):
+    friend_request = Friend_Request.objects.get(id=requestID)
+    if friend_request.to_user == request.user and accepted=="accepted":
+        friend_request.to_user.friends.add(friend_request.from_user)
+        friend_request.from_user.friends.add(friend_request.to_user)
+        friend_request.delete()
+        return JsonResponse({'status': 'success'})
+    else:
+        friend_request.delete()
+        return JsonResponse({'status': 'error'})
+
+@api_view(['POST'])
+def updateProfile(request, username):
+    newUsername = request.data.username
+    first_name = request.data.first_name
+    last_name = request.data.first_name
+    email = request.data.email
+    user = MyCustomUser.objects.get(username=username)
+
+    user.username = newUsername
+    user.first_name = first_name
+    user.last_name = last_name
+    user.email = email
+    if user.save():
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'})
+
+#@api_view(['POST'])
+#def newPassword(request, username):
+
+#@api_view(['POST'])
+#def updateAvatar(request):
+    
 
 # API unused views
 
@@ -290,5 +381,3 @@ def getData(request):
     users = MyCustomUser.objects.all()
     serializer = MyCustomUserSerializer(users, many=True)
     return Response(serializer.data)
-
-
