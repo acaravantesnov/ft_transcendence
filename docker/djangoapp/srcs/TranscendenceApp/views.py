@@ -52,51 +52,81 @@ logger = logging.getLogger("views")
 # Normal views
 
 def title(request):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated:
         return render(request, 'title.html')
     return redirect('home', username='Guest')
 
 def home(request, username):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'title.html')
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
 def play(request, username):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'game.html', {"username": username})
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
 def profile(request, username):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'profile.html')
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
 def signUp(request):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     form = newUser()
     return render(request, "signUp.html", {"form": form})
 
 def editProfile(request):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated:
         form = updateUser()
     return render(request, 'editProfile.html', {'form': form})
 
 def changePassword(request):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     form = newPassword()
     return render(request, 'changePassword.html', {'form': form})
 
 def leaderboards(request, username):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     return render(request, 'leaderboards.html')
 
 def friends(request, username):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'friends.html')
     form = signUser()
     return render(request, 'signIn.html', {"form", form})
 
 def dashboard(request, username):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     return render(request, 'dashboard.html', {'username': request.user.username})
 
 
