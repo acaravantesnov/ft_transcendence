@@ -1,8 +1,5 @@
-//document.addEventListener('DOMContentLoaded', function() {
 async function dashboard () {
-    console.log('DOM fully loaded and parsed');
     const username = document.getElementById('username').textContent;
-    console.log('Username:', username);
 
     fetch(`/users/getDashboard/${username}/`)
         .then(response => response.json())
@@ -34,4 +31,3 @@ async function dashboard () {
 }
 
 dashboard();
-//});

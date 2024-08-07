@@ -90,36 +90,11 @@ def leaderboards(request, username):
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
-#def dashboard(request, username):
-#    if request.user.is_authenticated and username != 'Guest':
-#        user = request.user
-#        games_won = Game.objects.filter(winner=user).count()
-#        games_lost = Game.objects.filter(Q(player1=user) | Q(player2=user)).exclude(winner=user).count()
-#        context = {
-#            'games_won': games_won,
-#            'games_lost': games_lost,
-#        }
-#        return render(request, 'dashboard.html', context)
-#    form = signUser()
-#    return render(request, 'signIn.html', {'form': form})
-
 def dashboard(request, username):
     return render(request, 'dashboard.html', {'username': request.user.username})
 
 
 # CRUD API views
-
-# @api_view(['POST'])
-# def createUser(request):
-#     request.data['password'] = make_password(request.data['password'])
-    
-#     serializer = MyCustomUserSerializer(data=request.data)
-
-#     if serializer.is_valid():
-#         serializer.save()
-#         return JsonResponse({'status': 'success'})
-#     else:
-#         return JsonResponse({'status': 'error', 'message': serializer.errors})
     
 @api_view(['POST'])
 def createUser(request):
