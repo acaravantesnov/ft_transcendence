@@ -66,12 +66,6 @@ def play(request, username):
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
-def leaderboards(request, username):
-    if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'leaderboards.html')
-    form = signUser()
-    return render(request, 'signIn.html', {'form': form})
-
 def profile(request, username):
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'profile.html')
@@ -92,10 +86,7 @@ def changePassword(request):
     return render(request, 'changePassword.html', {'form': form})
 
 def leaderboards(request, username):
-    if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'leaderboards.html')
-    form = signUser()
-    return render(request, 'signIn.html', {'form': form})
+    return render(request, 'leaderboards.html')
 
 def friends(request, username):
     if request.user.is_authenticated and username != 'Guest':
@@ -216,8 +207,10 @@ def getLeaderboards(request):
                 goals += game.player2_score
         score = gamesWon.count() * 10 - gamesLost.count() * 5 + goals
         leaderboard.append({'rank': rank, 'username': user.username, 'score': score})
-        rank += 1
     leaderboard = sorted(leaderboard, key=lambda x: x['score'], reverse=True)
+    for user in leaderboard:
+        user['rank'] = rank
+        rank += 1
     return JsonResponse(leaderboard, safe=False)
 
 
