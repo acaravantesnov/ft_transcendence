@@ -67,8 +67,7 @@ class GameManager:
               #asyncio.create_task(self.stop_game(room_group_name))
               await self.stop_game(room_group_name)
               logger.debug(f" [GameManager] Game stopped ")
-              waiting_room.delete_game(room_group_name)
-
+              waiting_room.remove_game(room_group_name)
 
     async def stop_game(self, room_group_name):
         try:
@@ -88,7 +87,7 @@ class GameManager:
                     'player1': player_left.pk,
                     'player2': player_right.pk,
                     'winner': player_winner.pk,
-                    'duration': 0,
+                    'duration': self.games[room_group_name].duration,
                     'player1_score': self.games[room_group_name].scores['left'],
                     'player2_score': self.games[room_group_name].scores['right']
                 }

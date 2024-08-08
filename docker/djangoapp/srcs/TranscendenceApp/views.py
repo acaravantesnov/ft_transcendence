@@ -6,6 +6,8 @@ In sime frameworks it is called an action, but in Django it is called a view.
 from django.shortcuts import render, redirect
 from django.contrib import messages, auth
 from django.http import HttpResponse, JsonResponse
+from django.db.models import Q
+from rest_framework import status
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import make_password
@@ -50,73 +52,85 @@ logger = logging.getLogger("views")
 # Normal views
 
 def title(request):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated:
         return render(request, 'title.html')
     return redirect('home', username='Guest')
 
 def home(request, username):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'title.html')
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
 def play(request, username):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'game.html', {"username": username})
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
-def leaderboards(request, username):
-    if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'leaderboards.html')
-    form = signUser()
-    return render(request, 'signIn.html', {'form': form})
-
 def profile(request, username):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'profile.html')
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
 def signUp(request):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     form = newUser()
     return render(request, "signUp.html", {"form": form})
 
 def editProfile(request):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated:
         form = updateProfileInfo()
     return render(request, 'editProfile.html', {'form': form})
 
 def changePassword(request):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     form = newPassword()
     return render(request, 'changePassword.html', {'form': form})
 
 def leaderboards(request, username):
-    if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'leaderboards.html')
-    form = signUser()
-    return render(request, 'signIn.html', {'form': form})
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
+    return render(request, 'leaderboards.html')
 
 def friends(request, username):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'friends.html')
     form = signUser()
     return render(request, 'signIn.html', {"form", form})
 
+def dashboard(request, username):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
+    return render(request, 'dashboard.html', {'username': request.user.username})
+
 
 # CRUD API views
-
-# @api_view(['POST'])
-# def createUser(request):
-#     request.data['password'] = make_password(request.data['password'])
-    
-#     serializer = MyCustomUserSerializer(data=request.data)
-
-#     if serializer.is_valid():
-#         serializer.save()
-#         return JsonResponse({'status': 'success'})
-#     else:
-#         return JsonResponse({'status': 'error', 'message': serializer.errors})
     
 @api_view(['POST'])
 def createUser(request):
@@ -216,10 +230,41 @@ def getLeaderboards(request):
                 goals += game.player2_score
         score = gamesWon.count() * 10 - gamesLost.count() * 5 + goals
         leaderboard.append({'rank': rank, 'username': user.username, 'score': score})
-        rank += 1
     leaderboard = sorted(leaderboard, key=lambda x: x['score'], reverse=True)
+    for user in leaderboard:
+        user['rank'] = rank
+        rank += 1
     return JsonResponse(leaderboard, safe=False)
 
+@api_view(['GET'])
+def getDashboard(request, username):
+    if request.user.is_authenticated and username != 'Guest':
+        user = request.user
+        games_won = Game.objects.filter(winner=user).count()
+        games_lost = Game.objects.filter(Q(player1=user) | Q(player2=user)).exclude(winner=user).count()
+
+        games_details = Game.objects.filter(Q(player1=user) | Q(player2=user)).select_related('player1', 'player2', 'winner')
+        games_list = [
+            {
+                'player1': game.player1.username,
+                'player2': game.player2.username,
+                'winner': game.winner.username if game.winner else 'None',
+                'date': game.date,
+                'duration': str(game.duration),
+                'player1_score': game.player1_score,
+                'player2_score': game.player2_score,
+            }
+            for game in games_details
+        ]
+
+        data = {
+            'games_won': games_won,
+            'games_lost': games_lost,
+            'games_list': games_list,
+        }
+        return Response(data, status=status.HTTP_200_OK)
+    else:
+        return Response({'detail': 'Authentication credentials were not provided or username is Guest.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['GET'])
 def getFriendList(request, username):
@@ -234,8 +279,6 @@ def getFriendList(request, username):
         order += 1
     return JsonResponse(friendlist, safe=False)
 
-
-        
 @api_view(['GET'])
 def statistics(request, username):
     if (MyCustomUser.objects.filter(username=username).count() == 0):

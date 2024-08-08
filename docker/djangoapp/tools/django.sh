@@ -9,6 +9,8 @@ do
   sleep 5
 done
 
+
+
 echo "Creating Migrations..."
 python3 manage.py makemigrations
 python3 manage.py makemigrations TranscendenceApp

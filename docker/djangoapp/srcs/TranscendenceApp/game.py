@@ -2,6 +2,7 @@ import asyncio
 import json
 import logging
 import random
+import time
 
 logger = logging.getLogger("Game")
 
@@ -21,6 +22,7 @@ class Game:
         self.game_over = {'ended': False, 'winner': None}
         self.running = False
         self.task = None
+        self.duration = time.time()
 
     async def start(self):
         logger.debug(f" [Game] start: {self.room_group_name} ")
@@ -120,7 +122,8 @@ class Game:
                 logger.debug(f" [Game] Task cancelled ")
             else:
                 logger.debug(f" [Game] Task is None ")
-        self.scores = {'left': 0, 'right': 0}
+        #self.scores = {'left': 0, 'right': 0}
+        self.duration = time.time() - self.duration
 
     def get_state(self):
         return {

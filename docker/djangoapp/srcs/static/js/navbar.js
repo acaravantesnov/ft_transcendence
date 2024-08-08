@@ -1,5 +1,6 @@
 document.querySelectorAll('.cmon').forEach(function(element) {
     element.addEventListener('click', (e) => {
+
         var checkIfLoggedIn = async (e) => {
 
             if (user.username != 'Guest')
@@ -8,7 +9,14 @@ document.querySelectorAll('.cmon').forEach(function(element) {
                 const event = new CustomEvent('CMONTRIGGER', { detail: { href: str } });
                 document.dispatchEvent(event);
             }
+            else if (e.target.href.endsWith('leaderboards/'))
+            {
+                let str = e.target.href + 'Guest/';
+                const event = new CustomEvent('CMONTRIGGER', { detail: { href: str } });
+                document.dispatchEvent(event);
+            }
         }
+
         e.preventDefault();
         checkIfLoggedIn(e);
     });
@@ -28,7 +36,10 @@ document.addEventListener('CMONTRIGGER', (e) => {
 });
 
 document.getElementById('brand').addEventListener('click', (e) => {
-    route(e);
+    e.preventDefault();
+    let str = '/users/home/' + user.username;
+    const event = new CustomEvent('CMONTRIGGER', { detail: { href: str } });
+    document.dispatchEvent(event);
 });
 
 document.getElementById('navbar-avatar').addEventListener('click', showOffcanvas);

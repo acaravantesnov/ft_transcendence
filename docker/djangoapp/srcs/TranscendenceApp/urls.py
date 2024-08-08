@@ -15,6 +15,7 @@ urlpatterns = [
     path('profile/<str:username>/', views.profile, name="profile"),
     path('friends/<str:username>/', views.friends, name="friends"),
     path('signUp/', views.signUp, name="signUp"),
+    path('dashboard/<str:username>/', views.dashboard, name="dashboard"),
     path('editProfile/', views.editProfile, name="editProfile"),
     path('changePassword/', views.changePassword, name="changePassword"),
 
@@ -30,6 +31,7 @@ urlpatterns = [
     path('getRequests/<str:username>', views.getRequests, name="getRequests"),
     path('getFriendList/<str:username>', views.getFriendList, name="getFriendList"),
     path('getLeaderboards/', views.getLeaderboards, name="getLeaderboards"),
+    path('getDashboard/<str:username>/', views.getDashboard, name="getDashboard"),
     path('statistics/<str:username>/', views.statistics, name="statistics"),
     path('waitlist/checkwaitlist/<str:username>/', views.checkwaitlist, name="checkwaitlist"),
     
@@ -45,3 +47,4 @@ urlpatterns = [
     path('updateAvatar/<str:username>/', views.updateAvatar),
 
 ]
+

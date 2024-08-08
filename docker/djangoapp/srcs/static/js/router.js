@@ -4,6 +4,7 @@ const startsWithRoutes = [
     '/users/play/',
     '/users/leaderboards/',
     '/users/profile/',
+    '/users/dashboard/',
     '/users/friends/',
     '/users/send_friend_request/',
     '/users/accept_friend_request/',
