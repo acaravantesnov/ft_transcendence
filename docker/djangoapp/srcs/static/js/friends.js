@@ -207,8 +207,18 @@ async function accept_request(requestID, accepted) {
 	const data = await responseReq.json();
 
 	if (data.status === "success") { acceptedRequestToast(); } else { rejectedRequestToast(); }
+	const event = new CustomEvent('REQTRIGGER', { detail: { href: `/users/friends/${user.username}` } });
+	document.dispatchEvent(event);
 }
 
+document.addEventListener('REQTRIGGER', (e) => {
+	const { href } = e.detail;
+	const event = {
+		preventDefault: () => {},
+		target: { href }
+	};
+	route(event);
+});
 
 function notSentRequestToast() {
 	

@@ -29,11 +29,6 @@ var routes = {
         title: 'Sign Up',
         description: 'Sign Up'
     },
-    '/users/editProfile/': {
-	urlPattern: '/users/editProfile/',
-	title: 'Update Profile',
-	description: 'Update Profile'
-    },
 }
 
 /*

@@ -17,19 +17,22 @@
     <span id="last_login"></span>
     <span id="date_joined"></span>
 
-    <div class="in-line">
-	    <button id="edit_profile" type="button" class="btn btn-primary"><a>Edit Profile</a></button>
-	    <button id="change_password" type="button" class="btn btn-primary"><a>Change Password</a></button>
+    <span id="avatar_2"></span>
 
-	    <button id="choose_avatar" type="button" class="btn btn-primary"><a>Choose your avatar</a></button>
+    <div class="in-line">
+	    <button type="button" class="btn btn-primary">
+		    <a class="nav-link cmon" id="edit_profile" href="/users/editProfile/">Edit Profile</a>
+	    </button>
+	    <button type="button" class="btn btn-primary">
+		    <a class="nav-link cmon" id="change_password" href="/users/changePassword/">Change Password</a>
+	    </button>
+
+	    <button id="choose_avatar" type="button" class="btn btn-primary">Choose your avatar</button>
     </div>
     <form onsubmit="updateAvatar();return false;" method=POST enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="id_avatar">Avatar</label>
-            <input type="file" name="avatar" id="id_avatar" class="form-control">
-        </div>
-        <input type="submit" value="Submit" class="btn btn-primary">
+	    {% csrf_token %}
+	    <div id="avatarDiv" class="form-group">
+	    </div>
     </form>
 </div>
 

@@ -7,37 +7,101 @@ document.getElementById('email').innerHTML = `<h5>Email: </h5>${user.email}`;
 document.getElementById('last_login').innerHTML = `<h5>Last login: </h5>${user.last_login}`;
 document.getElementById('date_joined').innerHTML = `<h5>Date joined: </h5>${user.date_joined}`;
 
-document.getElementById('avatar').innerHTML = `<img src="${user.avatar}" alt="logo" class="image-center" style="width: 15vh; height: 15vh;">`;
+//document.getElementById('avatar').innerHTML = `<img src="${user.avatar}" alt="logo" class="image-center" style="width: 15vh; height: 15vh;">`;
+document.getElementById('avatar_2').innerHTML = `<h5>Avatar route: </h5>${user.avatar}`;
 
-//document.getElementById('edit_profile').getElementsByTagName('a')[0].setAttribute("href", "/users/editProfile/");
-//document.getElementById('change_password').getElementsByTagName('a')[0].setAttribute("href", `/users/changePassword/${user.username}`);
-//document.getElementById('choose_avatar').getElementsByTagName('a')[0].setAttribute("href", `/users/editProfile/${user.username}`);
 
+document.getElementById('edit_profile').addEventListener('click', (e) => {
+	route(e);
+});
+document.getElementById('change_password').addEventListener('click', (e) => {
+	route(e);
+});
+avatar_flag = false;
+document.getElementById('choose_avatar').addEventListener('click', (e) =>{
+
+	if (!avatar_flag) {
+		document.getElementById('avatarDiv').innerHTML = `<label for="id_avatar">Avatar</label><input type="file" name="avatar" id="id_avatar" class="form-control"><input type="submit" value="Submit" class="btn btn-primary">`; avatar_flag = true;
+	} else { document.getElementById('avatarDiv').innerHTML = ""; avatar_flag = false; }
+});
+
+
+/*
+ * Tomando directamente el form con js
+ *
+ * const form = document.querySelector('form');
+ *
+ */
 
 async function updateAvatar() {
+	event.preventDefault();
 
-	const formData = new FormData();
-	
-	formData.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
-	formData.append('avatar', document.getElementById('id_avatar').files[0]);
+	const formData = new FormData(form);
+
+	/*
+	 * Añadiendo cada apartado por separado
+	 *
+	 * const formData = new FormData();
+	 *
+	 * formData.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
+	 * formData.append('name', document.getElementById('id_avatar').files[0].name);
+	 * formData.append('avatar', document.getElementById('id_avatar').files[0]);
+	 *
+	*/
+
+	/*
+	 * Usando el evento
+	 *
+	 * const formData = new FormData(event.target);
+	 *
+	 */
+
+
+	const formObject = {};
+	formData.forEach((value, key) => {
+		formObject[key] = value;
+	});
+
+	console.log(formObject);
+	console.log(formData);
+
+
+	/*
+	 *  Pasando el contenido con formato Object
+	 */
 
 	try {
-		const response = await fetch('/users/profile/updateAvatar/', {
+		const response = await fetch(`/users/updateAvatar/${user.username}/`, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json',
-				'X-CSRFToken': formData('csrfmiddlewaretoken'), 
+				'Content-Type': 'multipart/form-data',
+				'X-CSRFToken': formData.get('csrfmiddlewaretoken'), 
 			},
 			body: formData,
 		});
+	/*
+	 * Pasando el contenido en formato JSON
+	 *
+	 *
+		const response = await fetch(`/users/updateAvatar/${user.username}/`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+			},
+			body: JSON.stringify(formObject)
+		});
+	*/
 
 		if (!response.ok) { throw new Error('Network response was not ok'); }
 
 		const responseData = await response.json();
 
+		console.log(responseData);
+
 		if (responseData === 'success') {
 			successfulUpdateAvatarToast();
-			const event = new CustomEvent('UPDATEAVATARTRIGGER', { detail: { href: `/users/profile/${user.username}`} });
+			const event = new CustomEvent('UPDATEAVATARTRIGGER', { detail: { href: `/users/profile/${user.username}` } });
 			document.dispatchEvent(event);
 		} else { unsuccessfulUpdateAvatarToast(); }
 	} catch (error) {

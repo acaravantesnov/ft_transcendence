@@ -41,7 +41,7 @@ from rest_framework.decorators import api_view
 
 from .serializers import MyCustomUserSerializer, GameSerializer
 from .models import *
-from .forms import signUser, newUser
+from .forms import signUser, newUser, updateProfileInfo, newPassword, uploadFileForm
 from .waiting_room import waiting_room
 
 import logging
@@ -98,7 +98,7 @@ def editProfile(request):
         username = request.user.username
         return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated:
-        form = updateUser()
+        form = updateProfileInfo()
     return render(request, 'editProfile.html', {'form': form})
 
 def changePassword(request):
@@ -383,25 +383,47 @@ def accept_friend_request(request, requestID, accepted):
 
 @api_view(['POST'])
 def updateProfile(request, username):
-    newUsername = request.data.username
-    first_name = request.data.first_name
-    last_name = request.data.first_name
-    email = request.data.email
     user = MyCustomUser.objects.get(username=username)
 
-    user.username = newUsername
-    user.first_name = first_name
-    user.last_name = last_name
-    user.email = email
-    if user.save():
+    user.username = request.data.get('username')
+    user.first_name = request.data.get('first_name')
+    user.last_name = request.data.get('last_name')
+    user.email = request.data.get('email')
+    if not user.save():
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'})
 
-#@api_view(['POST'])
-#def newPassword(request, username):
+@api_view(['POST'])
+def updatePassword(request, username):
 
-#@api_view(['POST'])
-#def updateAvatar(request):
+    currentPassword = request.data.get('currentPassword')
+    newPassword = request.data.get('newPassword')
+    confirmPassword = request.data.get('confirmPassword')
+
+    if newPassword == confirmPassword:
+        user = MyCustomUser.objects.get(username=username)
+        if (user.check_password(currentPassword)):
+            user.set_password(newPassword)
+            user.save()
+            return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'})
+
+
+
+@api_view(['POST'])
+def updateAvatar(request, username):
+    if request.method == 'POST':
+        user = MyCustomUser.objects.get(username=username)
+        form = uploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['avatar']
+            with open('/media/avatars/%s' % file.name, 'wb+') as dest:
+                for chunk in file.chunks():
+                    dest.write(chunk)
+            user.avatar = file.name
+        if not user.save():
+            return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'})
     
 
 # API unused views
