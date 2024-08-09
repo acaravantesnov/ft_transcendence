@@ -23,6 +23,7 @@ services:
     env_file: .env
     depends_on:
       - db
+  
 
   db:
     container_name: db
@@ -35,6 +36,18 @@ services:
       - pgdata:/var/lib/postgresql/data
     networks:
       - net
+
+  ai-oponent:
+    container_name: ai-oponent
+    build: ./ai-oponent
+    restart: always
+    expose:
+      - "8000"
+    networks:
+      - net
+    env_file: .env
+    depends_on:
+      - djangoapp
 
 volumes:
   pgdata: {}

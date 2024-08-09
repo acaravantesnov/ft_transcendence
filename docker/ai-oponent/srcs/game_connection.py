@@ -18,7 +18,10 @@ async def game_connection(username, room_name, side, replay_buffer, wss_url):
 
     async def connect():
         # try:
-          async with websockets.connect(uri, ssl=ssl_context, ping_interval=None, ping_timeout=None) as websocket:
+          # wss
+          # async with websockets.connect(uri, ssl=ssl_context, ping_interval=None, ping_timeout=None) as websocket:
+          # ws
+          async with websockets.connect(uri, ping_interval=None, ping_timeout=None) as websocket:
               # Send join message
               join_message = json.dumps({"type": "join"})
               await websocket.send(join_message)
