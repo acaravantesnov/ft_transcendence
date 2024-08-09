@@ -41,7 +41,7 @@ from rest_framework.decorators import api_view
 
 from .serializers import MyCustomUserSerializer, GameSerializer
 from .models import *
-from .forms import signUser, newUser, updateProfileInfo, newPassword, uploadFileForm
+from .forms import signUser, newUser, updateProfileInfo, newPassword, updateAvatarForm
 from .waiting_room import waiting_room
 
 import logging
@@ -414,14 +414,9 @@ def updatePassword(request, username):
 def updateAvatar(request, username):
     if request.method == 'POST':
         user = MyCustomUser.objects.get(username=username)
-        form = uploadFileForm(request.POST, request.FILES)
+        form = updateAvatarForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
-            file = request.FILES['avatar']
-            with open('/media/avatars/%s' % file.name, 'wb+') as dest:
-                for chunk in file.chunks():
-                    dest.write(chunk)
-            user.avatar = file.name
-        if not user.save():
+            form.save()
             return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'})
     

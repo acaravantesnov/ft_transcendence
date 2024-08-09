@@ -131,9 +131,27 @@ class newPassword(forms.Form):
                                         'placeholder':'********'
                                 }))
 
-class uploadFileForm(forms.Form):
-    name = forms.CharField(max_length=50)
-    file = forms.FileField()
+class updateAvatarForm(forms.ModelForm):
+    class Meta:
+        model = MyCustomUser
+        fields = ['avatar']
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get('avatar', False)
+
+        if avatar:
+            if avatar.size > 2*1024*1024:
+                raise forms.ValidationError("Avatar file too large ( > 2mb )")
+            return avatar
+        else:
+            raise forms.ValidationError("Couldn't read uploaded image")
+        
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.avatar = self.cleaned_data["avatar"]
+        if commit:
+            instance.save()
+        return instance
 
 class signUser(forms.Form):
     username = forms.CharField(max_length=15, label="Username",

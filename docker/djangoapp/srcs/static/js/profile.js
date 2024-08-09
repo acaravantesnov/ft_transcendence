@@ -21,7 +21,7 @@ avatar_flag = false;
 document.getElementById('choose_avatar').addEventListener('click', (e) =>{
 
 	if (!avatar_flag) {
-		document.getElementById('avatarDiv').innerHTML = `<label for="id_avatar">Avatar</label><input type="file" name="avatar" id="id_avatar" class="form-control"><input type="submit" value="Submit" class="btn btn-primary">`; avatar_flag = true;
+		document.getElementById('avatarDiv').innerHTML = '<label for="id_avatar">Avatar</label><input type="file" name="avatar" id="id_avatar" class="form-control"><input type="submit" value="Submit" class="btn btn-primary">'; avatar_flag = true;
 	} else { document.getElementById('avatarDiv').innerHTML = ""; avatar_flag = false; }
 });
 
@@ -34,49 +34,15 @@ document.getElementById('choose_avatar').addEventListener('click', (e) =>{
  */
 
 async function updateAvatar() {
-	event.preventDefault();
 
-	const formData = new FormData(form);
+	const formData = new FormData();
 
-	/*
-	 * Añadiendo cada apartado por separado
-	 *
-	 * const formData = new FormData();
-	 *
-	 * formData.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
-	 * formData.append('name', document.getElementById('id_avatar').files[0].name);
-	 * formData.append('avatar', document.getElementById('id_avatar').files[0]);
-	 *
-	*/
-
-	/*
-	 * Usando el evento
-	 *
-	 * const formData = new FormData(event.target);
-	 *
-	 */
-
-
-	const formObject = {};
-	formData.forEach((value, key) => {
-		formObject[key] = value;
-	});
-
-	console.log(formObject);
-	console.log(formData);
-
-
-	/*
-	 *  Pasando el contenido con formato Object
-	 */
+	formData.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
+	formData.append('avatar', document.getElementById('id_avatar').files[0]);
 
 	try {
 		const response = await fetch(`/users/updateAvatar/${user.username}/`, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'multipart/form-data',
-				'X-CSRFToken': formData.get('csrfmiddlewaretoken'), 
-			},
 			body: formData,
 		});
 	/*
