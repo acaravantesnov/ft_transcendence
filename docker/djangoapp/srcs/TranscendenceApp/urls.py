@@ -10,6 +10,7 @@ urlpatterns = [
     # Normal views
     path('', views.title, name="title"),
     path('home/<str:username>', views.home, name="home"),
+    path('play/menu/<str:username>/', views.menu, name="menu"),
     path('play/<str:username>/', views.play, name="play"),
     path('leaderboards/<str:username>/', views.leaderboards, name="leaderboards"),
     path('profile/<str:username>/', views.profile, name="profile"),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('changePassword/', views.changePassword, name="changePassword"),
     path('stats/<str:username>/', views.stats, name='stats'),
     path('getStats/<str:username>/', views.get_stats, name='get_stats'),
+    path('changePassword/', views.changePassword, name="changePassword"),
 
     # CRUD API views
     path('create', views.createUser), # API POST

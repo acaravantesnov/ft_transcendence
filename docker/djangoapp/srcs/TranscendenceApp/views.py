@@ -78,6 +78,12 @@ def play(request, username):
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
+def menu(request, username):
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'menu.html');
+    form = signUser();
+    return render(request, 'signIn.html', {'form': form})
+
 def profile(request, username):
     if request.headers.get('Accept') != '*/*':
         username = request.user.username
