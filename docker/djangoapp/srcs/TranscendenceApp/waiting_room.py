@@ -17,6 +17,10 @@ class WaitingRoom:
 
     def add_user(self, user_id):
         logger.debug(f" [WaitingRoom] add_user: {user_id} ")
+        for waiting_user in self.waiting_users:
+            if user_id == waiting_user:
+              logger.debug(f" [WaitingRoom] user already in waiting list: {user_id} ")
+              return
         self.waiting_users.append(user_id)
         return
     
@@ -64,7 +68,17 @@ class WaitingRoom:
         return None
     
     def remove_game(self, room_name):
-        del self.dispatched_games[room_name]
+        logger.debug(f" [WaitingRoom] removing game: {room_name}")
+        logger.debug(f" [WaitingRoom] self.dispatched_games: {self.dispatched_games}")
+        for dispatched_game in self.dispatched_games:
+          if dispatched_game["room_name"] == room_name:
+            self.dispatched_games.remove(dispatched_game)
+            logger.debug(f" [WaitingRoom] Game {room_name} removed")
+            break
+        else:
+          logger.debug(f" [WaitingRoom] Game {room_name} not found")
+
+
 
 
 waiting_room = WaitingRoom()

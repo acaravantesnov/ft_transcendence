@@ -19,7 +19,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.side = self.scope['url_route']['kwargs']['side']
         self.user_id = self.scope['url_route']['kwargs']['user_id']
-        self.room_group_name = f'game_{self.room_name}'
+        self.room_group_name = f'{self.room_name}'
 
         # Join room group
         logger.debug(f" [GameConsumer] [{self.user_id}] Joining room group {self.room_group_name} ")
@@ -60,10 +60,10 @@ class GameConsumer(AsyncWebsocketConsumer):
         await game_manager.remove_user(self.room_group_name, self.side, self.user_id)
 
     async def receive(self, text_data):
-        logger.debug(f" [GameConsumer] receive: {text_data} ")
+        #logger.debug(f" [GameConsumer] receive: {text_data} ")
         data = json.loads(text_data)
         if data['type'] == 'paddle':
-            logger.debug(f" [GameConsumer] Updating paddle for user {self.user_id} ")
+            #logger.debug(f" [GameConsumer] Updating paddle for user {self.user_id} ")
             speed = data['speed']
             self.game.update_paddle(self.side, speed)
 

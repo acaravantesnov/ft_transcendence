@@ -68,11 +68,16 @@ class GameManager:
               await self.stop_game(room_group_name)
               logger.debug(f" [GameManager] Game stopped ")
               waiting_room.remove_game(room_group_name)
+              logger.debug(f" [GameManager] removed from waiting room: {room_group_name}")
 
     async def stop_game(self, room_group_name):
         try:
             logger.debug(f" [GameManager] stop_game: {room_group_name} ")
             if room_group_name in self.games:
+                # Get info of the game before stopping it
+                player1_score = self.games[room_group_name].scores['left']
+                player2_score = self.games[room_group_name].scores['right']
+                winner = self.games[room_group_name].game_over['winner']
                 logger.debug(f" [GameManager] Stopping game for room {room_group_name} ")
                 await self.games[room_group_name].stop()
                 logger.debug(f" [GameManager] Getting players ")
@@ -81,15 +86,15 @@ class GameManager:
                 player_right = await MyCustomUser.get_user_by_username(self.right_user[room_group_name])
                 logger.debug(f" [GameManager] right player: {player_right} ")
                 player_winner = player_left if self.games[room_group_name].game_over['winner'] == 'left' else player_right
-                logger.debug(f" [GameManager] winner: {player_winner}, game_over: {self.games[room_group_name].game_over['winner']} ")
+                logger.debug(f" [GameManager] winner: {player_winner}, game_over: {winner} ")
                 logger.debug(f" [GameManager] Saving game to database ")
                 game_data = {
                     'player1': player_left.pk,
                     'player2': player_right.pk,
                     'winner': player_winner.pk,
-                    'duration': self.games[room_group_name].duration,
-                    'player1_score': self.games[room_group_name].scores['left'],
-                    'player2_score': self.games[room_group_name].scores['right']
+                    'duration': 0,
+                    'player1_score': player1_score,
+                    'player2_score': player2_score
                 }
                 logger.debug(f" [GameManager] Game data: {game_data} ")
                 try:
