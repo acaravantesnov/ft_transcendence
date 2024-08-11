@@ -37,17 +37,17 @@ services:
     networks:
       - net
 
-  ai-oponent:
-    container_name: ai-oponent
-    build: ./ai-oponent
-    restart: always
-    expose:
-      - "8000"
-    networks:
-      - net
-    env_file: .env
-    depends_on:
-      - djangoapp
+  # ai-oponent:
+  #   container_name: ai-oponent
+  #   build: ./ai-oponent
+  #   restart: always
+  #   expose:
+  #     - "8000"
+  #   networks:
+  #     - net
+  #   env_file: .env
+  #   depends_on:
+  #     - djangoapp
 
 volumes:
   pgdata: {}
