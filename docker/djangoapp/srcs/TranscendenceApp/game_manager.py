@@ -68,6 +68,7 @@ class GameManager:
               await self.stop_game(room_group_name)
               logger.debug(f" [GameManager] Game stopped ")
               waiting_room.remove_game(room_group_name)
+              logger.debug(f" [GameManager] removed from waiting room: {room_group_name}")
 
     async def stop_game(self, room_group_name):
         try:

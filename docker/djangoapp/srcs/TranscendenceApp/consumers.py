@@ -19,7 +19,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.side = self.scope['url_route']['kwargs']['side']
         self.user_id = self.scope['url_route']['kwargs']['user_id']
-        self.room_group_name = f'game_{self.room_name}'
+        self.room_group_name = f'{self.room_name}'
 
         # Join room group
         logger.debug(f" [GameConsumer] [{self.user_id}] Joining room group {self.room_group_name} ")
