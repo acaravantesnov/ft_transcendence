@@ -10,43 +10,22 @@ const rightPaddle = document.getElementById('right-paddle');
 const leftScore = document.getElementById('left-score');
 const rightScore = document.getElementById('right-score');
 const gameArea = document.getElementById('game-area');
-const waitlistButton = document.getElementById('waitlistButton');
 
-// Waitlist functions
-async function addToWaitlist() {
-    try {
-        const response = await fetch(`/users/waitlist/addtowaitlist/${user.username}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            }
-        });
-        const data = await response.json();
-        if (response.ok) {
-            console.log('Added to waitlist:', data);
-        } else {
-            console.error('Failed to add to waitlist:', data);
-        }
-    } catch (error) {
-        console.error('Error adding to waitlist:', error);
-    }
-}
-
-async function checkWaitlist() {
-    try {
-        const response = await fetch(`/users/waitlist/checkwaitlist/${user.username}/`);
-        const data = await response.json();
-        console.log('Waitlist status:', data);
-
-        if (data.status === 'success') {
-            const { room_name, user_left, user_right } = data.response;
-            const side = user.username === user_left ? 'left' : (user.username === user_right ? 'right' : 'spectator');
-            initializeGame(room_name, side);
-        }
-    } catch (error) {
-        console.error('Error checking waitlist:', error);
-    }
+async function gameIA() {
+	try {
+		const response = await fetch(`/users/play/vsIA/createGame/${user.username}/`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRFToken': getCoockie('xcsrftoken')
+			}
+		});
+		const data = await response.json;
+		if (data.status === 'success') {
+			const { room_name } = data.response;
+			initializeGame(room_name, 'left');
+		}
+	} catch (error) { console.error('Error creating vsIA game: ', error); }
 }
 
 // Game functions
@@ -55,7 +34,7 @@ function initializeGame(roomName, side) {
 
     // Show game area and hide waitlist button
     document.getElementById('game-area').style.display = 'block';
-    document.getElementById('waitlistButton').style.display = 'none';
+    document.getElementById('playMenu').style.display = 'none';
     
     socket = new WebSocket(`wss://${window.location.host}/ws/game2/${user.username}/${roomName}/${side}/`);
     
@@ -92,12 +71,13 @@ function updateGameState(state) {
 }
 
 // Event listeners
-waitlistButton.addEventListener('click', addToWaitlist);
+
+vsIA.addEventListener('click', gameIA);
 
 document.addEventListener('keydown', (e) => {
     let speed = 0;
-    if (e.key === 'ArrowUp') speed = -3;
-    else if (e.key === 'ArrowDown') speed = 3;
+    if (e.key === 'ArrowUp') speed = -5;
+    else if (e.key === 'ArrowDown') speed = 5;
     
     if (speed !== 0 && socket) {
         socket.send(JSON.stringify({type: 'paddle', speed}));
@@ -111,9 +91,3 @@ document.addEventListener('keyup', (e) => {
 });
 
 // Initialization
-function init() {
-    user.username = document.body.dataset.username; // Assume username is set in the HTML
-    intervalId = setInterval(checkWaitlist, 1000);
-}
-
-init();

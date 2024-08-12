@@ -47,6 +47,7 @@ from .waiting_room import waiting_room
 from .tournament_manager import tournament_manager
 
 import logging
+import random
 
 logger = logging.getLogger("views")
 
@@ -367,6 +368,13 @@ def addGame(request):
         return Response(serializer.errors)
 
 @api_view(['POST'])
+def createGame(request, username):
+    n = random.randit(100, 99999)
+    room_name = "room"+n
+
+    return JsonResponse({'status':'success', 'room_name': room_name})
+
+@api_view(['POST'])
 def checkCredentials(request):
     username = request.data.get('username')
     password = request.data.get('password')
@@ -455,8 +463,6 @@ def updatePassword(request, username):
             user.save()
             return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'})
-
-
 
 @api_view(['POST'])
 def updateAvatar(request, username):
