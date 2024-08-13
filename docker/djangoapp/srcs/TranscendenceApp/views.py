@@ -45,6 +45,9 @@ from .models import *
 from .forms import signUser, newUser, updateProfileInfo, newPassword, updateAvatarForm
 from .waiting_room import waiting_room
 from .tournament_manager import tournament_manager
+from .ai_oponent.game_connection import game_connection
+from .ai_oponent.config import USERNAME, BUFFER_SIZE, WSS_URL
+from .ai_oponent.replay_buffer import ReplayBuffer
 
 import logging
 import random
@@ -352,6 +355,16 @@ def checkwaitlist(request, username):
         return JsonResponse({'status': 'waiting'})
     return JsonResponse({'status': 'success', 'response': response})
 
+@api_view(['GET'])
+def createGame(request, username):
+    n = random.randint(100, 99999)
+    room_name = "room"+str(n)
+    replay_buffer = ReplayBuffer(BUFFER_SIZE)
+    print('Creating an AIgame...')
+    game_connection(USERNAME, room_name, 'right', replay_buffer, WSS_URL)
+    print('No se crea...')
+    return await(JsonResponse({'status':'success', 'room_name': room_name}))
+
 
 # API POST views
 
@@ -367,12 +380,6 @@ def addGame(request):
     else:
         return Response(serializer.errors)
 
-@api_view(['POST'])
-def createGame(request, username):
-    n = random.randit(100, 99999)
-    room_name = "room"+n
-
-    return JsonResponse({'status':'success', 'room_name': room_name})
 
 @api_view(['POST'])
 def checkCredentials(request):

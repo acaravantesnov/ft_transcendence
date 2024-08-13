@@ -38,6 +38,7 @@ urlpatterns = [
     path('getDashboard/<str:username>/', views.getDashboard, name="getDashboard"),
     path('statistics/<str:username>/', views.statistics, name="statistics"),
     path('waitlist/checkwaitlist/<str:username>/', views.checkwaitlist, name="checkwaitlist"),
+    path('play/vsIA/createGame/<str:username>/', views.createGame, name="createGame"),
     
     # API POST views
     path('checkCredentials/', views.checkCredentials, name="checkCredentials"),

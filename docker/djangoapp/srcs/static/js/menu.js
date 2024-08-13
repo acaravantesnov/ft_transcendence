@@ -13,17 +13,15 @@ const gameArea = document.getElementById('game-area');
 
 async function gameIA() {
 	try {
-		const response = await fetch(`/users/play/vsIA/createGame/${user.username}/`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'X-CSRFToken': getCoockie('xcsrftoken')
-			}
-		});
-		const data = await response.json;
+		const response = await fetch(`/users/play/vsIA/createGame/${user.username}/`);
+		const data = await response.json();
+		console.log('Por aqui pasamos');
+		console.log(data);
 		if (data.status === 'success') {
-			const { room_name } = data.response;
+			const room_name = data.room_name;
+			console.log(room_name);
 			initializeGame(room_name, 'left');
+			console.log('Iniciando juego con la IA');
 		}
 	} catch (error) { console.error('Error creating vsIA game: ', error); }
 }
@@ -59,7 +57,7 @@ function updateGameState(state) {
     ball.style.top = `${state.ball_position.y * scaleY}px`;
     leftPaddle.style.left = `${state.left_paddle.x * scaleX}px`;
     leftPaddle.style.top = `${state.left_paddle.y * scaleY}px`;
-    rightPaddle.style.left = `${state.right_pa3dle.x * scaleX}px`;
+    rightPaddle.style.left = `${state.right_paddle.x * scaleX}px`;
     rightPaddle.style.top = `${state.right_paddle.y * scaleY}px`;
     leftScore.innerText = state.scores.left;
     rightScore.innerText = state.scores.right;
