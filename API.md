@@ -75,18 +75,6 @@ if room is already playing
 Check what is the waiting room of the tournament with id room_id
 
 #### Response
-If it is not in the waitlist
-```json
-{
-  "status": "not in waitlist",
-  "people waiting":
-  [
-    {"user_id": "username", "ready_to_play": True},
-    {"user_id": "username2", "ready_to_play": False},
-    ...
-  ]
-}
-```
 If it is waiting
 ```json
 {
@@ -218,7 +206,6 @@ Status of the whole torunament to see how it is going while waiting
 }
 ```
 
-```
 
 
 ## WebSocket Endpoints

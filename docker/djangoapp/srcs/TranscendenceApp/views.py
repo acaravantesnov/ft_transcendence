@@ -44,6 +44,7 @@ from .serializers import MyCustomUserSerializer, GameSerializer
 from .models import *
 from .forms import signUser, newUser, updateProfileInfo, newPassword, updateAvatarForm
 from .waiting_room import waiting_room
+from .tournament_manager import tournament_manager
 
 import logging
 
@@ -475,3 +476,44 @@ def getData(request):
     users = MyCustomUser.objects.all()
     serializer = MyCustomUserSerializer(users, many=True)
     return Response(serializer.data)
+
+
+# Tournament views
+
+@api_view(['POST'])
+def add_to_tournament_waiting_room(request, room_id, username):
+    logger.debug(f" [views] add_to_tournament_waiting_room: {room_id}, {username} ")
+    status = tournament_manager.add_user_to_room(room_id, username)
+    return JsonResponse({'status': status})
+
+@api_view(['POST'])
+def set_ready_to_play(request, room_id, username):
+    logger.debug(f" [views] set_ready_to_play: {room_id}, {username} ")
+    status = tournament_manager.user_ready_to_play(room_id, username)
+    return JsonResponse({'status': status})
+
+@api_view(['GET'])
+def check_tournament_waiting_room(request, room_id):
+    logger.debug(f" [views] check_tournament_waiting_room: {room_id} ")
+    response = tournament_manager.check_waiting_room(room_id)
+    return JsonResponse(response)
+
+@api_view(['GET'])
+def get_tournament_game(request, room_id, username):
+    logger.debug(f" [views] get_tournament_game: {room_id}, {username} ")
+    response = tournament_manager.get_game(room_id, username)
+    return JsonResponse(response)
+
+@api_view(['GET'])
+def get_tournament_state(request, room_id):
+    logger.debug(f" [views] get_tournament_state: {room_id} ")
+    response = tournament_manager.get_tournament_state(room_id)
+    return JsonResponse(response)
+
+@api_view(['GET'])
+def stop_game_torunament(request, room_id, winner_id, loser_id):
+    logger.debug(f" [views] stop_game: {room_id}, {winner_id}, {loser_id} ")
+    tournament_manager.stop_game(room_id, winner_id, loser_id)
+    status = 'success'
+    return JsonResponse({'status': status})
+

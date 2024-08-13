@@ -238,5 +238,10 @@ LOGGING = {
         "level": "DEBUG",
         "propagate": True,
       },
+      "TournamentManager": {
+        "handlers": ["file"],
+        "level": "DEBUG",
+        "propagate": True,
+      }
     }
 }

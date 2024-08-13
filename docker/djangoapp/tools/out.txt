@@ -1,0 +1,130 @@
+
+
+Testing empy room waitroom
+{"status": "waiting", "people waiting": []}
+
+joining digarcia
+{"status": "success"}
+
+joining mortega
+{"status": "success"}
+
+checking status
+{"status": "waiting", "people waiting": [{"user_id": "digarcia", "ready_to_play": false}, {"user_id": "mortega", "ready_to_play": false}]}
+
+set digarcia ready to play
+{"status": "success"}
+
+set incorrect username ready to play
+{"status": "error"}
+
+checking status
+{"status": "waiting", "people waiting": [{"user_id": "digarcia", "ready_to_play": true}, {"user_id": "mortega", "ready_to_play": false}]}
+
+set digarcia ready to play
+{"status": "success"}
+
+checking status which actually makes the torunament start as eveyone is ready to play
+{"status": "ready", "people waiting": [{"user_id": "digarcia", "ready_to_play": true}, {"user_id": "mortega", "ready_to_play": true}]}
+
+checking status again
+{"status": "ready", "people waiting": []}
+
+get state of the tournament (tree of confrontation)
+{"status": "success", "tournament": {"0": {"0": {"status": "playing", "room_name": "room_1_level_0_game_0", "user_left": "digarcia", "user_right": "mortega"}}}}
+
+digarcia requests details about their game so game it connects to the game
+{"status": "success", "response": {"room_name": "room_1_level_0_game_0", "user_left": "digarcia", "user_right": "mortega"}}
+
+mortega requests details about their game so game it connects to the game
+{"status": "success", "response": {"room_name": "room_1_level_0_game_0", "user_left": "digarcia", "user_right": "mortega"}}
+
+get state of the tournament (tree of confrontation)
+{"status": "success", "tournament": {"0": {"0": {"status": "playing", "room_name": "room_1_level_0_game_0", "user_left": "digarcia", "user_right": "mortega"}}}}
+
+game finishes, digarcia wins
+{"status": "success"}
+
+get state of the tournament (tree of confrontation)
+{"status": "success", "tournament": {"0": {"0": {"status": "finished", "room_name": "room_1_level_0_game_0", "user_left": "digarcia", "user_right": "mortega", "winner": "digarcia", "loser": "mortega"}}}}
+
+NEW ROOM WITH 4 PLAYERS
+
+
+joining digarcia
+{"status": "success"}
+
+joining mortega
+{"status": "success"}
+
+joining acaravan
+{"status": "success"}
+
+joining alaguila
+{"status": "success"}
+
+set digarcia ready to play
+{"status": "success"}
+
+set mortega ready to play
+{"status": "success"}
+
+set acaravan ready to play
+{"status": "success"}
+
+set alaguila ready to play
+{"status": "success"}
+
+checking status which actually makes the torunament start as eveyone is ready to play
+{"status": "ready", "people waiting": [{"user_id": "digarcia", "ready_to_play": true}, {"user_id": "mortega", "ready_to_play": true}, {"user_id": "acaravan", "ready_to_play": true}, {"user_id": "alaguila", "ready_to_play": true}]}
+
+get state of the tournament (tree of confrontation)
+{"status": "success", "tournament": {"0": {"0": {"status": "waiting", "user_left": null, "user_right": null}}, "1": {"0": {"status": "playing", "room_name": "room_2_level_1_game_0", "user_left": "digarcia", "user_right": "mortega"}, "1": {"status": "playing", "room_name": "room_2_level_1_game_1", "user_left": "acaravan", "user_right": "alaguila"}}}}
+
+digarcia requests details about their game so game it connects to the game
+{"status": "success", "response": {"room_name": "room_2_level_1_game_0", "user_left": "digarcia", "user_right": "mortega"}}
+
+mortega requests details about their game so game it connects to the game
+{"status": "success", "response": {"room_name": "room_2_level_1_game_0", "user_left": "digarcia", "user_right": "mortega"}}
+
+acaravan requests details about their game so game it connects to the game
+{"status": "success", "response": {"room_name": "room_2_level_1_game_1", "user_left": "acaravan", "user_right": "alaguila"}}
+
+alaguila requests details about their game so game it connects to the game
+{"status": "success", "response": {"room_name": "room_2_level_1_game_1", "user_left": "acaravan", "user_right": "alaguila"}}
+
+get state of the tournament (tree of confrontation)
+{"status": "success", "tournament": {"0": {"0": {"status": "waiting", "user_left": null, "user_right": null}}, "1": {"0": {"status": "playing", "room_name": "room_2_level_1_game_0", "user_left": "digarcia", "user_right": "mortega"}, "1": {"status": "playing", "room_name": "room_2_level_1_game_1", "user_left": "acaravan", "user_right": "alaguila"}}}}
+
+game finishes, digarcia wins
+{"status": "success"}
+
+get state of the tournament (tree of confrontation)
+{"status": "success", "tournament": {"0": {"0": {"status": "waiting", "user_left": "digarcia", "user_right": null}}, "1": {"0": {"status": "finished", "room_name": "room_2_level_1_game_0", "user_left": "digarcia", "user_right": "mortega", "winner": "digarcia", "loser": "mortega"}, "1": {"status": "playing", "room_name": "room_2_level_1_game_1", "user_left": "acaravan", "user_right": "alaguila"}}}}
+
+digarcia requests new game should return to wait as the other match is still going
+{"status": "error"}
+
+game finishes, acaravan wins
+{"status": "success"}
+
+get state of the tournament (tree of confrontation)
+{"status": "success", "tournament": {"0": {"0": {"status": "playing", "room_name": "room_2_level_0_game_0", "user_left": "digarcia", "user_right": "acaravan"}}, "1": {"0": {"status": "finished", "room_name": "room_2_level_1_game_0", "user_left": "digarcia", "user_right": "mortega", "winner": "digarcia", "loser": "mortega"}, "1": {"status": "finished", "room_name": "room_2_level_1_game_1", "user_left": "acaravan", "user_right": "alaguila", "winner": "acaravan", "loser": "alaguila"}}}}
+
+digarcia requests new game should return the game as the other match is finished
+{"status": "success", "response": {"room_name": "room_2_level_0_game_0", "user_left": "digarcia", "user_right": "acaravan"}}
+
+mortega requests new game should not give him a game as he lost to digarcia
+{"status": "error"}
+
+acaravan request new game which he gets as he should play against digarcia
+{"status": "success", "response": {"room_name": "room_2_level_0_game_0", "user_left": "digarcia", "user_right": "acaravan"}}
+
+get state of the tournament (tree of confrontation)
+{"status": "success", "tournament": {"0": {"0": {"status": "playing", "room_name": "room_2_level_0_game_0", "user_left": "digarcia", "user_right": "acaravan"}}, "1": {"0": {"status": "finished", "room_name": "room_2_level_1_game_0", "user_left": "digarcia", "user_right": "mortega", "winner": "digarcia", "loser": "mortega"}, "1": {"status": "finished", "room_name": "room_2_level_1_game_1", "user_left": "acaravan", "user_right": "alaguila", "winner": "acaravan", "loser": "alaguila"}}}}
+
+digarcia wins
+{"status": "success"}
+
+get state of the tournament (tree of confrontation)
+{"status": "success", "tournament": {"0": {"0": {"status": "finished", "room_name": "room_2_level_0_game_0", "user_left": "digarcia", "user_right": "acaravan", "winner": "digarcia", "loser": "acaravan"}}, "1": {"0": {"status": "finished", "room_name": "room_2_level_1_game_0", "user_left": "digarcia", "user_right": "mortega", "winner": "digarcia", "loser": "mortega"}, "1": {"status": "finished", "room_name": "room_2_level_1_game_1", "user_left": "acaravan", "user_right": "alaguila", "winner": "acaravan", "loser": "alaguila"}}}}
