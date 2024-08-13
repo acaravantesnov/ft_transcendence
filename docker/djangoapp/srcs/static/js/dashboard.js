@@ -50,5 +50,18 @@ function toggleDetails(index) {
     }
 }
 
+statsbutton.addEventListener('click', (e) => {
+    const event = new CustomEvent('STATSTRIGGER', { detail: { href: `/users/stats/${user.username}` } });
+	document.dispatchEvent(event);
+});
+
+document.addEventListener('STATSTRIGGER', (e) => {
+    const { href } = e.detail;
+    const event = {
+        preventDefault: () => {},
+        target: { href }
+    };
+    route(event);
+});
 
 dashboard();

@@ -1,0 +1,18 @@
+{% load static %}
+
+<div class="container">
+    <h1>Stats for {{ username }}</h1>
+    <div>
+        <canvas id="pointsScoredChart"></canvas>
+        <p>Points Scored: <span id="pointsScoredPercentage">0%</span></p>
+    </div>
+    <div>
+        <canvas id="pointsConcededChart"></canvas>
+        <p>Points Conceded: <span id="pointsConcededPercentage">0%</span></p>
+    </div>
+    <div id="username" style="display: none;">{{ username }}</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/stats.js' %}"></script>
+

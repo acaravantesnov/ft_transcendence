@@ -18,6 +18,8 @@ urlpatterns = [
     path('dashboard/<str:username>/', views.dashboard, name="dashboard"),
     path('editProfile/', views.editProfile, name="editProfile"),
     path('changePassword/', views.changePassword, name="changePassword"),
+    path('stats/<str:username>/', views.stats, name='stats'),
+    path('getStats/<str:username>/', views.get_stats, name='get_stats'),
 
     # CRUD API views
     path('create', views.createUser), # API POST

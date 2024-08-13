@@ -5,6 +5,7 @@ const startsWithRoutes = [
     '/users/leaderboards/',
     '/users/profile/',
     '/users/dashboard/',
+    '/users/stats/',
     '/users/friends/',
     '/users/send_friend_request/',
     '/users/accept_friend_request/',

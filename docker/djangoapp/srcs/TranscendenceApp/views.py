@@ -8,6 +8,7 @@ from django.contrib import messages, auth
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Q
 from rest_framework import status
+from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import make_password
@@ -129,6 +130,8 @@ def dashboard(request, username):
         return render(request, 'index.html', {'username': username})
     return render(request, 'dashboard.html', {'username': request.user.username})
 
+def stats(request, username):
+    return render(request, 'stats.html', {'username': username})
 
 # CRUD API views
     
@@ -165,6 +168,39 @@ def deleteUser(request, pk):
 
 
 # API GET views
+
+@api_view(['GET'])
+def get_stats(request, username):
+    try:
+        user = MyCustomUser.objects.get(username=username)
+    except MyCustomUser.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+    games = Game.objects.filter(player1=user) | Game.objects.filter(player2=user)
+
+    total_conceded = 0
+    total_scored = 0
+    
+    for game in games:
+
+        if game.player1 == user:
+            total_scored += game.player1.score
+            total_conceded += game.player2.score
+        else:
+            total_scored += game.player2_score
+            total_conceded += game.player1_score 
+
+    games_played = games.count()
+    total_possible_points = games_played * 3
+
+    stats_data = {
+        'games_played': games_played,
+        'total_points': total_possible_points,
+        'total_scored': total_scored,
+        'total_conceded': total_conceded,
+    }
+
+    return JsonResponse(stats_data)
 
 @api_view(['GET'])
 def getUserInfo(request):
