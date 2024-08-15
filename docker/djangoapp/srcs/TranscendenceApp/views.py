@@ -3,6 +3,7 @@ A view function is a function that takes a Request and returns a Response. It is
 In sime frameworks it is called an action, but in Django it is called a view.
 '''
 
+import os
 from django.shortcuts import render, redirect
 from django.contrib import messages, auth
 from django.http import HttpResponse, JsonResponse
@@ -44,10 +45,13 @@ from .serializers import MyCustomUserSerializer, GameSerializer
 from .models import *
 from .forms import signUser, newUser, updateProfileInfo, newPassword, updateAvatarForm
 from .waiting_room import waiting_room
+<<<<<<< HEAD
 from .tournament_manager import tournament_manager
 from .ai_oponent.game_connection import game_connection
 from .ai_oponent.config import USERNAME, BUFFER_SIZE, WSS_URL
 from .ai_oponent.replay_buffer import ReplayBuffer
+=======
+>>>>>>> 17a3ec1 (AI multiple)
 
 import logging
 import random
@@ -357,13 +361,10 @@ def checkwaitlist(request, username):
 
 @api_view(['GET'])
 def createGame(request, username):
-    n = random.randint(100, 99999)
-    room_name = "room"+str(n)
-    replay_buffer = ReplayBuffer(BUFFER_SIZE)
-    print('Creating an AIgame...')
-    game_connection(USERNAME, room_name, 'right', replay_buffer, WSS_URL)
-    print('No se crea...')
-    return await(JsonResponse({'status':'success', 'room_name': room_name}))
+    #n = random.randint(100, 99999)
+    #room_name = "room"+str(n)
+    room_name = "roomIA001"
+    return JsonResponse({'status':'success', 'room_name': room_name})
 
 
 # API POST views

@@ -4,6 +4,10 @@ import logging
 import random
 import time
 
+from .ai_oponent.config import USERNAME, BUFFER_SIZE
+from .ai_oponent.agent import Agent
+from .ai_oponent.replay_buffer import ReplayBuffer
+
 logger = logging.getLogger("Game")
 
 class Game:
@@ -23,6 +27,9 @@ class Game:
         self.running = False
         self.task = None
         self.duration = time.time()
+        if (room_group_name.find("IA")):
+            replay_buffer = ReplayBuffer(BUFFER_SIZE)
+            self.agent = Agent('right', replay_buffer)
 
     async def start(self):
         logger.debug(f" [Game] start: {self.room_group_name} ")
@@ -51,6 +58,8 @@ class Game:
     def check_end_game(self):
         if self.game_over['ended']:
             logger.debug(f" [Game] Returning Game over: {self.game_over['winner']} ")
+            #await self.stop()
+            print(self.running)
             return True
         if self.scores['left'] >= 3:
             logger.debug(f" [Game] Game over: left ")
@@ -66,7 +75,13 @@ class Game:
         self.ball_position['y'] += self.ball_speed['y']
 
         self.left_paddle['y'] += self.left_paddle['speed']
-        self.right_paddle['y'] += self.right_paddle['speed']
+        if (self.room_group_name.find("IA")):
+            state = self.get_state()
+            print(state)
+            self.right_paddle['y'] += self.agent.decide_action(state)
+
+        else:
+            self.right_paddle['y'] += self.right_paddle['speed']
 
         # Keep paddles within the screen
         self.left_paddle['y'] = max(0, min(self.screen_size['height'] - self.paddle_size['height'], self.left_paddle['y']))
@@ -129,6 +144,8 @@ class Game:
         if self.running:
             logger.debug(f" [Game] Stopping game loop ")
             self.running = False
+            print("Parando el juego")
+            print(self.running)
             logger.debug(f" [Game] Cancelling task ")
             if self.task:
                 logger.debug(f" [Game] Cancelling task ")
@@ -136,7 +153,7 @@ class Game:
                 logger.debug(f" [Game] Task cancelled ")
             else:
                 logger.debug(f" [Game] Task is None ")
-        self.scores = {'left': 0, 'right': 0}
+        #self.scores = {'left': 0, 'right': 0}
         self.duration = time.time() - self.duration
 
     def get_state(self):

@@ -61,7 +61,7 @@ class DQNet(nn.Module):
         return x
 
 class Agent:
-    def __init__(self, side, replay_buffer, input_dim=5, output_dim=3, discount_factor=0.85, epsilon=0.0, lr=0.0002, batch_size=256, model_path="model.pt", tau=0.4, tau_decay=0.995, tau_min=0.1):
+    def __init__(self, side, replay_buffer, input_dim=5, output_dim=3, discount_factor=0.85, epsilon=0.0, lr=0.0002, batch_size=256, model_path="./TranscendenceApp/ai_oponent/model.pt", tau=0.4, tau_decay=0.995, tau_min=0.1):
         self.side = side
         self.replay_buffer = replay_buffer
         self.discount_factor = discount_factor
@@ -157,5 +157,5 @@ class Agent:
         self.optimizer.step()
 
     def save_model(self):
-        torch.save(self.model.state_dict(), "model.pt")
+        torch.save(self.model.state_dict(), model_path)
         print(" [Agent] Model saved")

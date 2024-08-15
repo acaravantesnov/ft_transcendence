@@ -47,6 +47,17 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({'type': 'game_state', 'state': self.game.get_state()}))
 
     async def disconnect(self, close_code):
+
+        # Remove user from the room
+        logger.debug(f" [GameConsumer] Removing user from room {self.room_group_name} ")     
+        print(close_code)
+        if (close_code == 4000):
+            await game_manager.remove_user(self.room_group_name, self.side, self.user_id)
+
+        if (close_code == 4000):
+            game_manager.stop_game(self.room_group_name)
+            print("GameOVer")
+
         # Leave room group
         logger.debug(f" [GameConsumer] disconnect: {self.scope} ")
         await self.channel_layer.group_discard(
@@ -54,10 +65,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-        # Remove user from the room
-        logger.debug(f" [GameConsumer] Removing user from room {self.room_group_name} ")
-        
-        await game_manager.remove_user(self.room_group_name, self.side, self.user_id)
 
     async def receive(self, text_data):
         #logger.debug(f" [GameConsumer] receive: {text_data} ")

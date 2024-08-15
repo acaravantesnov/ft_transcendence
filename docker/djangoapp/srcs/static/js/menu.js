@@ -1,34 +1,33 @@
 // game.js
 
-let socket = null;
-let intervalId = null;
 
 // DOM elements
-const ball = document.getElementById('ball');
-const leftPaddle = document.getElementById('left-paddle');
-const rightPaddle = document.getElementById('right-paddle');
-const leftScore = document.getElementById('left-score');
-const rightScore = document.getElementById('right-score');
-const gameArea = document.getElementById('game-area');
+var ball = document.getElementById('ball');
+var leftPaddle = document.getElementById('left-paddle');
+var rightPaddle = document.getElementById('right-paddle');
+var leftScore = document.getElementById('left-score');
+var rightScore = document.getElementById('right-score');
+var gameArea = document.getElementById('game-area');
 
 async function gameIA() {
 	try {
 		const response = await fetch(`/users/play/vsIA/createGame/${user.username}/`);
-		const data = await response.json();
+		//const data = await response.json();
 		console.log('Por aqui pasamos');
-		console.log(data);
-		if (data.status === 'success') {
-			const room_name = data.room_name;
+		//console.log(data);
+		//if (data.status === 'success') {
+			const room_name = 'roomIA001';
+			//const room_name = data.room_name;
 			console.log(room_name);
 			initializeGame(room_name, 'left');
 			console.log('Iniciando juego con la IA');
-		}
+		//}
 	} catch (error) { console.error('Error creating vsIA game: ', error); }
 }
 
 // Game functions
 function initializeGame(roomName, side) {
-    clearInterval(intervalId);
+    //clearInterval(intervalId);
 
     // Show game area and hide waitlist button
     document.getElementById('game-area').style.display = 'block';
@@ -43,6 +42,11 @@ function initializeGame(roomName, side) {
         if (data.type === 'game_state') {
             updateGameState(data.state);
         }
+    };
+
+    socket.onclose = event => {
+	    //meke popUp
+	    window.location.href = `/users/home/${user.username}`;
     };
 
     // Update URL without refreshing
@@ -63,14 +67,15 @@ function updateGameState(state) {
     rightScore.innerText = state.scores.right;
 
     if (state.game_over.ended) {
-        alert(`${state.game_over.winner === 'left' ? 'Left' : 'Right'} player won!`);
-        window.location.href = `/users/home/${user.username}`;
+	    socket.close(4000,"Game Over")
     }
 }
 
 // Event listeners
 
 vsIA.addEventListener('click', gameIA);
+vsPlayer.addEventListener('click', gameIA);
+tournament.addEventListener('click', gameIA);
 
 document.addEventListener('keydown', (e) => {
     let speed = 0;

@@ -5,7 +5,7 @@ import numpy as np
 import os
 
 class ReplayBuffer:
-    def __init__(self, buffer_size, buffer_path="replay_buffer.pkl"):
+    def __init__(self, buffer_size, buffer_path="/app/TranscendenceApp/ai_oponent/replay_buffer.pkl"):
         self.buffer = deque(maxlen=buffer_size)
         self.prev_state = None
         self.prev_action = None

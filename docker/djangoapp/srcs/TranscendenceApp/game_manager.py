@@ -40,6 +40,10 @@ class GameManager:
         elif side == "left":
             self.left_user[room_group_name] = user_id
             self.left_user_connected[room_group_name] = True
+            if room_group_name.find("IA"):
+                self.right_user[room_group_name] = "AI"
+                self.right_user_connected[room_group_name] = True
+
             return 0
         logger.debug(f" [GameManager] User not added to room {room_group_name} ")
         return 1
@@ -56,6 +60,8 @@ class GameManager:
           logger.debug(f" [GameManager] remove_user: {room_group_name} ")
           if side == "left":
               self.left_user_connected[room_group_name] = False
+              if room_group_name.find("IA"):
+                self.right_user_connected[room_group_name] = False
           elif side == "right":
               self.right_user_connected[room_group_name] = False
 
@@ -67,7 +73,7 @@ class GameManager:
               #asyncio.create_task(self.stop_game(room_group_name))
               await self.stop_game(room_group_name)
               logger.debug(f" [GameManager] Game stopped ")
-              waiting_room.remove_game(room_group_name)
+              #waiting_room.remove_game(room_group_name)
               logger.debug(f" [GameManager] removed from waiting room: {room_group_name}")
 
     async def stop_game(self, room_group_name):
@@ -84,6 +90,7 @@ class GameManager:
                 player_left = await MyCustomUser.get_user_by_username(self.left_user[room_group_name])
                 logger.debug(f" [GameManager] left player: {player_left} ")
                 player_right = await MyCustomUser.get_user_by_username(self.right_user[room_group_name])
+
                 logger.debug(f" [GameManager] right player: {player_right} ")
                 player_winner = player_left if self.games[room_group_name].game_over['winner'] == 'left' else player_right
                 logger.debug(f" [GameManager] winner: {player_winner}, game_over: {winner} ")
@@ -112,11 +119,11 @@ class GameManager:
                 except Exception as e:
                     logger.error(f" [GameManager] Catched Error saving game to database: {e} ")
                 logger.debug(f" [GameManager] Deleting game instance")
-                del self.left_user[room_group_name]
-                del self.right_user[room_group_name]
-                del self.left_user_connected[room_group_name]
-                del self.right_user_connected[room_group_name]
-                del self.games[room_group_name]
+                self.left_user.pop(room_group_name)
+                self.right_user.pop(room_group_name)
+                self.left_user_connected.pop(room_group_name)
+                self.right_user_connected.pop(room_group_name)
+                self.games.pop(room_group_name)
                 logger.debug(f" [GameManager] Game stopped ")
         except Exception as e:
             logger.error(f" [GameManager] Error stopping game: {e} ")
