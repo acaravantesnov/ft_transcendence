@@ -45,13 +45,7 @@ from .serializers import MyCustomUserSerializer, GameSerializer
 from .models import *
 from .forms import signUser, newUser, updateProfileInfo, newPassword, updateAvatarForm
 from .waiting_room import waiting_room
-<<<<<<< HEAD
 from .tournament_manager import tournament_manager
-from .ai_oponent.game_connection import game_connection
-from .ai_oponent.config import USERNAME, BUFFER_SIZE, WSS_URL
-from .ai_oponent.replay_buffer import ReplayBuffer
-=======
->>>>>>> 17a3ec1 (AI multiple)
 
 import logging
 import random
@@ -90,6 +84,12 @@ def play(request, username):
 def menu(request, username):
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'menu.html');
+    form = signUser();
+    return render(request, 'signIn.html', {'form': form})
+
+def menu2(request, mode, username):
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'menu2.html');
     form = signUser();
     return render(request, 'signIn.html', {'form': form})
 
@@ -360,10 +360,19 @@ def checkwaitlist(request, username):
     return JsonResponse({'status': 'success', 'response': response})
 
 @api_view(['GET'])
-def createGame(request, username):
-    #n = random.randint(100, 99999)
-    #room_name = "room"+str(n)
-    room_name = "roomIA001"
+def createGame(request, mode, username):
+    if mode.find('vsPlayer') and mode.find('local'):
+        m = "PL"
+    else if mode.find('vsPlayer') and mode.find('remote'):
+        m = "PR"
+    else if mode.find('tournament') and mode.find('local'):
+        m = "TL"
+    else if mode.find('tournament') and mode.find('remote'):
+        m = "TR"
+    else:
+        m = "error"
+    n = random.randint(100, 99999)
+    room_name = "room"+m+str(n)
     return JsonResponse({'status':'success', 'room_name': room_name})
 
 

@@ -11,6 +11,7 @@ urlpatterns = [
     path('', views.title, name="title"),
     path('home/<str:username>', views.home, name="home"),
     path('play/menu/<str:username>/', views.menu, name="menu"),
+    path('play/menu2/<str:mode>/<str:username>/', views.menu2, name="menu2"),
     path('play/<str:username>/', views.play, name="play"),
     path('leaderboards/<str:username>/', views.leaderboards, name="leaderboards"),
     path('profile/<str:username>/', views.profile, name="profile"),
@@ -38,7 +39,7 @@ urlpatterns = [
     path('getDashboard/<str:username>/', views.getDashboard, name="getDashboard"),
     path('statistics/<str:username>/', views.statistics, name="statistics"),
     path('waitlist/checkwaitlist/<str:username>/', views.checkwaitlist, name="checkwaitlist"),
-    path('play/vsIA/createGame/<str:username>/', views.createGame, name="createGame"),
+    path('play/vsIA/createGame/<str:mode>/<str:username>/', views.createGame, name="createGame"),
     
     # API POST views
     path('checkCredentials/', views.checkCredentials, name="checkCredentials"),

@@ -1,4 +1,4 @@
-// game.js
+// menu2.js
 
 
 // DOM elements
@@ -9,19 +9,21 @@ var leftScore = document.getElementById('left-score');
 var rightScore = document.getElementById('right-score');
 var gameArea = document.getElementById('game-area');
 
-async function gameIA() {
+const title = document.getElementsByClassName('display-2')[0].innerHTML = (window.location.toString().search('vsPlayer')>0 ? 'vsPlayer' : window.location.toString().search('tournament')>0 ? 'Tournament' : "caca");
+
+async function gameIA(str) {
 	try {
-		const response = await fetch(`/users/play/vsIA/createGame/${user.username}/`);
-		//const data = await response.json();
-		console.log('Por aqui pasamos');
-		//console.log(data);
-		//if (data.status === 'success') {
-			const room_name = 'roomIA001';
-			//const room_name = data.room_name;
+		const txt = str + title.innerHTML;
+		const response = await fetch(`/users/play/vsIA/createGame/${txt}/${user.username}/`);
+		const data = await response.json();
+		console.log(data);
+		if (data.status === 'success') {
+			//const room_name = 'roomIA001';
+			const room_name = data.room_name;
 			console.log(room_name);
 			initializeGame(room_name, 'left');
-			console.log('Iniciando juego con la IA');
-		//}
+			//console.log('Iniciando juego con la IA');
+		}
 	} catch (error) { console.error('Error creating vsIA game: ', error); }
 }
 
@@ -73,24 +75,8 @@ function updateGameState(state) {
 
 // Event listeners
 
-vsIA.addEventListener('click', gameIA);
-vsPlayer.addEventListener('click', (e) => {
-	const { href } = { href: `/users/play/menu2/vsPlayer/${user.username}` };
-	const event = {
-		preventDefault: () => {},
-		target: { href }
-	};
-	route(event);
-});
-
-tournament.addEventListener('click', (e) => {
-	const { href } = { href: `/users/play/menu2/tournament/${user.username}` };
-	const event = {
-		preventDefault: () => {},
-		target: { href }
-	};
-	route(event);
-});
+local.addEventListener('click', gameIA('local'));
+remote.addEventListener('click', gameIA('remote'));
 
 document.addEventListener('keydown', (e) => {
     let speed = 0;
