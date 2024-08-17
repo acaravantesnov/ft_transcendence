@@ -176,7 +176,9 @@ def get_stats(request, username):
     except MyCustomUser.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=404)
 
-    games = Game.objects.filter(player1=user) | Game.objects.filter(player2=user)
+    games = Game.objects.filter(Q(player1=user) | Q(player2=user)).select_related('player1', 'player2', 'winner')
+    
+    #games = Game.objects.filter(player1=user) | Game.objects.filter(player2=user)
 
     total_conceded = 0
     total_scored = 0
@@ -184,8 +186,8 @@ def get_stats(request, username):
     for game in games:
 
         if game.player1 == user:
-            total_scored += game.player1.score
-            total_conceded += game.player2.score
+            total_scored += game.player1_score
+            total_conceded += game.player2_score
         else:
             total_scored += game.player2_score
             total_conceded += game.player1_score 
