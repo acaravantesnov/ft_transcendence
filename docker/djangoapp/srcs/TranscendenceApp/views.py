@@ -131,6 +131,9 @@ def dashboard(request, username):
     return render(request, 'dashboard.html', {'username': request.user.username})
 
 def stats(request, username):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
     return render(request, 'stats.html', {'username': username})
 
 # CRUD API views
