@@ -1,27 +1,5 @@
 {% load static %}
 
-<style>
-#local {
-  #background-color: red;
-  #height: 300px;
-  width: 30%;
-  #background-size: cover;
-  #border: solid 3px green;
-  margin-left: 1.5%;
-  margin-right: 1.5%;
-}
-#remote {
-  #background-image: url("/static/images/vsPlayer.webp");
-  #height: 300px;
-  width: 30%;
-  #background-size: cover;
-  #border: solid 3px green;
-  margin-left: 1.5%;
-  margin-right: 1.5%;
-}
-
-</style>
-
     <div class="container">
         <div class="row top-buffer" style="font-family: Dosis">
             <div class="col-12">
@@ -30,27 +8,18 @@
 		</div>
                 <div class="card card-body pt-4 pb-4">
 			<center>
-			<div id="playMenu" class="in-line">
-				<button type="button" id="local" class="btn btn-danger">
+			<div id="modeMenu" class="in-line">
+				<button type="button" id="local" class="btn btn-danger" style="width:30%;margin-left:1.5%;margin-right:1.5%">
 				<span style="color:white; font-size:25px">Local</span>
 				</button>
-				<button type="button" id="remote" class="btn btn-success">
+				<button type="button" id="remote" class="btn btn-success" style="width:30%;margin-left:1.5%;margin-right:1.5%">
 				<span style="color:white; font-size:25px">Online</span>
 				</button>
 			</div>
-                    <div id="game-area" style="display: none;">
-                        <div id="scores">
-                            <div id="left-score">0</div>
-                            <div id="right-score">0</div>
-                        </div>
-                        <div id="ball"></div>
-                        <div id="left-paddle" class="paddle"></div>
-                        <div id="right-paddle" class="paddle"></div>
-                    </div>
 		    </center>
                 </div>
             </div>
         </div>
     </div>
 
-<script src="{% static 'js/menu2.js' %}"></script>
+<script src="{% static 'js/modeMenu.js' %}"></script>

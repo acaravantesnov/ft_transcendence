@@ -1,4 +1,4 @@
-// play.js
+// modeMenu.js
 
 
 // DOM elements
@@ -9,9 +9,13 @@
 //var rightScore = document.getElementById('right-score');
 //var gameArea = document.getElementById('game-area');
 
-async function gameIA() {
+var title = document.getElementsByClassName('display-2')[0].innerHTML = (window.location.toString().search('vsPlayer')>0 ? 'vsPlayer' : window.location.toString().search('tournament')>0 ? 'Tournament' : "caca");
+
+async function init_game(str) {
 	try {
-		const response = await fetch(`/users/play/vsIA/${user.username}/`);
+		const txt = title+str; 
+		const response = await fetch(`/users/play/createGame/${txt}/${user.username}/`);
+		//const response = await fetch(`/users/tournament/addtowaitingroom/${room_id}/${user.username}`)
 		const data = await response.json();
 		console.log(data);
 		if (data.status === 'success') {
@@ -20,17 +24,35 @@ async function gameIA() {
 			console.log(room_name);
 			go_to(`/users/playing/${room_name}/${side}/${user.username}`)
 			initializeGame(room_name, 'left');
-
+		} else if (data.status === 'waiting') {
+			check_waitlist();
 		}
 	} catch (error) { console.error('Error creating vsIA game: ', error); }
 }
 
-// To Playing page
+async function checkWaitlist() {
+    try {
+        const response = await fetch(`/users/waitlist/checkwaitlist/${user.username}/`);
+        const data = await response.json();
+        console.log('Waitlist status:', data);
+
+        if (data.status === 'success') {
+            const { room_name, user_left, user_right } = data.response;
+            const side = user.username === user_left ? 'left' : (user.username === user_right ? 'right' : 'spectator');
+    	    clearInterval(intervalId);
+	    go_to(`/users/playing/${room_name}/${side}/${user.username}`)
+            initializeGame(room_name, side);
+        }
+    } catch (error) {
+        console.error('Error checking waitlist:', error);
+    }
+}
+
+/*
 
 // Game functions
-/*
 function initializeGame(roomName, side) {
-    //clearInterval(intervalId);
+    clearInterval(intervalId);
 
     // Show game area and hide waitlist button
     document.getElementById('game-area').style.display = 'block';
@@ -74,28 +96,45 @@ function updateGameState(state) {
     }
 }
 */
+
 // Event listeners
 
-vsIA.addEventListener('click', gameIA);
+local.addEventListener('click', () => init_game('local'));
 
-vsPlayer.addEventListener('click', () => go_to(`/users/play/mode/vsPlayer/${user.username}`));
-
-tournament.addEventListener('click', () => go_to(`/users/play/mode/tournament/${user.username}`));
+remote.addEventListener('click', () => {
+	if (title == 'Tournament') { go_to(`/users/play/tournament/${user.username}`); }
+	else { init_game('remote'); }
+});
 
 /*
 document.addEventListener('keydown', (e) => {
-    let speed = 0;
-    if (e.key === 'ArrowUp') speed = -5;
-    else if (e.key === 'ArrowDown') speed = 5;
+    let right_speed = 0;
+    let left_speed = 0;
+    if (e.key === 'ArrowUp') right_speed = -3;
+    else if (e.key === 'ArrowDown') right_speed = 3;
+    else if (e.key === 'w') left_speed = -3;
+    else if (e.key === 's') left_speed = 3;
     
-    if (speed !== 0 && socket) {
-        socket.send(JSON.stringify({type: 'paddle', speed}));
+    if (right_speed !== 0 && socket) {
+        socket.send(JSON.stringify({type: 'right_paddle', speed: right_speed}));
+    }
+    if (left_speed !== 0 && socket) {
+	socket.send(JSON.stringify({type: 'left_paddle', speed: left_speed}));
     }
 });
 
 document.addEventListener('keyup', (e) => {
     if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && socket) {
-        socket.send(JSON.stringify({type: 'paddle', speed: 0}));
+        socket.send(JSON.stringify({type: 'right_paddle', speed: 0}));
+    }
+    if ((e.key === 'w' || e.key === 's') && socket) {
+	socket.send(JSON.stringify({type: 'left_paddle', speed: 0}));
     }
 });
 */
+
+// Initialization
+function check_waitlist() {
+	intervalId = setInterval(checkWaitlist, 1000);
+}
+

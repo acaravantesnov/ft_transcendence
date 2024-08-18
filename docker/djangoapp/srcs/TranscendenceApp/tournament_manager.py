@@ -9,16 +9,24 @@ logger = logging.getLogger("TournamentManager")
 class TournamentManager:
     def __init__(self):
         # Store tournament trees by room_id
-        self.tournaments = defaultdict(lambda: defaultdict(lambda: defaultdict(dict)))
+        self.tournaments = defaultdict(lambda: defaultdict(lambda: defaultdict(dict))) # room_id -> level -> game_id -> game_info [status,room_name,left_user, right_user]
         self.active_games = defaultdict(dict)  # room_id -> user_id -> (level, game_id)
         self.ready_users = defaultdict(set)  # room_id -> set of users ready to play
         self.waiting_users = defaultdict(list)  # room_id -> users waiting for the next round
         self.status = defaultdict(str)  # room_id -> status of the tournament
 
     def add_user_to_room(self, room_id, user_id):
+        print('Aqui entra correctamente')
         if self.status[room_id] in ["ready", "finished"]:
             logger.debug(f" [TournamentManager] Tournament in room {room_id} has already started")
             return "error: tournament already started"
+
+        if room_id not in self.waiting_users:
+            # If room does not exist a waiting room for it is added
+            print('Aqui entra correctamente')
+            self.waiting_users[room_id]
+            print('Pero no se a;ade')
+            logger.debug(f" [TournamentManager] Tournament room added")
 
         if user_id in self.waiting_users[room_id]:
             logger.debug(f" [TournamentManager] User {user_id} already in waiting list in room {room_id}")
@@ -220,6 +228,14 @@ class TournamentManager:
             self._create_game(room_id, next_level, self.tournaments[room_id][next_level][parent_game_id]["user_left"],
                               self.tournaments[room_id][next_level][parent_game_id]["user_right"], parent_game_id)
             logger.debug(f" [TournamentManager] Created game for next level {next_level}, game {parent_game_id}")
+    
+    def get_tournaments(self):
+        rooms = []
+        all_rooms = self.waiting_users
+        for key, value in all_rooms.items():
+            players = len(value)
+            rooms.append({'room_name': key, 'players': players})
+        return { 'status': 'success', 'tournaments': rooms }
 
 tournament_manager = TournamentManager()
 

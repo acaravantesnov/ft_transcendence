@@ -1,0 +1,37 @@
+{% load static %}
+
+<!-- Modal -->
+<div class="modal fade" id="newTournamentModal" tabindex="-1" role="dialog" aria-labelledby="newTournamentModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newTournamentModalLongTitle">New Tournament Created</h5>
+      </div>
+      <div class="modal-body">
+	    <p id="roomName"></p>
+      </div>
+      <div class="modal-footer">
+	<button id="close-popup" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+        <div class="row top-buffer" style="font-family: Dosis">
+            <div class="col-12">
+		<div class="col-sm-12">
+			<h3 class="display-2">Tournaments</h3>
+		</div>
+                <div class="card card-body pt-4 pb-4">
+		<center>
+                    <div id="tournament-area">
+                    </div>
+		    <button id="open-popup" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#newTournamentModal">Create Tournament</button>
+		</center>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="{% static 'js/tournaments.js' %}"></script>

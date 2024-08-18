@@ -27,7 +27,7 @@ class Game:
         self.running = False
         self.task = None
         self.duration = time.time()
-        if (room_group_name.find("IA")):
+        if (room_group_name.find("IA")>0):
             replay_buffer = ReplayBuffer(BUFFER_SIZE)
             self.agent = Agent('right', replay_buffer)
 
@@ -58,8 +58,6 @@ class Game:
     def check_end_game(self):
         if self.game_over['ended']:
             logger.debug(f" [Game] Returning Game over: {self.game_over['winner']} ")
-            #await self.stop()
-            print(self.running)
             return True
         if self.scores['left'] >= 3:
             logger.debug(f" [Game] Game over: left ")
@@ -75,13 +73,7 @@ class Game:
         self.ball_position['y'] += self.ball_speed['y']
 
         self.left_paddle['y'] += self.left_paddle['speed']
-        if (self.room_group_name.find("IA")):
-            state = self.get_state()
-            print(state)
-            self.right_paddle['y'] += self.agent.decide_action(state)
-
-        else:
-            self.right_paddle['y'] += self.right_paddle['speed']
+        self.right_paddle['y'] += self.right_paddle['speed']
 
         # Keep paddles within the screen
         self.left_paddle['y'] = max(0, min(self.screen_size['height'] - self.paddle_size['height'], self.left_paddle['y']))
@@ -170,4 +162,7 @@ class Game:
         if paddle == 'left':
             self.left_paddle['speed'] = speed
         elif paddle == 'right':
-            self.right_paddle['speed'] = speed
+            if self.room_group_name.find("IA")>0:
+                self.right_paddle['speed'] = self.agent.decide_action(self.get_state())
+            else:
+                self.right_paddle['speed'] = speed

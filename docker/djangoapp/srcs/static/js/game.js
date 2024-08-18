@@ -80,7 +80,7 @@ function updateGameState(state) {
     ball.style.top = `${state.ball_position.y * scaleY}px`;
     leftPaddle.style.left = `${state.left_paddle.x * scaleX}px`;
     leftPaddle.style.top = `${state.left_paddle.y * scaleY}px`;
-    rightPaddle.style.left = `${state.right_pa3dle.x * scaleX}px`;
+    rightPaddle.style.left = `${state.right_paddle.x * scaleX}px`;
     rightPaddle.style.top = `${state.right_paddle.y * scaleY}px`;
     leftScore.innerText = state.scores.left;
     rightScore.innerText = state.scores.right;

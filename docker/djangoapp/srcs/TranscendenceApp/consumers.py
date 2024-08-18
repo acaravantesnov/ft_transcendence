@@ -37,6 +37,9 @@ class GameConsumer(AsyncWebsocketConsumer):
           # Add user to the room
           logger.debug(f" [GameConsumer] [{self.user_id}] Adding user to room {self.room_group_name} ")
           game_manager.add_user(self.room_group_name, self.side, self.user_id)
+          if self.room_group_name.find('L')>0:
+              side = 'right' if self.side == 'left' else 'left'
+              game_manager.add_user(self.room_group_name, side, self.user_id)
           logger.debug(f" [GameConsumer] [{self.user_id}] User added to room {self.room_group_name} ")
 
           # Start the game if not already running
@@ -69,10 +72,15 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         #logger.debug(f" [GameConsumer] receive: {text_data} ")
         data = json.loads(text_data)
+        print(data['type'])
         if data['type'] == 'paddle':
             #logger.debug(f" [GameConsumer] Updating paddle for user {self.user_id} ")
             speed = data['speed']
             self.game.update_paddle(self.side, speed)
+        elif data['type'] == 'right_paddle':
+            self.game.update_paddle('right', data['speed'])
+        elif data['type'] == 'left_paddle':
+            self.game.update_paddle('left', data['speed'])
 
     async def game_state(self, event):
         # logger.debug(f"[GameConsumer] game_state: {event} ")

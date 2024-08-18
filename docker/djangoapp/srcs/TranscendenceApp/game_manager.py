@@ -40,7 +40,7 @@ class GameManager:
         elif side == "left":
             self.left_user[room_group_name] = user_id
             self.left_user_connected[room_group_name] = True
-            if room_group_name.find("IA"):
+            if room_group_name.find("IA")>0:
                 self.right_user[room_group_name] = "AI"
                 self.right_user_connected[room_group_name] = True
 
@@ -60,7 +60,7 @@ class GameManager:
           logger.debug(f" [GameManager] remove_user: {room_group_name} ")
           if side == "left":
               self.left_user_connected[room_group_name] = False
-              if room_group_name.find("IA"):
+              if room_group_name.find("IA")>0:
                 self.right_user_connected[room_group_name] = False
           elif side == "right":
               self.right_user_connected[room_group_name] = False

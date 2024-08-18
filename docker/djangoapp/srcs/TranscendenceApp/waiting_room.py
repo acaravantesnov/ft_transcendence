@@ -1,5 +1,6 @@
 from .game import Game
 
+import random
 import logging
 
 logger = logging.getLogger("WaitingRoom")
@@ -10,7 +11,7 @@ class WaitingRoom:
         self.waiting_users = []
 
         # Counter to give game rooms unique names
-        self.room_counter = 0
+        self.room_names = []
 
         # Self dispatched games
         self.dispatched_games = []
@@ -29,20 +30,29 @@ class WaitingRoom:
         self.waiting_users.remove(user_id)
         return
 
-    # When a new game should be created
+    def add_room(self, room_name):
+        logger.debug(f" [WaitingRoom] add_room: {room_name} ")
+        self.room_names.append(room_name)
+        return
+
+    # When a new gae should be created
     # in this case it is when there are 4 users in the waiting room
     def check_waiting_room_condition(self):
         logger.debug(f" [WaitingRoom] check_waiting_room_condition ")
+        print(' [WaitingRoom] room condition')
         if len(self.waiting_users) >= 2:
+            self.add_room('roomPR'+str(random.randint(100,99999)))
             return True
         return False
     
     # Create a new game room with two random users from the waiting room
     def create_game(self):
         logger.debug(f" [WaitingRoom] create_game ")
-        room_name = f"game_{self.room_counter}"
-        self.room_counter += 1
-        room_name = f"game_{self.room_counter}"
+        #room_name = f"game_{self.room_counter}"
+        #self.room_counter += 1
+        #room_name = f"game_{self.room_counter}"
+        print(' [WaitingRoon] creando juego ')
+        room_name = self.room_names.pop()
         user_right = self.waiting_users.pop()
         user_left = self.waiting_users.pop()
         self.dispatched_games.append({
@@ -60,10 +70,13 @@ class WaitingRoom:
     def user_check_if_waiting_is_done(self, user_id):
         logger.debug(f" [WaitingRoom] self.waaaiting_users: {self.waiting_users}")
         logger.debug(f" [WaitingRoom] user_check_if_waiting_is_done: {user_id} ")
+        print(' [WaitingRoom] user_check ')
         if self.check_waiting_room_condition():
             self.create_game()
         for game in self.dispatched_games:
+            print(' [WaitingRoom] Comprobando dispatched_games ')
             if user_id == game["user_left"] or user_id == game["user_right"]:
+                print(' [WaitingRoom] Dispatched_game encontrado ')
                 return game
         return None
     

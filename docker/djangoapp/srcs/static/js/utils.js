@@ -75,3 +75,12 @@ function hideOffcanvas() {
         }, 150); // Matches the fade-out duration
     }
 }
+
+function go_to(url) {
+	const { href } = { href: url };
+	const event = {
+		preventDefault: () => {},
+		target: { href }
+	};
+	route(event)
+}

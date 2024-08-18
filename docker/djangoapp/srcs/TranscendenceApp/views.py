@@ -81,13 +81,23 @@ def play(request, username):
     form = signUser()
     return render(request, 'signIn.html', {'form': form})
 
+def playing(request, username):
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'playing.html', {"username": username})
+    form = signUser()
+    return render(request, 'signIn.html', {'form': form})
+
+
 def menu(request, username):
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'menu.html');
     form = signUser();
     return render(request, 'signIn.html', {'form': form})
 
-def menu2(request, mode, username):
+def modeMenu(request, mode, username):
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'menu2.html');
     form = signUser();
@@ -150,6 +160,12 @@ def stats(request, username):
         username = request.user.username
         return render(request, 'index.html', {'username': username})
     return render(request, 'stats.html', {'username': username})
+    
+def tournament(request, username):
+    if request.headers.get('Accept') != '*/*':
+        return render(request, 'index.html', {'username': username})
+    return render(request, 'tournaments.html', {'username': username})
+
 
 # CRUD API views
     
@@ -354,6 +370,7 @@ def statistics(request, username):
 @api_view(['GET'])
 def checkwaitlist(request, username):
     response = waiting_room.user_check_if_waiting_is_done(username)
+    print(response)
     logger.debug(f" [views] checkwaitlist: {response} ")
     if response is None:
         return JsonResponse({'status': 'waiting'})
@@ -361,19 +378,28 @@ def checkwaitlist(request, username):
 
 @api_view(['GET'])
 def createGame(request, mode, username):
-    if mode.find('vsPlayer') and mode.find('local'):
+
+    if mode.find('vsPlayer')>=0 and mode.find('local')>0:
         m = "PL"
-    else if mode.find('vsPlayer') and mode.find('remote'):
+        n = random.randint(100, 99999)
+        room_name = "room"+m+str(n)
+        status = 'success'
+    elif mode.find('vsPlayer')>=0 and mode.find('remote')>0:
         m = "PR"
-    else if mode.find('tournament') and mode.find('local'):
-        m = "TL"
-    else if mode.find('tournament') and mode.find('remote'):
+        waiting_room.add_user(username)
+        room_name = 'none'
+        status = 'waiting'
+    #elif mode.find('tournament')>=0 and mode.find('local')>0:
+    #    m = "TL"
+    elif mode.find('tournament')>=0 and mode.find('remote')>0:
         m = "TR"
+        n = random.randint(100, 99999)
+        room_name = "room"+m+str(n)
+        status = 'success'
     else:
         m = "error"
-    n = random.randint(100, 99999)
-    room_name = "room"+m+str(n)
-    return JsonResponse({'status':'success', 'room_name': room_name})
+        status = 'error'
+    return JsonResponse({'status': status, 'room_name': room_name})
 
 
 # API POST views
@@ -525,6 +551,15 @@ def check_tournament_waiting_room(request, room_id):
 def get_tournament_game(request, room_id, username):
     logger.debug(f" [views] get_tournament_game: {room_id}, {username} ")
     response = tournament_manager.get_game(room_id, username)
+    return JsonResponse(response)
+
+@api_view(['GET'])
+def get_tournaments(request):
+    print('Veaamosss')
+    logger.debug(f" [views] get_tournaments ")
+    print('Veaamosss')
+    response = tournament_manager.get_tournaments()
+    print('Veaamosss')
     return JsonResponse(response)
 
 @api_view(['GET'])

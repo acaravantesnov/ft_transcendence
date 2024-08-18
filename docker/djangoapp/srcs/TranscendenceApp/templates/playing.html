@@ -1,0 +1,26 @@
+{% load static %}
+
+    <div class="container">
+        <div class="row top-buffer" style="font-family: Dosis">
+            <div class="col-12">
+		<div class="col-sm-12">
+			<h3 class="display-2"></h3>
+		</div>
+                <div class="card card-body pt-4 pb-4">
+		<center>
+                    <div id="game-area" style="display: none;">
+                        <div id="scores">
+                            <div id="left-score">0</div>
+                            <div id="right-score">0</div>
+                        </div>
+                        <div id="ball"></div>
+                        <div id="left-paddle" class="paddle"></div>
+                        <div id="right-paddle" class="paddle"></div>
+                    </div>
+		</center>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="{% static 'js/playing.js' %}"></script>
