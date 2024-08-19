@@ -554,12 +554,9 @@ def get_tournament_game(request, room_id, username):
     return JsonResponse(response)
 
 @api_view(['GET'])
-def get_tournaments(request):
-    print('Veaamosss')
+def get_tournaments(request, username):
     logger.debug(f" [views] get_tournaments ")
-    print('Veaamosss')
-    response = tournament_manager.get_tournaments()
-    print('Veaamosss')
+    response = tournament_manager.get_tournaments(username)
     return JsonResponse(response)
 
 @api_view(['GET'])

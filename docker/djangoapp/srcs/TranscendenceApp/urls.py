@@ -60,7 +60,7 @@ urlpatterns = [
     path('tournament/checkwaitingroom/<str:room_id>/', views.check_tournament_waiting_room, name='check_tournament_waiting_room'),
     path('tournament/readytoplay/<str:room_id>/<str:username>/', views.set_ready_to_play, name='ready_to_play'),
     path('tournament/getgame/<str:room_id>/<str:username>/', views.get_tournament_game, name='get_tournament_game'),
-    path('tournament/gettournaments/', views.get_tournaments, name='get_tournaments'),
+    path('tournament/gettournaments/<str:username>/', views.get_tournaments, name='get_tournaments'),
     path('tournament/getstate/<str:room_id>/', views.get_tournament_state, name='get_tournament_state'),
     path('tournament/stopgame/<str:room_id>/<str:winner_id>/<str:loser_id>/', views.stop_game_torunament, name='stop_game'),
 

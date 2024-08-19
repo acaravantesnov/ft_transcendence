@@ -84,6 +84,7 @@ async function friends (){
     try {
 	const response = await fetch(`/users/getFriendList/${user.username}`);
    	const data = await response.json();
+	const data_parsed = JSON.parse(data);
 	const tableBody = document.getElementById('friendTable').getElementsByTagName('tbody')[0];
 	data.forEach(element => {
 		const row = tableBody.insertRow();

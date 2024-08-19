@@ -126,3 +126,23 @@ main {
 	font-size: 8px;
 	line-height: 1.42857;
 }
+
+#tournament-area {
+	display: flex;
+	align-items: center;
+}
+
+.tournament-div {
+	width: 15%;
+	height: auto;
+	padding: 10px 6px;
+	border-radius: 5px;
+	text-align: center;
+    	margin-left: 2%;
+	margin-right: 2%;
+	border-color: green;
+	border-width: 2px;
+	border-style: outset;
+	#line-height: 1.42857;
+
+}

@@ -229,12 +229,22 @@ class TournamentManager:
                               self.tournaments[room_id][next_level][parent_game_id]["user_right"], parent_game_id)
             logger.debug(f" [TournamentManager] Created game for next level {next_level}, game {parent_game_id}")
     
-    def get_tournaments(self):
+    def get_tournaments(self, username):
+        print('Hola')
+        print(username)
         rooms = []
         all_rooms = self.waiting_users
         for key, value in all_rooms.items():
             players = len(value)
-            rooms.append({'room_name': key, 'players': players})
+            joined = 'false'
+            print('Hasta aqui bien')
+            print(value)
+            for val in value:
+                print('Pero aqui ya mal')
+                if val == username:
+                    joined = 'true'
+                    break 
+            rooms.append({'room_name': key, 'players': players, 'joined': joined })
         return { 'status': 'success', 'tournaments': rooms }
 
 tournament_manager = TournamentManager()
