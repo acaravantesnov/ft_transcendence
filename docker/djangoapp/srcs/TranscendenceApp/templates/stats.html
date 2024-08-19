@@ -1,0 +1,22 @@
+{% load static %}
+
+<div class="container">
+    <h1>Stats for {{ username }}</h1>
+    <div class="row">
+        <!-- Gráfico 1 -->
+        <div class="col-md-6">
+            <canvas id="pointsScoredChart"></canvas>
+            <p class="text-center"><span id="pointsScoredPercentage" class="text-success">0 %</span></p>
+        </div>
+        <!-- Gráfico 2 -->
+        <div class="col-md-6">
+            <canvas id="pointsConcededChart"></canvas>
+            <p class="text-center"><span id="pointsConcededPercentage" class="text-danger">0 %</span></p>
+        </div>
+    </div>
+    <div id="username" style="display: none;">{{ username }}</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/stats.js' %}"></script>
+
