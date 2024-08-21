@@ -2,6 +2,7 @@ const startsWithRoutes = [
     '/users/home/',
     '/users/waitlist/',
     '/users/play/',
+    '/users/playing',
     '/users/leaderboards/',
     '/users/profile/',
     '/users/dashboard/',

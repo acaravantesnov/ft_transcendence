@@ -41,10 +41,20 @@ async function quit_tournament(room_name) {
 
 async function waiting_tournament_room(room_name) {
 	try {
-		const response = await fetch(`/users/tournament/checkwaitingroom/${room_name}`)
+		const response = await fetch(`/users/tournament/getstate/${room_name}`);
 		const data = await response.json();
 		if (data.status == 'success') {
 			console.log(data);
+			if (data.tournament.state == 'ready') {
+				// Editar para que este "ready" cuando se llegue a un determinado numero de jugadores
+				const response = await fetch(`/users/tournament/checkwaitingroom/${room_name}`);
+				// go_to() hacia la pagina de playing... Lo que falta crear de verdad la partida
+			} else if (data.tournament.state == 'waiting') {
+				// Incluir algo de informacion como la gente que falta para estar ready
+			}
+			//
+			//
+			//
 		}
 	} catch (error) {
 		console.error(' Error while entering {room_name} due to: ', error);

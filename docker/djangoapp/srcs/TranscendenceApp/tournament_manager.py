@@ -16,16 +16,13 @@ class TournamentManager:
         self.status = defaultdict(str)  # room_id -> status of the tournament
 
     def add_user_to_room(self, room_id, user_id):
-        print('Aqui entra correctamente')
         if self.status[room_id] in ["ready", "finished"]:
             logger.debug(f" [TournamentManager] Tournament in room {room_id} has already started")
             return "error: tournament already started"
 
         if room_id not in self.waiting_users:
             # If room does not exist a waiting room for it is added
-            print('Aqui entra correctamente')
             self.waiting_users[room_id]
-            print('Pero no se a;ade')
             logger.debug(f" [TournamentManager] Tournament room added")
 
         if user_id in self.waiting_users[room_id]:
@@ -230,17 +227,12 @@ class TournamentManager:
             logger.debug(f" [TournamentManager] Created game for next level {next_level}, game {parent_game_id}")
     
     def get_tournaments(self, username):
-        print('Hola')
-        print(username)
         rooms = []
         all_rooms = self.waiting_users
         for key, value in all_rooms.items():
             players = len(value)
             joined = 'false'
-            print('Hasta aqui bien')
-            print(value)
             for val in value:
-                print('Pero aqui ya mal')
                 if val == username:
                     joined = 'true'
                     break 

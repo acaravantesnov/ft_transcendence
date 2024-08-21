@@ -65,6 +65,32 @@ function initializeTournament(roomName, side) {
 }
 
 
+// Una vez inizializado el torneo comprobar el estado del juego con getgame, mientras esta en waiting, pantalla de espera
+//      waiting for _playerX_
+//
+// En el momento que getgame de permiso, comenzar el juego
+//     Incluir una secuencia: ready? 3, 2, 1 o algo
+//     Mostrar en que level se encuentra y demas
+
+async function waiting_for_tournament_game() {
+	try {
+		const response = await fetch(`/users/tournament/getgame/${room_name}/${user.username}`);
+		const data = await response.json();
+
+	} catch (error) {
+		console.error(' Error while managing the game -- due to: ', error);
+	}
+}
+
+
+//
+// Cuando acabe el juego, volver a la pantalla de waiting
+//
+// Al acabar el torneo mostrar un trofeo, quiza un podio y algo de informacion del torneo
+//
+// Regresar a la pantalla inicial de usuario conectado
+//
+
 // Game functions
 function initializeGame(roomName, side) {
 
@@ -154,5 +180,8 @@ document.addEventListener('keyup', (e) => {
 
 // Initialization
 function check_waitlist() {
+	// si es juego normal
 	intervalId = setInterval(checkWaitlist, 1000);
+	// si es un juego de torneo
+	//
 }
