@@ -78,11 +78,16 @@ async function waiting_for_tournament_game(room_name) {
                 } else if (data.status == 'success') {
 			console.log('Siiuuuu  a jugar');
 			console.log(data);
+			await new Promise(r => setTimeout(r, 10000));
 			clearInterval(intervalID);
                         await go_to(`/users/playing/${user.username}/`);
 			await new Promise(r => setTimeout(r, 1000));
                         document.getElementById('text-game').textContent = " V.S. "
-                        const { room_tournament_name, user_left, user_right } = data.response;
+                        const room_tournament_name = data.response.room_name;
+			console.log('El nombre de la sala es....');
+			console.log(room_tournament_name);
+			const user_left= data.response.user_left;
+			const user_right = data.response.user_right;
                         const side = user.username === user_left ? 'left' : (user.username === user_right ? 'right' : 'spectator');
                         document.getElementById('localPlayer').textContent = user_left;
                         document.getElementById('rival').textContent = user_right;
