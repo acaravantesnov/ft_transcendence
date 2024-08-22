@@ -16,16 +16,21 @@ class TournamentManager:
         self.status = defaultdict(str)  # room_id -> status of the tournament
 
     def add_user_to_room(self, room_id, user_id):
+        print('Adding user')
         if self.status[room_id] in ["ready", "finished"]:
+            print('Tournament already started')
             logger.debug(f" [TournamentManager] Tournament in room {room_id} has already started")
             return "error: tournament already started"
 
         if room_id not in self.waiting_users:
+            print('Addng to waiters')
             # If room does not exist a waiting room for it is added
             self.waiting_users[room_id]
+            print('Added to waiters')
             logger.debug(f" [TournamentManager] Tournament room added")
 
         if user_id in self.waiting_users[room_id]:
+            print('Already in waiters')
             logger.debug(f" [TournamentManager] User {user_id} already in waiting list in room {room_id}")
             return "error: already in waiting list"
 
@@ -118,6 +123,12 @@ class TournamentManager:
         if self.status[room_id] == "ready":
             logger.debug(f" [TournamentManager] Tournament in room {room_id} is ready to start")
             return {"status": self.status[room_id], "people waiting": response}
+        print('Room')
+        print(room_id)
+        print('Waiting users...')
+        print(len(users_waiting))
+        print('Ready users...')
+        print(len(self.ready_users[room_id]))
         if len(users_waiting) == len(self.ready_users[room_id]) and (len(users_waiting) == 2 or len(users_waiting) == 4 or len(users_waiting) == 8 or len(users_waiting) == 16):
             # Start the torunament
             logger.debug(f" [TournamentManager] Starting tournament in room {room_id}")

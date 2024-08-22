@@ -1,5 +1,10 @@
 // playing.js
 
+// game vars
+
+var name_of_room = document.location.pathname.split('/');
+console.log(name_of_room);
+
 
 // DOM elements
 var ball = document.getElementById('ball');
@@ -10,7 +15,7 @@ var rightScore = document.getElementById('right-score');
 var gameArea = document.getElementById('game-area');
 var mode = window.location.toString().search('R')>0 ? 'remote' : 'local';
 
-const title = document.getElementsByClassName('display-2')[0].innerHTML = (window.location.toString().search('vsPlayer')>0 ? 'vsPlayer' : window.location.toString().search('tournament')>0 ? 'Tournament' : "caca");
+title = document.getElementsByClassName('display-2')[0].innerHTML = (window.location.toString().search('vsPlayer')>0 ? 'vsPlayer' : window.location.toString().search('tournament')>0 ? 'Tournament' : "caca");
 
 /*
 async function init_game(str) {
@@ -53,34 +58,12 @@ async function checkWaitlist() {
 
 // Tournament
 
-function initializeTournament(roomName, side) {
-	try {
-		const response = await fetch(`/users/tournament/`);
-		const data = await response.json();
-
-		if (data.status === '')
-	} catch (error) {
-		console.error('Error during Tournament: ', error);
-	}
-}
-
-
 // Una vez inizializado el torneo comprobar el estado del juego con getgame, mientras esta en waiting, pantalla de espera
 //      waiting for _playerX_
 //
-// En el momento que getgame de permiso, comenzar el juego
 //     Incluir una secuencia: ready? 3, 2, 1 o algo
 //     Mostrar en que level se encuentra y demas
 
-async function waiting_for_tournament_game() {
-	try {
-		const response = await fetch(`/users/tournament/getgame/${room_name}/${user.username}`);
-		const data = await response.json();
-
-	} catch (error) {
-		console.error(' Error while managing the game -- due to: ', error);
-	}
-}
 
 
 //
@@ -94,6 +77,7 @@ async function waiting_for_tournament_game() {
 // Game functions
 function initializeGame(roomName, side) {
 
+	console.log(side);
     // Show game area and hide waitlist button
     document.getElementById('game-area').style.display = 'block';
     //document.getElementById('playMenu').style.display = 'none';
@@ -109,10 +93,21 @@ function initializeGame(roomName, side) {
         }
     };
 
-    socket.onclose = event => {
-	    //meke popUp
-	    window.location.href = `/users/home/${user.username}`;
-    };
+	console.log(roomName);
+	console.log(roomName.search('T'));
+
+    if (roomName.search('T')>0) {
+	    socket.onclose = event => {
+	    	//meke popUp
+		    go_to(`/users/play/tournament/${user.username}`);
+	    };
+    } else { 
+	    socket.onclose = event => {
+	    	//meke popUp
+	    	go_to(`/users/home/${user.username}`);
+	    };
+    }
+
 
     // Update URL without refreshing
     // window.history.pushState({}, '', `/users/play/${user.username}/${roomName}/${side}/`);
@@ -161,6 +156,7 @@ document.addEventListener('keydown', (e) => {
     	if (left_speed !== 0 && socket) {
 		socket.send(JSON.stringify({type: 'left_paddle', speed: left_speed}));
     	}
+    }
 });
 
 document.addEventListener('keyup', (e) => {
@@ -177,11 +173,3 @@ document.addEventListener('keyup', (e) => {
     	}
     }
 });
-
-// Initialization
-function check_waitlist() {
-	// si es juego normal
-	intervalId = setInterval(checkWaitlist, 1000);
-	// si es un juego de torneo
-	//
-}

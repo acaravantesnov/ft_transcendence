@@ -32,6 +32,7 @@ ALLOWED_HOSTS = [
     '0.0.0.0',
     'localhost',
     'djangoapp',
+    'c1r5s5',
 ]
 
 INSTALLED_APPS = [
