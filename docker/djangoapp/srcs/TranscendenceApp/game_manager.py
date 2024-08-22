@@ -36,14 +36,13 @@ class GameManager:
         if side == "right":
             self.right_user[room_group_name] = user_id
             self.right_user_connected[room_group_name] = True
+            if room_group_name.find("AI")>0:
+                self.left_user[room_group_name] = "AI"
+                self.left_user_connected[room_group_name] = True
             return 0
         elif side == "left":
             self.left_user[room_group_name] = user_id
             self.left_user_connected[room_group_name] = True
-            if room_group_name.find("IA")>0:
-                self.right_user[room_group_name] = "AI"
-                self.right_user_connected[room_group_name] = True
-
             return 0
         logger.debug(f" [GameManager] User not added to room {room_group_name} ")
         return 1
@@ -57,13 +56,13 @@ class GameManager:
     #             logger.debug(f" [GameManager] No users left in room {room_group_name}, stopping game ")
     #             asyncio.create_task(self.stop_game(room_group_name))
     #             logger.debug(f" [GameManager] Game stopped ")
-          logger.debug(f" [GameManager] remove_user: {room_group_name} ")
+          logger.debug(f" [GameManager] remove_user: {room_group_name}, {side}, {user_id} ")
           if side == "left":
               self.left_user_connected[room_group_name] = False
-              if room_group_name.find("IA")>0:
-                self.right_user_connected[room_group_name] = False
           elif side == "right":
               self.right_user_connected[room_group_name] = False
+              if room_group_name.find("AI")>0:
+                self.left_user_connected[room_group_name] = False
 
           # If no users left in the room, stop the game
           if not self.left_user_connected[room_group_name] and not self.right_user_connected[room_group_name]:
@@ -73,8 +72,14 @@ class GameManager:
               #asyncio.create_task(self.stop_game(room_group_name))
               await self.stop_game(room_group_name)
               logger.debug(f" [GameManager] Game stopped ")
-              #waiting_room.remove_game(room_group_name)
-              logger.debug(f" [GameManager] removed from waiting room: {room_group_name}")
+              # eg. roomPR73613 is remote game as it has R. eg. roomPL73613 is local game as it has L
+              # eg. roomTR73613 is remote tournament as it has T
+              # If it is remote game remove from waiting room. If it is local or tournament do not remove from waiting room
+              if room_group_name.find("R")>0 and not room_group_name.find("T")>0:
+                waiting_room.remove_game(room_group_name)
+                logger.debug(f" [GameManager] removed from waiting room: {room_group_name}")
+              else:
+                logger.debug(f" [GameManager] NOT removed from waiting room: {room_group_name}")
 
     async def stop_game(self, room_group_name):
         try:

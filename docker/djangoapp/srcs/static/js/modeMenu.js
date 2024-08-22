@@ -20,14 +20,19 @@ async function init_game(str) {
 		console.log(data);
 		if (data.status === 'success') {
 			const room_name = data.room_name;
-			const side = 'left';
 			console.log(room_name);
-			go_to(`/users/playing/${room_name}/${side}/${user.username}`)
-			initializeGame(room_name, 'left');
+            if (str == 'local') {
+                await go_to(`/users/playing/${user.username}`)
+                await new Promise(r => setTimeout(r, 1000));
+                initializeGame(room_name, 'local');
+            }
+            else if (str == 'remote') {
+                check_waitlist();
+            }
 		} else if (data.status === 'waiting') {
 			check_waitlist();
 		}
-	} catch (error) { console.error('Error creating vsIA game: ', error); }
+	} catch (error) { console.error('Error creating game: ', error); }
 }
 
 async function checkWaitlist() {
@@ -40,7 +45,8 @@ async function checkWaitlist() {
             const { room_name, user_left, user_right } = data.response;
             const side = user.username === user_left ? 'left' : (user.username === user_right ? 'right' : 'spectator');
     	    clearInterval(intervalId);
-	    go_to(`/users/playing/${room_name}/${side}/${user.username}`)
+            await go_to(`/users/playing/${user.username}`)
+            await new Promise(r => setTimeout(r, 1000));
             initializeGame(room_name, side);
         }
     } catch (error) {

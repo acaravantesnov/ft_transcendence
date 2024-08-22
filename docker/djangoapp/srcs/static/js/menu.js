@@ -11,18 +11,18 @@
 
 async function gameIA() {
 	try {
-		const response = await fetch(`/users/play/vsIA/${user.username}/`);
+		const response = await fetch(`/users/play/createGame/AI/${user.username}/`);
 		const data = await response.json();
 		console.log(data);
 		if (data.status === 'success') {
 			const room_name = data.room_name;
-			const side = 'left';
 			console.log(room_name);
-			go_to(`/users/playing/${room_name}/${side}/${user.username}`)
-			initializeGame(room_name, 'left');
+			await go_to(`/users/playing/${user.username}`);
+            await new Promise(r => setTimeout(r, 1000));
+			initializeGame(room_name, 'right');
 
 		}
-	} catch (error) { console.error('Error creating vsIA game: ', error); }
+	} catch (error) { console.error('Error creating vsAI game: ', error); }
 }
 
 // To Playing page

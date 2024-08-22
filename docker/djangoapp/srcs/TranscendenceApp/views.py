@@ -379,7 +379,12 @@ def checkwaitlist(request, username):
 @api_view(['GET'])
 def createGame(request, mode, username):
 
-    if mode.find('vsPlayer')>=0 and mode.find('local')>0:
+    if mode.find('AI')>=0:
+        m = "AI"
+        n = random.randint(100, 99999)
+        room_name = "room"+m+str(n)
+        status = 'success'
+    elif mode.find('vsPlayer')>=0 and mode.find('local')>0:
         m = "PL"
         n = random.randint(100, 99999)
         room_name = "room"+m+str(n)

@@ -2,8 +2,8 @@
 
 // game vars
 
-var name_of_room = document.location.pathname.split('/');
-console.log(name_of_room);
+// var socket = null;
+var mode = null;
 
 
 // DOM elements
@@ -13,7 +13,6 @@ var rightPaddle = document.getElementById('right-paddle');
 var leftScore = document.getElementById('left-score');
 var rightScore = document.getElementById('right-score');
 var gameArea = document.getElementById('game-area');
-var mode = window.location.toString().search('R')>0 ? 'remote' : 'local';
 
 title = document.getElementsByClassName('display-2')[0].innerHTML = (window.location.toString().search('vsPlayer')>0 ? 'vsPlayer' : window.location.toString().search('tournament')>0 ? 'Tournament' : "caca");
 
@@ -79,12 +78,18 @@ function initializeGame(roomName, side) {
 
 	console.log(side);
     // Show game area and hide waitlist button
-    document.getElementById('game-area').style.display = 'block';
+    //document.getElementById('game-area').style.display = 'block';
     //document.getElementById('playMenu').style.display = 'none';
     
     socket = new WebSocket(`wss://${window.location.host}/ws/game2/${user.username}/${roomName}/${side}/`);
     
     socket.onopen = () => socket.send(JSON.stringify({type: 'join'}));
+
+	if (side == 'local') {
+		mode = 'local';
+	} else {
+		mode = 'remote';
+	}
     
     socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
@@ -107,10 +112,6 @@ function initializeGame(roomName, side) {
 	    	go_to(`/users/home/${user.username}`);
 	    };
     }
-
-
-    // Update URL without refreshing
-    // window.history.pushState({}, '', `/users/play/${user.username}/${roomName}/${side}/`);
 }
 
 function updateGameState(state) {
@@ -154,22 +155,22 @@ document.addEventListener('keydown', (e) => {
         	socket.send(JSON.stringify({type: 'right_paddle', speed: right_speed}));
     	}
     	if (left_speed !== 0 && socket) {
-		socket.send(JSON.stringify({type: 'left_paddle', speed: left_speed}));
+			socket.send(JSON.stringify({type: 'left_paddle', speed: left_speed}));
     	}
     }
 });
 
 document.addEventListener('keyup', (e) => {
     if (mode == 'remote') {
-	if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && socket) {
-		socket.send(JSON.stringify({type: 'right_paddle', speed: 0}));
-	}
+		if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && socket) {
+			socket.send(JSON.stringify({type: 'paddle', speed: 0}));
+		}
     } else if (mode == 'local') {
     	if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && socket) {
         	socket.send(JSON.stringify({type: 'right_paddle', speed: 0}));
     	}
     	if ((e.key === 'w' || e.key === 's') && socket) {
-		socket.send(JSON.stringify({type: 'left_paddle', speed: 0}));
+			socket.send(JSON.stringify({type: 'left_paddle', speed: 0}));
     	}
     }
 });

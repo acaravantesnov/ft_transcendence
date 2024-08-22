@@ -27,9 +27,10 @@ class Game:
         self.running = False
         self.task = None
         self.duration = time.time()
-        if (room_group_name.find("IA")>0):
+        if (room_group_name.find("AI")>0):
             replay_buffer = ReplayBuffer(BUFFER_SIZE)
-            self.agent = Agent('right', replay_buffer)
+            self.agent = Agent('left', replay_buffer)
+            self.time_ai_played = 0
 
     async def start(self):
         logger.debug(f" [Game] start: {self.room_group_name} ")
@@ -41,9 +42,12 @@ class Game:
     async def game_loop(self):
         logger.debug(f" [Game] game_loop: {self.room_group_name} ")
         while self.running:
-            self.check_end_game()
-            self.update_positions()
-            await self.check_collisions()
+            try:
+                self.check_end_game()
+                self.update_positions()
+                await self.check_collisions()
+            except Exception as e:
+                logger.error(f" [Game] Exception in game loop: {e} ")
 
             # Broadcast game state to room group
             await self.channel_layer.group_send(
@@ -72,6 +76,10 @@ class Game:
         self.ball_position['x'] += self.ball_speed['x']
         self.ball_position['y'] += self.ball_speed['y']
 
+        if self.room_group_name.find("AI")>0 and time.time() - self.time_ai_played > 1.0:
+            self.time_ai_played = time.time()
+            self.left_paddle['speed'] = self.agent.decide_action(self.get_state())
+            #print(f"AI: {self.right_paddle['speed']}")
         self.left_paddle['y'] += self.left_paddle['speed']
         self.right_paddle['y'] += self.right_paddle['speed']
 
@@ -162,7 +170,4 @@ class Game:
         if paddle == 'left':
             self.left_paddle['speed'] = speed
         elif paddle == 'right':
-            if self.room_group_name.find("IA")>0:
-                self.right_paddle['speed'] = self.agent.decide_action(self.get_state())
-            else:
-                self.right_paddle['speed'] = speed
+            self.right_paddle['speed'] = speed
