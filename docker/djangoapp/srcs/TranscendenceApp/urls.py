@@ -2,8 +2,10 @@
 Maps the view functions to the URL patterns.
 '''
 
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from . import views
+from django.conf.urls.i18n import i18n_patterns
+
 
 # URLConf module
 urlpatterns = [
@@ -26,6 +28,8 @@ urlpatterns = [
     path('getStats/<str:username>/', views.get_stats, name='get_stats'),
     path('changePassword/', views.changePassword, name="changePassword"),
 
+    
+    
     # CRUD API views
     path('create', views.createUser), # API POST
     path('read/<str:pk>', views.readUser), # API GET
