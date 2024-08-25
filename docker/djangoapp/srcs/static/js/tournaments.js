@@ -64,34 +64,57 @@ async function waiting_tournament_room(room_name) {
 	}
 }
 
+async function go_back_to_wait_for_game(room_name) {
+  //room_name = 'roomTR52365_level_0_game_0'
+  //torunament_name = 'roomTR52365'
+  torunament_name = room_name.split('_')[0];
+  await new Promise(r => setTimeout(r, 250));
+  tarea.parentElement.innerHTML = `<h3><i>Waiting for ${torunament_name}</i></h3>`;
+  await new Promise(r => setTimeout(r, 3000));
+  gestion_de_waiters('juego', torunament_name);
+}
+
 async function waiting_for_tournament_game(room_name) {
         try {
                 const response = await fetch(`/users/tournament/getgame/${room_name}/${user.username}`);
+                console.log('getgame');
+                console.log(room_name)
+                console.log(user.username)
                 const data = await response.json();
-                if (data.status == 'error') {
-			console.log('waiting for game...');
-			console.log(data);
-                        document.getElementById('text-game').textContent = " is waiting for ";
-                        document.getElementById('localPlayer').textContent = "";
-                        document.getElementById('rival').textContent = "";
-
+                console.log(data);
+                console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+                if (data.status == 'waiting') {
+                    //Show notification of waiting for game
+                    // window.alert("Waiting: " + room_name);
+                    console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC');
+                    console.log('waiting for game...');
+                    console.log(data);
+                    document.getElementById('text-game').textContent = " is waiting for ";
+                    document.getElementById('localPlayer').textContent = "";
+                    document.getElementById('rival').textContent = "";
+                } else if (data.status == 'error') {
+                    // window.alert('Error: ' + room_name);
+                    console.log('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB');
+                    clearInterval(intervalID);
+                    await go_to(`/users/home/${user.username}`);
+                    await new Promise(r => setTimeout(r, 1000));
                 } else if (data.status == 'success') {
-			console.log('Siiuuuu  a jugar');
-			console.log(data);
-			await new Promise(r => setTimeout(r, 10000));
-			clearInterval(intervalID);
-                        await go_to(`/users/playing/${user.username}/`);
-			await new Promise(r => setTimeout(r, 1000));
-                        document.getElementById('text-game').textContent = " V.S. "
-                        const room_tournament_name = data.response.room_name;
-			console.log('El nombre de la sala es....');
-			console.log(room_tournament_name);
-			const user_left= data.response.user_left;
-			const user_right = data.response.user_right;
-                        const side = user.username === user_left ? 'left' : (user.username === user_right ? 'right' : 'spectator');
-                        document.getElementById('localPlayer').textContent = user_left;
-                        document.getElementById('rival').textContent = user_right;
-                        initializeGame(room_tournament_name, side);
+                    console.log('Siiuuuu  a jugar');
+                    console.log(data);
+                    //await new Promise(r => setTimeout(r, 10000));
+                    clearInterval(intervalID);
+                    await go_to(`/users/playing/${user.username}/`);
+                    await new Promise(r => setTimeout(r, 1000));
+                    document.getElementById('text-game').textContent = " V.S. "
+                    const room_tournament_name = data.response.room_name;
+                    console.log('El nombre de la sala es....');
+                    console.log(room_tournament_name);
+                    const user_left= data.response.user_left;
+                    const user_right = data.response.user_right;
+                    const side = user.username === user_left ? 'left' : (user.username === user_right ? 'right' : 'spectator');
+                    document.getElementById('localPlayer').textContent = user_left;
+                    document.getElementById('rival').textContent = user_right;
+                    initializeGame(room_tournament_name, side);
                 }
 
         } catch (error) {

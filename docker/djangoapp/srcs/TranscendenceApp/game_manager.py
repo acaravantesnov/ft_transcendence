@@ -2,6 +2,7 @@ from .game import Game
 from .waiting_room import waiting_room
 from .serializers import GameSerializer
 from .models import MyCustomUser
+from .tournament_manager import tournament_manager
 from asgiref.sync import sync_to_async
 
 import logging
@@ -92,12 +93,16 @@ class GameManager:
                 logger.debug(f" [GameManager] Stopping game for room {room_group_name} ")
                 await self.games[room_group_name].stop()
                 logger.debug(f" [GameManager] Getting players ")
+                player_left_name_str = self.left_user[room_group_name]
                 player_left = await MyCustomUser.get_user_by_username(self.left_user[room_group_name])
                 logger.debug(f" [GameManager] left player: {player_left} ")
+                player_right_name_str = self.right_user[room_group_name]
                 player_right = await MyCustomUser.get_user_by_username(self.right_user[room_group_name])
 
                 logger.debug(f" [GameManager] right player: {player_right} ")
                 player_winner = player_left if self.games[room_group_name].game_over['winner'] == 'left' else player_right
+                player_winner_name_str = player_left_name_str if self.games[room_group_name].game_over['winner'] == 'left' else player_right_name_str
+                player_loser_name_str = player_left_name_str if self.games[room_group_name].game_over['winner'] == 'right' else player_right_name_str
                 logger.debug(f" [GameManager] winner: {player_winner}, game_over: {winner} ")
                 logger.debug(f" [GameManager] Saving game to database ")
                 game_data = {
@@ -130,6 +135,13 @@ class GameManager:
                 self.right_user_connected.pop(room_group_name)
                 self.games.pop(room_group_name)
                 logger.debug(f" [GameManager] Game stopped ")
+                if room_group_name.find("T")>0:
+                    #room_name = 'roomTR52365_level_0_game_0'
+                    #torunament_name = 'roomTR52365'
+                    logger.debug(f" [GameManager] Removing game {room_group_name}, {room_group_name.find('_level')}")
+                    torunament_name = room_group_name[:room_group_name.find('_level')]
+                    logger.debug(f" [GameManager] Removing game {room_group_name} in tournament {torunament_name}, player_left: {player_left_name_str}, player_right: {player_right_name_str}")
+                    tournament_manager.stop_game(torunament_name, player_winner_name_str, player_loser_name_str)
         except Exception as e:
             logger.error(f" [GameManager] Error stopping game: {e} ")
 

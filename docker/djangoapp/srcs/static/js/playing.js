@@ -105,6 +105,7 @@ function initializeGame(roomName, side) {
 	    socket.onclose = event => {
 	    	//meke popUp
 		    go_to(`/users/play/tournament/${user.username}`);
+        go_back_to_wait_for_game(roomName);
 	    };
     } else { 
 	    socket.onclose = event => {

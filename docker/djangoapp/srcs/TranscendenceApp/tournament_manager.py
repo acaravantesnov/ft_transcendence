@@ -74,7 +74,7 @@ class TournamentManager:
         logger.debug(f" [TournamentManager] Filled first round of games for room {room_id}")
         logger.debug(f" [TournamentManager] Full tree: {self.tournaments[room_id]}")
 
-    def _create_game(self, room_id, level, user_left, user_right, game_id):
+    def _create_game(self, room_id, level, user_left, user_right, game_id, add_to_active_games=True):
         # user_left = self.waiting_users[room_id].pop(0)
         # user_right = self.waiting_users[room_id].pop(0)
         logger.debug(f" [TournamentManager] Creating game at level {level} in room {room_id}")
@@ -90,9 +90,11 @@ class TournamentManager:
         }
 
         self.tournaments[room_id][level][game_id] = game
-        self.active_games[room_id][user_left] = (level, game_id)
-        self.active_games[room_id][user_right] = (level, game_id)
         logger.debug(f" [TournamentManager] Created game {game_id} at level {level} in room {room_id}")
+        if add_to_active_games:
+          self.active_games[room_id][user_left] = (level, game_id)
+          self.active_games[room_id][user_right] = (level, game_id)
+          logger.debug(f" [TournamentManager] Added users {user_left} and {user_right} to active games in room {room_id}")
 
     def user_ready_to_play(self, room_id, user_id):
         if user_id in self.ready_users[room_id]:
@@ -219,6 +221,7 @@ class TournamentManager:
                 logger.debug(f" [TournamentManager] ERROR: Parent game {parent_game_id} already has a winner on the left")
             logger.debug(f" [TournamentManager] Winner {winner_id} advanced to level {next_level}, game {parent_game_id}, side left")
             self.tournaments[room_id][next_level][parent_game_id]["user_left"] = winner_id
+            self.active_games[room_id][winner_id] = (next_level, parent_game_id)
             logger.debug(f" [TournamentManager] Winner {winner_id} advanced to level {next_level}, game {parent_game_id}, side left")
         else:
             logger.debug(f" [TournamentManager] parent_game_id: {parent_game_id}")
@@ -226,6 +229,7 @@ class TournamentManager:
                 logger.debug(f" [TournamentManager] ERROR: Parent game {parent_game_id} already has a winner on the right")
             logger.debug(f" [TournamentManager] Winner {winner_id} advanced to level {next_level}, game {parent_game_id}, side right")
             self.tournaments[room_id][next_level][parent_game_id]["user_right"] = winner_id
+            self.active_games[room_id][winner_id] = (next_level, parent_game_id)
             logger.debug(f" [TournamentManager] Winner {winner_id} advanced to level {next_level}, game {parent_game_id}, side right")
 
         logger.debug(f" [TournamentManager] Winner {winner_id} advanced to level {next_level}, game {parent_game_id})")
@@ -234,7 +238,7 @@ class TournamentManager:
         if self.tournaments[room_id][next_level][parent_game_id]["user_left"] and \
                 self.tournaments[room_id][next_level][parent_game_id]["user_right"]:
             self._create_game(room_id, next_level, self.tournaments[room_id][next_level][parent_game_id]["user_left"],
-                              self.tournaments[room_id][next_level][parent_game_id]["user_right"], parent_game_id)
+                              self.tournaments[room_id][next_level][parent_game_id]["user_right"], parent_game_id, False)
             logger.debug(f" [TournamentManager] Created game for next level {next_level}, game {parent_game_id}")
     
     def get_tournaments(self, username):
