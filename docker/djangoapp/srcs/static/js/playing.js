@@ -115,6 +115,7 @@ function delay(ms) {
 }
 
 function startGame(roomName, side) {
+    console.log('Starting game...');
     socket = new WebSocket(`wss://${window.location.host}/ws/game2/${user.username}/${roomName}/${side}/`);
 
     socket.onopen = () => socket.send(JSON.stringify({ type: 'join' }));
@@ -133,14 +134,22 @@ function startGame(roomName, side) {
 
     if (roomName.search('T') > 0) {
         socket.onclose = event => {
+            sessionStorage.removeItem('roomName');
+            sessionStorage.removeItem('side');
             go_to(`/users/play/tournament/${user.username}`);
             go_back_to_wait_for_game(roomName);
         };
     } else {
         socket.onclose = event => {
+            sessionStorage.removeItem('roomName');
+            sessionStorage.removeItem('side');
             go_to(`/users/home/${user.username}`);
         };
     }
+
+    sessionStorage.setItem('roomName', roomName);
+    sessionStorage.setItem('side', side);
+    console.log('Saved on local storage');
 }
 
 
@@ -204,3 +213,19 @@ document.addEventListener('keyup', (e) => {
     	}
     }
 });
+
+
+// Restore state and reconnect WebSocket on page load
+function restore_game() {
+    const roomName = sessionStorage.getItem('roomName');
+    const side = sessionStorage.getItem('side');
+    console.log('Restoring game state from local storage...');
+    console.log('data is: ' + roomName + ' ' + side);
+
+    if (roomName && side) {
+        console.log('Restoring game state from local storage...');
+        startGame(roomName, side);
+    }
+}
+
+restore_game();

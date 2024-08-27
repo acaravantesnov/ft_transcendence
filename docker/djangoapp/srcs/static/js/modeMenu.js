@@ -23,7 +23,7 @@ async function init_game(str) {
 			console.log(room_name);
             if (str == 'local') {
                 await go_to(`/users/playing/${user.username}`)
-                await new Promise(r => setTimeout(r, 1000));
+                await new Promise(r => setTimeout(r, 1500));
                 initializeGame(room_name, 'local', user.username, user.username);
             }
             else if (str == 'remote') {
@@ -46,7 +46,7 @@ async function checkWaitlist() {
             const side = user.username === user_left ? 'left' : (user.username === user_right ? 'right' : 'spectator');
             clearInterval(intervalId);
             await go_to(`/users/playing/${user.username}`)
-            await new Promise(r => setTimeout(r, 1000));
+            await new Promise(r => setTimeout(r, 1500));
             initializeGame(room_name, side, user_left, user_right);
         }
     } catch (error) {
