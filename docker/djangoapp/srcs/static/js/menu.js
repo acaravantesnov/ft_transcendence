@@ -19,7 +19,7 @@ async function gameIA() {
 			console.log(room_name);
 			await go_to(`/users/playing/${user.username}`);
             await new Promise(r => setTimeout(r, 1000));
-			initializeGame(room_name, 'right');
+			initializeGame(room_name, 'right', 'AI', user.username);
 
 		}
 	} catch (error) { console.error('Error creating vsAI game: ', error); }

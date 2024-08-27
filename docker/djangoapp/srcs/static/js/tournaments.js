@@ -70,7 +70,7 @@ async function go_back_to_wait_for_game(room_name) {
   torunament_name = room_name.split('_')[0];
   await new Promise(r => setTimeout(r, 250));
   tarea.parentElement.innerHTML = `<h3><i>Waiting for ${torunament_name}</i></h3>`;
-  await new Promise(r => setTimeout(r, 3000));
+  // await new Promise(r => setTimeout(r, 250));
   gestion_de_waiters('juego', torunament_name);
 }
 
@@ -114,7 +114,7 @@ async function waiting_for_tournament_game(room_name) {
                     const side = user.username === user_left ? 'left' : (user.username === user_right ? 'right' : 'spectator');
                     document.getElementById('localPlayer').textContent = user_left;
                     document.getElementById('rival').textContent = user_right;
-                    initializeGame(room_tournament_name, side);
+                    initializeGame(room_tournament_name, side, user_left, user_right);
                 }
 
         } catch (error) {

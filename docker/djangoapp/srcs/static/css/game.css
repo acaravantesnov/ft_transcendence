@@ -37,7 +37,17 @@
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 20px;
     font-size: 2vmin;
     font-weight: bold;
+    flex-direction: row; /* Ensure the scores are in a row */
+}
+
+#left-score {
+    display: inline-block;
+    margin-right: 40px; /* Add space to the right of the left score */
+}
+
+#right-score {
+    display: inline-block;
+    margin-left: 40px; /* Add space to the left of the right score */
 }

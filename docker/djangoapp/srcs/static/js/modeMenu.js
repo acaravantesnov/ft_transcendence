@@ -9,7 +9,7 @@
 //var rightScore = document.getElementById('right-score');
 //var gameArea = document.getElementById('game-area');
 
-var title = document.getElementsByClassName('display-2')[0].innerHTML = (window.location.toString().search('vsPlayer')>0 ? 'vsPlayer' : window.location.toString().search('tournament')>0 ? 'Tournament' : "caca");
+var title = document.getElementsByClassName('display-2')[0].innerHTML = (window.location.toString().search('vsPlayer')>0 ? 'vsPlayer' : window.location.toString().search('tournament')>0 ? 'Tournament' : " ");
 
 async function init_game(str) {
 	try {
@@ -24,7 +24,7 @@ async function init_game(str) {
             if (str == 'local') {
                 await go_to(`/users/playing/${user.username}`)
                 await new Promise(r => setTimeout(r, 1000));
-                initializeGame(room_name, 'local');
+                initializeGame(room_name, 'local', user.username, user.username);
             }
             else if (str == 'remote') {
                 check_waitlist();
@@ -44,10 +44,10 @@ async function checkWaitlist() {
         if (data.status === 'success') {
             const { room_name, user_left, user_right } = data.response;
             const side = user.username === user_left ? 'left' : (user.username === user_right ? 'right' : 'spectator');
-    	    clearInterval(intervalId);
+            clearInterval(intervalId);
             await go_to(`/users/playing/${user.username}`)
             await new Promise(r => setTimeout(r, 1000));
-            initializeGame(room_name, side);
+            initializeGame(room_name, side, user_left, user_right);
         }
     } catch (error) {
         console.error('Error checking waitlist:', error);

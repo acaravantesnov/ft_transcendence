@@ -14,7 +14,7 @@ var leftScore = document.getElementById('left-score');
 var rightScore = document.getElementById('right-score');
 var gameArea = document.getElementById('game-area');
 
-title = document.getElementsByClassName('display-2')[0].innerHTML = (window.location.toString().search('vsPlayer')>0 ? 'vsPlayer' : window.location.toString().search('tournament')>0 ? 'Tournament' : "caca");
+title = document.getElementsByClassName('display-2')[0].innerHTML = (window.location.toString().search('vsPlayer')>0 ? 'vsPlayer' : window.location.toString().search('tournament')>0 ? 'Tournament' : " ");
 
 /*
 async function init_game(str) {
@@ -74,23 +74,53 @@ async function checkWaitlist() {
 //
 
 // Game functions
-function initializeGame(roomName, side) {
+function initializeGame(roomName, side, left_player, right_player) {
+    console.log(side);
 
-	console.log(side);
-    // Show game area and hide waitlist button
-    //document.getElementById('game-area').style.display = 'block';
-    //document.getElementById('playMenu').style.display = 'none';
-    
+    // Hide the game elements initially
+    toggleGameElements(false);
+
+    // Start the countdown and then initialize the game
+    startCountdown(5, left_player, right_player)
+        .then(() => {
+            // Show the game elements after the countdown
+            toggleGameElements(true);
+
+            // Initialize the WebSocket connection and start the game
+            startGame(roomName, side);
+        });
+}
+
+function toggleGameElements(show) {
+    const display = show ? 'block' : 'none';
+    document.getElementById('countdown').style.display = show ? 'none' : 'block';
+    document.getElementById('scores').style.display = display;
+    document.getElementById('ball').style.display = display;
+    document.getElementById('left-paddle').style.display = display;
+    document.getElementById('right-paddle').style.display = display;
+}
+
+async function startCountdown(seconds, left_player, right_player) {
+    const countdownElement = document.getElementById('countdown');
+
+    while (seconds > 0) {
+        countdownElement.innerText = seconds > 3 ? left_player + ' vs ' + right_player : seconds;
+        await delay(1000);
+        seconds--;
+    }
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function startGame(roomName, side) {
     socket = new WebSocket(`wss://${window.location.host}/ws/game2/${user.username}/${roomName}/${side}/`);
-    
-    socket.onopen = () => socket.send(JSON.stringify({type: 'join'}));
 
-	if (side == 'local') {
-		mode = 'local';
-	} else {
-		mode = 'remote';
-	}
-    
+    socket.onopen = () => socket.send(JSON.stringify({ type: 'join' }));
+
+    mode = (side === 'local') ? 'local' : 'remote';
+
     socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.type === 'game_state') {
@@ -98,22 +128,21 @@ function initializeGame(roomName, side) {
         }
     };
 
-	console.log(roomName);
-	console.log(roomName.search('T'));
+    console.log(roomName);
+    console.log(roomName.search('T'));
 
-    if (roomName.search('T')>0) {
-	    socket.onclose = event => {
-	    	//meke popUp
-		    go_to(`/users/play/tournament/${user.username}`);
-        go_back_to_wait_for_game(roomName);
-	    };
-    } else { 
-	    socket.onclose = event => {
-	    	//meke popUp
-	    	go_to(`/users/home/${user.username}`);
-	    };
+    if (roomName.search('T') > 0) {
+        socket.onclose = event => {
+            go_to(`/users/play/tournament/${user.username}`);
+            go_back_to_wait_for_game(roomName);
+        };
+    } else {
+        socket.onclose = event => {
+            go_to(`/users/home/${user.username}`);
+        };
     }
 }
+
 
 function updateGameState(state) {
     const scaleX = gameArea.clientWidth / 800;
