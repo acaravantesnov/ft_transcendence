@@ -7,7 +7,7 @@ document.getElementById('email').innerHTML = `<h5>Email: </h5>${user.email}`;
 document.getElementById('last_login').innerHTML = `<h5>Last login: </h5>${user.last_login}`;
 document.getElementById('date_joined').innerHTML = `<h5>Date joined: </h5>${user.date_joined}`;
 
-//document.getElementById('avatar').innerHTML = `<img src="${user.avatar}" alt="logo" class="image-center" style="width: 15vh; height: 15vh;">`;
+document.getElementById('avatar').innerHTML = `<img src="${user.avatar}" alt="logo" class="image-center" style="width: 15vh; height: 15vh;">`;
 document.getElementById('avatar_2').innerHTML = `<h5>Avatar route: </h5>${user.avatar}`;
 
 
@@ -25,14 +25,6 @@ document.getElementById('choose_avatar').addEventListener('click', (e) =>{
 	} else { document.getElementById('avatarDiv').innerHTML = ""; avatar_flag = false; }
 });
 
-
-/*
- * Tomando directamente el form con js
- *
- * const form = document.querySelector('form');
- *
- */
-
 async function updateAvatar() {
 
 	const formData = new FormData();
@@ -45,19 +37,6 @@ async function updateAvatar() {
 			method: 'POST',
 			body: formData,
 		});
-	/*
-	 * Pasando el contenido en formato JSON
-	 *
-	 *
-		const response = await fetch(`/users/updateAvatar/${user.username}/`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-			},
-			body: JSON.stringify(formObject)
-		});
-	*/
 
 		if (!response.ok) { throw new Error('Network response was not ok'); }
 
