@@ -52,7 +52,6 @@ import random
 
 logger = logging.getLogger("views")
 
-
 # Normal views
 
 def title(request):
@@ -171,7 +170,6 @@ def tournament(request, username):
 
 @api_view(['POST'])
 def createUser(request):
-    print(request.POST.get('username'))
     user = MyCustomUser.objects.filter(username=request.POST.get('username'))
     if user:
         return JsonResponse({'status': 'Username already exists'})
