@@ -82,30 +82,26 @@ async function friend_requests (){
 
 async function friends (){
     try {
-	const response = await fetch(`/users/getFriendList/${user.username}`);
-  console.log(response);
-  const data = await response.json();
-  console.log(data);
-	// const data_parsed = JSON.parse(data);
-  // console.log(data_parsed);
-	const tableBody = document.getElementById('friendTable').getElementsByTagName('tbody')[0];
-	data.forEach(element => {
-		const row = tableBody.insertRow();
-		const rank = row.insertCell(0);
-		const username = row.insertCell(1);
-		const stat = row.insertCell(2);
-		rank.textContent = element.order;
-		username.textContent = element.username;
-		const circle = document.createElement("button");
-		if (element.stat == true) { circle.setAttribute("class", "btn btn-success btn-circle"); }
-		else { circle.setAttribute("class", "btn btn-danger btn-circle"); }
-		stat.appendChild(circle);
-	});
-	    } catch (error) {
-	    console.error('Error:', error);
-      // We don't want the alert in the evaluation
-	    // alert('An error ocurred while fetching the friendList. Please try again later.');
-    }
+		const response = await fetch(`/users/getFriendList/${user.username}`);
+  		const data = await response.json();
+		const tableBody = document.getElementById('friendTable').getElementsByTagName('tbody')[0];
+		data.forEach(element => {
+			const row = tableBody.insertRow();
+			const rank = row.insertCell(0);
+			const username = row.insertCell(1);
+			const stat = row.insertCell(2);
+			rank.textContent = element.order;
+			username.textContent = element.username;
+			const circle = document.createElement("button");
+			if (element.stat == true) { circle.setAttribute("class", "btn btn-success btn-circle"); }
+			else { circle.setAttribute("class", "btn btn-danger btn-circle"); }
+			stat.appendChild(circle);
+		});
+	} catch (error) {
+		console.error('Error:', error);
+		// We don't want the alert in the evaluation
+		// alert('An error ocurred while fetching the friendList. Please try again later.');
+		}
 }
 
 

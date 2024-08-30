@@ -10,8 +10,6 @@ async function submitNewProfile(event) {
 		    formObject[key] = value;
 	    });
 
-	    console.log(formObject);
-
 	    try {
 		    const response = await fetch(`/users/editProfile/updateProfile/${user.username}/`, {
 			    method: 'POST',

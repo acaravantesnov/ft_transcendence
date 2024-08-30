@@ -63,8 +63,6 @@ async function updateAvatar() {
 
 		const responseData = await response.json();
 
-		console.log(responseData);
-
 		if (responseData === 'success') {
 			successfulUpdateAvatarToast();
 			const event = new CustomEvent('UPDATEAVATARTRIGGER', { detail: { href: `/users/profile/${user.username}` } });

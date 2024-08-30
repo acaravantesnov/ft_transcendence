@@ -52,7 +52,6 @@ async function init () {
     formDataAl.append('confirm_password', '42');
     formDataAl.append('avatar', '/avatars/default.png');
 
-	try {
 		const responseIA = await fetch('/users/signUp/createUser/', {
 			method: 'POST',
 			body: formDataAI,
@@ -73,11 +72,6 @@ async function init () {
 			method: 'POST',
 			body: formDataAl,
 		});
-
-	} catch (error) {
-        	console.error('Error:', error);
-        	unsuccessfulSignUpToast('An error occurred while creating AI user. Please try again later.');
-    	}
 
 }
 

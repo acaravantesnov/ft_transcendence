@@ -61,7 +61,6 @@ async function signOut() {
 		}
 	});
 	const data = await a.json();
-	console.log(data);
 }
 
 function successfulLogoutToast()

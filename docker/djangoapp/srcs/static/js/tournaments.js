@@ -1,15 +1,10 @@
-// tournaments.js 
-
-var prueba = document.location.pathname.split('/');
-console.log(prueba);
-
+// tournaments.js
 
 popup = document.getElementById('open-popup')
 closepopup = document.getElementById('close-popup')
 tarea = document.getElementById('tournament-area')
 
 async function join_tournament(room_name) {
-	console.log('Aqui si...')
 	try {
 		const response = await fetch(`/users/tournament/addtowaitingroom/${room_name}/${user.username}/`, {
 			method: 'POST',
@@ -20,7 +15,6 @@ async function join_tournament(room_name) {
 		});
 		const data = await response.json();
 		if (data.status == 'success') {
-			console.log('Aqui tambien...');
 			// JoinTournamentToast
 			go_to(`/users/play/tournament/${user.username}`);
 		}
@@ -82,11 +76,9 @@ async function waiting_for_tournament_game(room_name) {
                 console.log(user.username)
                 const data = await response.json();
                 console.log(data);
-                console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
                 if (data.status == 'waiting') {
                     //Show notification of waiting for game
                     // window.alert("Waiting: " + room_name);
-                    console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC');
                     console.log('waiting for game...');
                     console.log(data);
                     document.getElementById('text-game').textContent = " is waiting for ";
@@ -94,12 +86,10 @@ async function waiting_for_tournament_game(room_name) {
                     document.getElementById('rival').textContent = "";
                 } else if (data.status == 'error') {
                     // window.alert('Error: ' + room_name);
-                    console.log('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB');
                     clearInterval(intervalID);
                     await go_to(`/users/home/${user.username}`);
                     await new Promise(r => setTimeout(r, 1000));
                 } else if (data.status == 'success') {
-                    console.log('Siiuuuu  a jugar');
                     console.log(data);
                     //await new Promise(r => setTimeout(r, 10000));
                     clearInterval(intervalID);
@@ -216,7 +206,6 @@ closepopup.addEventListener('click', () => go_to(`/users/play/tournament/${user.
 // Waiters
 
 async function enter_tournament(room_name, username) {
-	console.log('Aqui entramos...')
 	try {
 		const response = await fetch(`/users/tournament/readytoplay/${room_name}/${username}/`, {
 			method: 'POST',
@@ -240,9 +229,7 @@ async function enter_tournament(room_name, username) {
 
 function gestion_de_waiters(flag, room_name) {
 
-	console.log('Aqui tambien...')
 	if ( flag == 'torneo'){
-		console.log('Pero aqui no')
 		intervalID = setInterval(waiting_tournament_room, 1000, room_name);
 	} else if (flag == 'juego') {
 		intervalID = setInterval(waiting_for_tournament_game, 1000, room_name);

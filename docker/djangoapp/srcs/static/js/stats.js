@@ -129,7 +129,6 @@ async function stats() {
 // Cargar Chart.js dinámicamente y luego ejecutar la función stats
 loadScript('https://cdn.jsdelivr.net/npm/chart.js')
     .then(() => {
-        console.log('Chart.js loaded successfully');
         stats();  // Ejecuta la función stats después de que Chart.js ha sido cargado
     })
     .catch(error => {

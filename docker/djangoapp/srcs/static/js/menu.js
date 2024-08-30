@@ -13,10 +13,8 @@ async function gameIA() {
 	try {
 		const response = await fetch(`/users/play/createGame/AI/${user.username}/`);
 		const data = await response.json();
-		console.log(data);
 		if (data.status === 'success') {
 			const room_name = data.room_name;
-			console.log(room_name);
 			await go_to(`/users/playing/${user.username}`);
             await new Promise(r => setTimeout(r, 1000));
 			initializeGame(room_name, 'right', 'AI', user.username);

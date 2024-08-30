@@ -17,7 +17,6 @@ async function init_game(str) {
 		const response = await fetch(`/users/play/createGame/${txt}/${user.username}/`);
 		//const response = await fetch(`/users/tournament/addtowaitingroom/${room_id}/${user.username}`)
 		const data = await response.json();
-		console.log(data);
 		if (data.status === 'success') {
 			const room_name = data.room_name;
 			console.log(room_name);

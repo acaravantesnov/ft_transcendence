@@ -16,7 +16,6 @@ async function submitSignUp(event) {
     else {
         formData.append('avatar', '/avatars/default.png');
     }
-	console.log(formData);
 
     try {
         const response = await fetch('/users/signUp/createUser/', {
