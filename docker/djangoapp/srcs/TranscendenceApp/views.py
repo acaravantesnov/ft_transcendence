@@ -173,7 +173,7 @@ def tournament(request, username):
 def createUser(request):
     print(request.POST.get('username'))
     user = MyCustomUser.objects.filter(username=request.POST.get('username'))
-    if not user:
+    if user:
         return JsonResponse({'status': 'Username already exists'})
     form = newUser(request.POST, request.FILES)
     if form.is_valid():

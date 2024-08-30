@@ -32,7 +32,7 @@ ALLOWED_HOSTS = [
     '0.0.0.0',
     'localhost',
     'djangoapp',
-    'c1r5s5',
+    os.environ.get('HOSTNAME'),
 ]
 
 INSTALLED_APPS = [
@@ -73,6 +73,7 @@ MIDDLEWARE = [
 
 CSRF_TRUSTED_ORIGINS = [
     'https://localhost:8080',
+    'https://' + os.environ.get('HOSTNAME') + ':8080',
 ]
 
 ROOT_URLCONF = 'TranscendenceProject.urls'
