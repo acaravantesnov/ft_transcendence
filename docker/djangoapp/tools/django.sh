@@ -27,5 +27,9 @@ fi
 
 echo "Starting Server..."
 
-python3 create_users.py
+if [ $(python3 create_users.py) ]
+then
+	echo ";)"
+fi
+
 python3 manage.py runserver 0.0.0.0:8000

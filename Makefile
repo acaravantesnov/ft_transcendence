@@ -6,7 +6,7 @@
 #    By: acaravan <acaravan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/13 17:01:21 by mortega-          #+#    #+#              #
-#    Updated: 2024/06/25 14:05:47 by acaravan         ###   ########.fr        #
+#    Updated: 2024/09/02 15:00:26 by mortega-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,5 +58,6 @@ runserver:
 	$(docker_compose) -f $(docker_yml) exec djangoapp python manage.py runserver $(HOST):$(PORT)
 
 up:
+	export HOSTNAME=$(hostname | cut -d '.' -f 1)
 	$(docker_compose) -f ./docker/docker-compose.yml up -d --build
 
