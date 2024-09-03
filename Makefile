@@ -6,7 +6,7 @@
 #    By: acaravan <acaravan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/13 17:01:21 by mortega-          #+#    #+#              #
-#    Updated: 2024/09/02 15:00:26 by mortega-         ###   ########.fr        #
+#    Updated: 2024/09/03 18:55:55 by digarcia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ docker_compose = docker compose
  
 PORT = 8000
 HOST = 0.0.0.0
+export HOSTNAME = $(shell hostname | cut -d '.' -f 1)
 
 all: up
 
@@ -58,6 +59,5 @@ runserver:
 	$(docker_compose) -f $(docker_yml) exec djangoapp python manage.py runserver $(HOST):$(PORT)
 
 up:
-	export HOSTNAME=$(hostname | cut -d '.' -f 1)
 	$(docker_compose) -f ./docker/docker-compose.yml up -d --build
 
