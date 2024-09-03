@@ -1,13 +1,39 @@
 {% load static %}
 
 <div class="container">
-    <div class="row" style="font-family: Dosis">
+    <div class="row d-flex align-items-center" style="font-family: Dosis;">
         <div class="col-md-8 col-12">
-            <p class="responsive-text-large">ft<br>transcendence</p>
-            <p class="responsive-text-small">by acaravan, digarcia, mortega- and alaguila.</p>
+            <p class="responsive-text-large mb-0">ft<br>transcendence</p>
+            <p class="responsive-text-small mt-2">by acaravan, digarcia, mortega- and alaguila.</p>
         </div>
-        <div class="col-md-4 d-none d-md-block">
-            <img src="{% static 'images/pong.gif' %}" class="rounded-image image-center" alt="pong">
+        <div class="col-md-4 d-none d-md-block text-md-end">
+            <img src="{% static 'images/pong.gif' %}" class="rounded-image" alt="pong" style="max-width: 100%;">
         </div>
     </div>
 </div>
+
+<style>
+    .responsive-text-large {
+        font-size: 6rem;
+    }
+
+    .responsive-text-small {
+        font-size: 1rem;
+    }
+
+    @media (max-width: 767px) {
+        .responsive-text-large {
+            font-size: 5rem;
+        }
+
+        .responsive-text-small {
+            font-size: 0.875rem;
+        }
+    }
+
+    .rounded-image {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+</style>
