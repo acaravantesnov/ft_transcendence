@@ -78,7 +78,8 @@ vsIA.addEventListener('click', gameIA);
 
 vsPlayer.addEventListener('click', () => go_to(`/users/play/mode/vsPlayer/${user.username}`));
 
-tournament.addEventListener('click', () => go_to(`/users/play/mode/tournament/${user.username}`));
+// tournament.addEventListener('click', () => go_to(`/users/play/mode/tournament/${user.username}`));
+tournament.addEventListener('click', () => go_to(`/users/play/tournament/${user.username}`));
 
 /*
 document.addEventListener('keydown', (e) => {
