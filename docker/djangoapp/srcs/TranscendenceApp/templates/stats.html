@@ -1,14 +1,12 @@
 {% load static %}
 
 <div class="container">
-    <h1>Stats for {{ username }}</h1>
+    <h1>{{ stats_text }} {{ username }}</h1>
     <div class="row">
-        <!-- Gráfico 1 -->
         <div class="col-md-6">
             <canvas id="pointsScoredChart"></canvas>
             <p class="text-center"><span id="pointsScoredPercentage" class="text-success">0 %</span></p>
         </div>
-        <!-- Gráfico 2 -->
         <div class="col-md-6">
             <canvas id="pointsConcededChart"></canvas>
             <p class="text-center"><span id="pointsConcededPercentage" class="text-danger">0 %</span></p>

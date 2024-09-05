@@ -31,7 +31,7 @@ async function submitSignUp(event) {
 
         if (responseData.status === 'success') {
             successfulSignUpToast();
-            const event = new CustomEvent('SIGNUPTRIGGER', { detail: { href: '/users/home/' } });
+            const event = new CustomEvent('SIGNUPTRIGGER', { detail: { href: '/users/home/Guest' } });
             document.dispatchEvent(event);
         } else {
             let errorMessage = '';

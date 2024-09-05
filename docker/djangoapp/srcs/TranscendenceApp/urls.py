@@ -2,7 +2,7 @@
 Maps the view functions to the URL patterns.
 '''
 
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from . import views
 
 # URLConf module
@@ -26,6 +26,9 @@ urlpatterns = [
     path('getStats/<str:username>/', views.get_stats, name='get_stats'),
     path('changePassword/', views.changePassword, name="changePassword"),
 
+    
+    path('change_language/<str:lang_code>/', views.change_language, name='change_language'),
+    
     # CRUD API views
     path('create', views.createUser), # API POST
     path('read/<str:pk>', views.readUser), # API GET

@@ -3,6 +3,7 @@ FROM python:3.10-slim-bullseye
 # install dependencies
 RUN apt-get update
 RUN apt-get install -y netcat redis-server vim net-tools
+RUN apt-get install -y gettext
 
 # Install app dependencies
 COPY ./tools/requirements.txt .

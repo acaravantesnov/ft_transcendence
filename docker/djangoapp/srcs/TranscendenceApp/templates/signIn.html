@@ -4,7 +4,7 @@
 	<div class="row", style="font-family: Dosis">
 		<center>
 			<div class="col-sm-12">
-				<h4 class="display-2">Welcome!</h4>
+				<h4 class="display-2">{{ welcome_message }}</h4>
 			</div>
 		</center>
 	</div>
@@ -25,12 +25,12 @@
 							</div>
 							{% endfor %}
 							<br>
-							<center><button type="submit" class="btn btn-success btn-lg">Sign In</button></center>
+							<center><button type="submit" class="btn btn-success btn-lg">{{ sign_in_text }}</button></center>
 						</form>
 						{% if form %}
 							<br>
-							<p>If you do not have an account, fulfill your registration here:</p>
-							<a class="nav-link" href="/users/signUp/" onclick="redirectSignUp(event);">Sign Up</a>
+							<p>{{ no_account_text }}</p>
+							<a class="nav-link" href="/users/signUp/" onclick="redirectSignUp(event);">{{ sign_up_text }}</a>
 						{% endif %}
 					</div>
 				</center>

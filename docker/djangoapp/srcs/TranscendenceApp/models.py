@@ -24,6 +24,7 @@ class MyCustomUser(AbstractUser):
     avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png')
     friends = models.ManyToManyField("MyCustomUser", blank=True)
     status = models.BooleanField(default=False)
+    preferred_language = models.CharField(max_length=10, choices=[('es', 'Spanish'), ('en', 'English'), ('fr', 'French')], default='es')
 
     def __str__(self):
         return self.username
