@@ -6,16 +6,18 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-            <ul class="navbar-nav position-absolute top-50 start-50 translate-middle">
-                <li class="nav-item">
-                    <a class="nav-link cmon fs-2" href="/users/play/">🏓 </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link cmon fs-2" href="/users/leaderboards/"> 🏆</a>
-                </li>
-            </ul>
+        <div class="collapse navbar-collapse justify-content-left" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <div style="width: 50px; height: 50px; margin-left: 30px;">
+                    <a class="nav-link cmon fs-2" href="/users/play/">🏓 </a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div style="width: 50px; height: 50px; margin-left: 30px;">
+                    <a class="nav-link cmon fs-2" href="/users/leaderboards/"> 🏆</a>
+                    </div>
+                </li>
                 <li class="nav-item">
                     <div style="width: 50px; height: 50px; margin-left: 30px;">
                         <a class="btn btn-primary btn-image" id="navbar-avatar" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample"></a>
@@ -30,7 +32,11 @@
     .navbar-nav {
         padding: 10px;
     }
+    .nav-item{
+        padding: 10px;
+    }
     .navbar-collapse {
+        background-color: bg-dark;
         justify-content: flex-end;
     }
 </style>

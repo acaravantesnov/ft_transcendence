@@ -138,11 +138,11 @@ main {
 	padding: 10px 6px;
 	border-radius: 5px;
 	text-align: center;
-    	margin-left: 2%;
+    margin-left: 2%;
 	margin-right: 2%;
 	border-color: green;
 	border-width: 2px;
 	border-style: outset;
-	#line-height: 1.42857;
+	line-height: 1.42857;
 
 }
