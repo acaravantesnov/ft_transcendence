@@ -1,19 +1,21 @@
 {% load static %}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container" style="font-family: Dosis">
+    <div class="container position-relative" style="font-family: Dosis">
         <a class="navbar-brand fs-3" id="brand" href="/users/home/">ft_transcendence</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav position-absolute top-50 start-50 translate-middle">
+                <li class="nav-item">
+                    <a class="nav-link cmon fs-2" href="/users/play/">🏓 </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link cmon fs-2" href="/users/leaderboards/"> 🏆</a>
+                </li>
+            </ul>
             <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item">
-                    <a class="nav-link cmon active fs-5" href="/users/play/">Play</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link cmon fs-5" href="/users/leaderboards/">Leaderboards</a>
-                </li>
                 <li class="nav-item">
                     <div style="width: 50px; height: 50px; margin-left: 30px;">
                         <a class="btn btn-primary btn-image" id="navbar-avatar" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample"></a>
@@ -25,13 +27,10 @@
 </nav>
 
 <style>
-    /* Custom styles for the collapsible menu */
     .navbar-nav {
-        background-color: #343a40; /* Dark background color */
         padding: 10px;
     }
-    /* Ensure the collapse menu stretches full width */
     .navbar-collapse {
-        justify-content: flex-end; /* Align the menu to the right */
+        justify-content: flex-end;
     }
 </style>
