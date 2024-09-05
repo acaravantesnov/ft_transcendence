@@ -57,15 +57,28 @@ logger = logging.getLogger("views")
 
 # Normal views
 
-def change_language(request, lang_code):
+def change_language(request, lang):
+    username = request.user.username
     if request.user.is_authenticated:
-        request.user.preferred_language = lang_code
+        request.user.preferred_language = lang
         request.user.save()
-    translation.activate(lang_code)
-    request.session['lang_code'] = lang_code
-    return redirect(request.META.get('HTTP_REFERER', '/'))
+    context = {
+        'username': username,
+        'welcome_message': translate('WELCOME', lang),
+        'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
+    }
+    return render(request, 'title.html', context)
 
 def title(request):
+    username = request.user.username
     lang = request.session.get('lang_code', 'es')
     if request.user.is_authenticated:
         lang = request.user.preferred_language
@@ -83,7 +96,6 @@ def title(request):
         'spanish_text': translate('SPANISH', lang),
     }
     if request.headers.get('Accept') != '*/*':
-        username = request.user.username
         return render(request, 'index.html', context)
     if request.user.is_authenticated:
         return render(request, 'title.html', context)

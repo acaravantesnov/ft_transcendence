@@ -13,6 +13,7 @@ const startsWithRoutes = [
     '/users/signOut/',
     '/users/editProfile/',
     '/users/changePassword/',
+    '/users/change_language/',
 ]
 
 var routes = {
@@ -48,15 +49,15 @@ const route = (event) => {
 }
 
 const locationHandler = async () => {
-    //const location = window.location.pathname;
-    let location = window.location.pathname;
-    const languagePrefix = location.match(/^\/(en|es|fr)\//);
-    if (languagePrefix) {
-        location = location.replace(languagePrefix[0], '/');  // Eliminar el prefijo de idioma de la ruta
-    }
-    if (location.length == 0) {
-        location = '/';
-    }
+    const location = window.location.pathname;
+    // let location = window.location.pathname;
+    // const languagePrefix = location.match(/^\/(en|es|fr)\//);
+    // if (languagePrefix) {
+    //     location = location.replace(languagePrefix[0], '/');  // Eliminar el prefijo de idioma de la ruta
+    // }
+    // if (location.length == 0) {
+    //     location = '/';
+    // }
 
     let html = '';
     if ((location == '/') || (location == '/users/home/')) {

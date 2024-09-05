@@ -3,7 +3,13 @@ document.querySelectorAll('.cmon').forEach(function(element) {
 
         var checkIfLoggedIn = async (e) => {
 
-            if (user.username != 'Guest')
+            if (e.target.href.endsWith('change_language/en/') || e.target.href.endsWith('change_language/es/') || e.target.href.endsWith('change_language/fr/'))
+            {
+                let str = e.target.href;
+                const event = new CustomEvent('CMONTRIGGER', { detail: { href: str } });
+                document.dispatchEvent(event);
+            }
+            else if (user.username != 'Guest')
             {
                 let str = e.target.href + user.username + '/';
                 const event = new CustomEvent('CMONTRIGGER', { detail: { href: str } });
