@@ -59,7 +59,9 @@ class newUser(forms.ModelForm):
             'password': forms.PasswordInput(attrs={'class':'form-control', 'placeholder':'*******'}),
             'avatar': forms.FileInput(attrs={'class':'form-control'}),
         }
-        
+    
+    preferred_language = forms.CharField(max_length=10, required=False)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['password'].required = True
@@ -78,6 +80,8 @@ class newUser(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=False)
+        if 'preferred_language' in self.cleaned_data:
+            instance.preferred_language = self.cleaned_data['preferred_language']
         instance.set_password(self.cleaned_data["password"])
         if commit:
             instance.save()

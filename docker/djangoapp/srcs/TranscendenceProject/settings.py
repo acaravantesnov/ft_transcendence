@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 import os
-from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -65,12 +64,12 @@ SESSION_CACHE_ALIAS = 'default'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -142,12 +141,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'es'
+LANGUAGE_CODE = 'en-US'
 
 LANGUAGES = [
-    ('en', _('English')),
-    ('es', _('Español')),
-    ('fr', _('Français')),
+    ('en', ('English')),
+    ('es', ('Spanish')),
+    ('fr', ('French')),
 ]
 
 LOCALE_PATHS = [
@@ -156,9 +155,9 @@ LOCALE_PATHS = [
 
 TIME_ZONE = 'Europe/Madrid'
 
-USE_I18N = True
+#USE_I18N = True
 
-USE_TZ = True
+#USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)

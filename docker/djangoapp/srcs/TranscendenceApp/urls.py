@@ -4,8 +4,6 @@ Maps the view functions to the URL patterns.
 
 from django.urls import path, re_path, include
 from . import views
-from django.conf.urls.i18n import i18n_patterns
-
 
 # URLConf module
 urlpatterns = [
@@ -29,6 +27,7 @@ urlpatterns = [
     path('changePassword/', views.changePassword, name="changePassword"),
 
     
+    path('change_language/<str:lang_code>/', views.change_language, name='change_language'),
     
     # CRUD API views
     path('create', views.createUser), # API POST

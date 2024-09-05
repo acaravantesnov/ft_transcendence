@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import make_password
+from django.utils import translation
 
 '''
 REST framework provides an APIView class, which subclasses Django's View class.
@@ -46,6 +47,8 @@ from .models import *
 from .forms import signUser, newUser, updateProfileInfo, newPassword, updateAvatarForm
 from .waiting_room import waiting_room
 from .tournament_manager import tournament_manager
+from .translations import translate
+
 
 import logging
 import random
@@ -54,31 +57,95 @@ logger = logging.getLogger("views")
 
 # Normal views
 
+def change_language(request, lang_code):
+    if request.user.is_authenticated:
+        request.user.preferred_language = lang_code
+        request.user.save()
+    translation.activate(lang_code)
+    request.session['lang_code'] = lang_code
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
 def title(request):
+    lang = request.session.get('lang_code', 'es')
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
+    context = {
+        'username': username,
+        'welcome_message': translate('WELCOME', lang),
+        'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
+    }
     if request.headers.get('Accept') != '*/*':
         username = request.user.username
-        return render(request, 'index.html', {'username': username})
+        return render(request, 'index.html', context)
     if request.user.is_authenticated:
-        return render(request, 'title.html')
-    return redirect('home', username='Guest')
+        return render(request, 'title.html', context)
+    context['username'] = 'Guest'
+    return redirect('home', context)
 
 def home(request, username):
+    lang = request.session.get('lang_code', 'es')
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
+    context = {
+        'username': username,
+        'welcome_message': translate('WELCOME', lang),
+        'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
+        'title_text': translate('TITLE', lang),
+    }
     if request.headers.get('Accept') != '*/*':
         username = request.user.username
-        return render(request, 'index.html', {'username': username})
+        context['username'] = username
+        return render(request, 'index.html', context)
     if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'title.html')
+        return render(request, 'title.html', context)
     form = signUser()
-    return render(request, 'signIn.html', {'form': form})
+    context['form'] = form
+    return render(request, 'signIn.html', context)
+    
 
 def play(request, username):
+    lang = request.session.get('lang_code', 'es')
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
+    context = {
+        'username': username,
+        'welcome_message': translate('WELCOME', lang),
+        'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
+        'wait_text': translate('WAIT', lang),
+    }
     if request.headers.get('Accept') != '*/*':
         username = request.user.username
-        return render(request, 'index.html', {'username': username})
+        context['username'] = username
+        return render(request, 'index.html', context)
     if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'game.html', {"username": username})
+        return render(request, 'game.html', context)
     form = signUser()
-    return render(request, 'signIn.html', {'form': form})
+    context['form'] = form
+    return render(request, 'signIn.html', context)
 
 def playing(request, username):
     if request.headers.get('Accept') != '*/*':
@@ -103,58 +170,229 @@ def modeMenu(request, mode, username):
     return render(request, 'signIn.html', {'form': form})
 
 def profile(request, username):
+    lang = request.session.get('lang_code', 'es')
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
+    context = {
+        'username': username,
+        'welcome_message': translate('WELCOME', lang),
+        'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
+    }
     if request.headers.get('Accept') != '*/*':
         username = request.user.username
-        return render(request, 'index.html', {'username': username})
+        context['username'] = username
+        return render(request, 'index.html', context)
     if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'profile.html')
+        context['profile_text'] = translate('PROFILE', lang)
+        context['edit_profile_text'] = translate('EDIT_PROFILE', lang)
+        context['change_pass_text'] = translate('C_PASS', lang)
+        context['choose_avatar_text'] = translate('AVATAR', lang)
+        return render(request, 'profile.html', context)
     form = signUser()
-    return render(request, 'signIn.html', {'form': form})
+    context['form'] = form
+    return render(request, 'signIn.html', context)
 
 def signUp(request):
+    lang = request.session.get('lang_code', 'es')
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
+    context = {
+        'welcome_message': translate('WELCOME', lang),
+        'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
+    }
     if request.headers.get('Accept') != '*/*':
         username = request.user.username
-        return render(request, 'index.html', {'username': username})
+        context['username'] = username
+        return render(request, 'index.html', context)
     form = newUser()
-    return render(request, "signUp.html", {"form": form})
+    context['form'] = form
+    context['username_text'] = translate('USERNAME', lang)
+    context['first_name_text'] = translate('FIRST_NAME', lang)
+    context['last_name_text'] = translate('LAST_NAME', lang)
+    context['email_text'] = translate('EMAIL', lang)
+    context['pass_text'] = translate('PASS', lang)
+    context['pass_confirmation_text'] = translate('CONF_PASS', lang)
+    return render(request, "signUp.html", context)
 
 def editProfile(request):
+    lang = request.session.get('lang_code', 'es')
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
+    context = {
+        'welcome_message': translate('WELCOME', lang),
+        'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
+    }
     if request.headers.get('Accept') != '*/*':
         username = request.user.username
-        return render(request, 'index.html', {'username': username})
+        context['username']= username
+        return render(request, 'index.html', context)
     if request.user.is_authenticated:
         form = updateProfileInfo()
-    return render(request, 'editProfile.html', {'form': form})
+        context['form']= form
+        context['your_profile_text'] = translate('Y_PROFILE', lang)
+        context['username_text'] = translate('USERNAME', lang)
+        context['first_name_text'] = translate('FIRST_NAME', lang)
+        context['last_name_text'] = translate('LAST_NAME', lang)
+        context['email_text'] = translate('EMAIL', lang)
+        context['update_text'] = translate('UPDATE', lang)
+    return render(request, 'editProfile.html', context)
 
 def changePassword(request):
+    lang = request.session.get('lang_code', 'es')
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
+    context = {
+        'welcome_message': translate('WELCOME', lang),
+        'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
+    }
     if request.headers.get('Accept') != '*/*':
         username = request.user.username
-        return render(request, 'index.html', {'username': username})
+        context['username']= username
+        return render(request, 'index.html', context)
     form = newPassword()
-    return render(request, 'changePassword.html', {'form': form})
+    context['form']= form
+    context['n_pass_text']= translate('N_PASS', lang) 
+    context['c_pass_text']= translate('C_PASS', lang) 
+    context['r_pass_text']= translate('R_PASS', lang) 
+    context['u_pass_text']= translate('U_PASS', lang) 
+    return render(request, 'changePassword.html', context)
 
 def leaderboards(request, username):
+    lang = request.session.get('lang_code', 'es')
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
+    context = {
+        'welcome_message': translate('WELCOME', lang),
+        'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
+    }
     if request.headers.get('Accept') != '*/*':
         username = request.user.username
-        return render(request, 'index.html', {'username': username})
-    return render(request, 'leaderboards.html')
+        context['username']= username
+        return render(request, 'index.html', context)
+    context['rank_text']= translate('RANK', lang) 
+    context['username_text']= translate('USERNAME', lang) 
+    context['score_text']= translate('SCORE', lang) 
+    return render(request, 'leaderboards.html', context)
 
 def friends(request, username):
+    lang = request.session.get('lang_code', 'es')
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
+    context = {
+        'welcome_message': translate('WELCOME', lang),
+        'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
+    }
     if request.headers.get('Accept') != '*/*':
         username = request.user.username
-        return render(request, 'index.html', {'username': username})
+        context['username']= username
+        return render(request, 'index.html', context)
     if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'friends.html')
+        context['friend_list_text']= translate('L_FRIENDS', lang) 
+        context['friends_text']= translate('FRIENDS', lang) 
+        context['rank_text']= translate('RANK', lang) 
+        context['player_text']= translate('PLAYER', lang) 
+        context['status_text']= translate('STATUS', lang) 
+        return render(request, 'friends.html', context)
     form = signUser()
-    return render(request, 'signIn.html', {"form", form})
+    context['form'] = form
+    return render(request, 'signIn.html', context)
 
 def dashboard(request, username):
+    lang = request.session.get('lang_code', 'es')
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
+    username = request.user.username
+    context = {
+        'welcome_message': translate('WELCOME', lang),
+        'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
+        'username': username,
+    }
     if request.headers.get('Accept') != '*/*':
-        username = request.user.username
-        return render(request, 'index.html', {'username': username})
-    return render(request, 'dashboard.html', {'username': request.user.username})
+        return render(request, 'index.html', context)
+    context['won_text']= translate('WON', lang)
+    context['lost_text']= translate('LOST', lang)
+    context['view_stats_text']= translate('VIEW', lang)
+    context['player1_text']= translate('PLAYER1', lang)
+    context['player2_text']= translate('PLAYER2', lang)
+    context['winner_text']= translate('WINNER', lang)
+    context['date_text']= translate('DATE', lang)
+    context['no_games_text']= translate('NO_GAMES', lang)
+    return render(request, 'dashboard.html', context)
 
 def stats(request, username):
+    lang = request.session.get('lang_code', 'es')
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
+    username = request.user.username
+    context = {
+        'welcome_message': translate('WELCOME', lang),
+        'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
+        'username': username,
+    }
     if request.headers.get('Accept') != '*/*':
         username = request.user.username
         return render(request, 'index.html', {'username': username})
