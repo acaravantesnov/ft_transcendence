@@ -49,6 +49,7 @@ from .waiting_room import waiting_room
 from .tournament_manager import tournament_manager
 from .translations import translate
 
+from .game_manager import game_manager
 
 import logging
 import random
@@ -842,4 +843,10 @@ def stop_game_torunament(request, room_id, winner_id, loser_id):
     tournament_manager.stop_game(room_id, winner_id, loser_id)
     status = 'success'
     return JsonResponse({'status': status})
+
+@api_view(['GET'])
+def check_game_exists(request, username):
+    logger.debug(f" [views] check_game_exists: {username} ")
+    response = game_manager.check_game_exists(username)
+    return JsonResponse(response)
 
