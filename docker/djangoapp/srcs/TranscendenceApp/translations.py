@@ -2,6 +2,7 @@ translations = {
     'es': {
         'WELCOME': '¡Bienvenido!',
         'SIGN_IN': 'Iniciar Sesión',
+        'SIGN_OUT': 'Desconectar',
         'SIGN_UP': 'Registrarse',
         'NO_ACCOUNT': 'Si no tienes una cuenta, completa tu registro aquí:',
         'PLAY': 'Jugar',
@@ -49,6 +50,7 @@ translations = {
     'en': {
         'WELCOME': 'Welcome!',
         'SIGN_IN': 'Sign In',
+        'SIGN_OUT': 'Sign Out',
         'SIGN_UP': 'Sign Up',
         'NO_ACCOUNT': 'If you do not have an account, fulfill your registration here:',
         'PLAY': 'Play',
@@ -96,6 +98,7 @@ translations = {
     'fr': {
         'WELCOME': 'Bienvenu!',
         'SIGN_IN': 'Se Connecter',
+        'SIGN_OUT': 'Se Déconnecter',
         'SIGN_UP': "S'inscrire",
         'NO_ACCOUNT': 'Si vous n\'avez pas de compte, effectuez votre inscription ici :',
         'PLAY': 'Jouer',

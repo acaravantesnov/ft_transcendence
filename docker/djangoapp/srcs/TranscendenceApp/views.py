@@ -79,7 +79,7 @@ def change_language(request, lang):
 
 def title(request):
     username = request.user.username
-    lang = request.session.get('lang_code', 'es')
+    lang = 'en'
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
@@ -103,7 +103,7 @@ def title(request):
     return redirect('home', context)
 
 def home(request, username):
-    lang = request.session.get('lang_code', 'es')
+    lang = 'en'
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
@@ -132,7 +132,7 @@ def home(request, username):
     
 
 def play(request, username):
-    lang = request.session.get('lang_code', 'es')
+    lang = 'en'
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
@@ -182,7 +182,7 @@ def modeMenu(request, mode, username):
     return render(request, 'signIn.html', {'form': form})
 
 def profile(request, username):
-    lang = request.session.get('lang_code', 'es')
+    lang = 'en'
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
@@ -213,7 +213,7 @@ def profile(request, username):
     return render(request, 'signIn.html', context)
 
 def signUp(request):
-    lang = request.session.get('lang_code', 'es')
+    lang = 'en'
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
@@ -243,7 +243,7 @@ def signUp(request):
     return render(request, "signUp.html", context)
 
 def editProfile(request):
-    lang = request.session.get('lang_code', 'es')
+    lang = 'en'
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
@@ -274,7 +274,7 @@ def editProfile(request):
     return render(request, 'editProfile.html', context)
 
 def changePassword(request):
-    lang = request.session.get('lang_code', 'es')
+    lang = 'en'
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
@@ -302,7 +302,7 @@ def changePassword(request):
     return render(request, 'changePassword.html', context)
 
 def leaderboards(request, username):
-    lang = request.session.get('lang_code', 'es')
+    lang = 'en'
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
@@ -327,7 +327,7 @@ def leaderboards(request, username):
     return render(request, 'leaderboards.html', context)
 
 def friends(request, username):
-    lang = request.session.get('lang_code', 'es')
+    lang = 'en'
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
@@ -358,7 +358,7 @@ def friends(request, username):
     return render(request, 'signIn.html', context)
 
 def dashboard(request, username):
-    lang = request.session.get('lang_code', 'es')
+    lang = 'en'
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     username = request.user.username
@@ -388,7 +388,7 @@ def dashboard(request, username):
     return render(request, 'dashboard.html', context)
 
 def stats(request, username):
-    lang = request.session.get('lang_code', 'es')
+    lang = 'en'
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     username = request.user.username
@@ -495,7 +495,8 @@ def getUserInfo(request):
     if request.user.is_authenticated:
         try:
             user = MyCustomUser.objects.get(username=request.user.username)
-            return JsonResponse({
+            lang = request.user.preferred_language
+            context = {
                 'username': user.username,
                 'first_name': user.first_name,
                 'last_name': user.last_name,
@@ -503,7 +504,12 @@ def getUserInfo(request):
                 'last_login': user.last_login,
                 'date_joined': user.date_joined,
                 'avatar': user.avatar.url,
-            })
+                'profile_text': translate('PROFILE', lang),
+                'friends_text': translate('FRIENDS', lang),
+                'dashboard_text': translate('DASHBOARD', lang),
+                'sign_out_text': translate('SIGN_OUT', lang),
+            }
+            return JsonResponse(context)
         except MyCustomUser.DoesNotExist:
             return JsonResponse({'error': 'User does not exist'}, status=404)
     else:
@@ -515,6 +521,10 @@ def getUserInfo(request):
             'last_login': 'Guest',
             'date_joined': 'Guest',
             'avatar': '/media/avatars/default.png',
+            'profile_text': 'My profile',
+            'friends_text': 'Friends',
+            'dashboard_text': 'Dashboard',
+            'sign_out_text': 'Sign Out'
         })
         
 
