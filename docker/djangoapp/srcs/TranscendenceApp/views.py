@@ -59,12 +59,8 @@ logger = logging.getLogger("views")
 # Normal views
 
 def change_language(request, lang):
-    username = request.user.username
-    if request.user.is_authenticated:
-        request.user.preferred_language = lang
-        request.user.save()
     context = {
-        'username': username,
+        'username': request.user.username,
         'welcome_message': translate('WELCOME', lang),
         'sign_in_text': translate('SIGN_IN', lang),
         'sign_up_text': translate('SIGN_UP', lang),
@@ -75,8 +71,16 @@ def change_language(request, lang):
         'english_text': translate('ENGLISH', lang),
         'french_text': translate('FRENCH', lang),
         'spanish_text': translate('SPANISH', lang),
+        'title_text': translate('TITLE', lang),
     }
-    return render(request, 'title.html', context)
+    if request.user.is_authenticated:
+        request.user.preferred_language = lang
+        request.user.save()
+        return render(request, 'title.html', context)
+    form = signUser()
+    context['form'] = form
+    return render(request, 'signIn.html', context)
+    
 
 def title(request):
     username = request.user.username

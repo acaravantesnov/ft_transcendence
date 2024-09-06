@@ -106,8 +106,3 @@ function successfulLogoutToast()
     var toast = new bootstrap.Toast(document.getElementById('successfulLogoutToast'))
     toast.show()
 }
-
-var myCollapse = document.getElementById('navbarNav');
-var bsCollapse = new bootstrap.Collapse(myCollapse, {
-    toggle: false
-});
