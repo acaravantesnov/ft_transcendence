@@ -14,6 +14,7 @@ const startsWithRoutes = [
     '/users/editProfile/',
     '/users/changePassword/',
     '/users/change_language/',
+    '/users/instructions/',
 ]
 
 var routes = {

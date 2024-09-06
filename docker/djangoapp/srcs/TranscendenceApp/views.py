@@ -424,6 +424,24 @@ def tournament(request, username):
         return render(request, 'index.html', {'username': username})
     return render(request, 'tournaments.html', {'username': username})
 
+def instructions(request, username):
+    lang = 'en'
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
+    context = {
+        'username': username,
+        'instructions_title': translate('INSTRUCTIONS_TITLE', lang),
+        'instructions_body_l1': translate('INSTRUCTIONS_BODY_L1', lang),
+        'instructions_body_l2': translate('INSTRUCTIONS_BODY_L2', lang),
+        'instructions_body_l3': translate('INSTRUCTIONS_BODY_L3', lang),
+        'instructions_body_l4': translate('INSTRUCTIONS_BODY_L4', lang),
+        'instructions_body_l5': translate('INSTRUCTIONS_BODY_L5', lang),
+        'instructions_body_l6': translate('INSTRUCTIONS_BODY_L6', lang),
+    }
+    if request.headers.get('Accept') != '*/*':
+        username = request.user.username
+        return render(request, 'index.html', {'username': username})
+    return render(request, 'instructions.html', context)
 
 # CRUD API views
 
