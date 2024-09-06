@@ -179,8 +179,13 @@ def menu(request, username):
         return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'menu.html');
-    form = signUser();
-    return render(request, 'signIn.html', {'form': form})
+    context = {
+        'username': username,
+        'sign_in_text': translate('SIGN_IN', lang),
+    }
+    form = signUser()
+    context['form'] = form
+    return render(request, 'signIn.html', context)
 
 def modeMenu(request, mode, username):
     if request.headers.get('Accept') != '*/*':
@@ -439,6 +444,10 @@ def tournament(request, username):
     if request.headers.get('Accept') != '*/*':
         return render(request, 'index.html', {'username': username})
     if not request.user.is_authenticated:
+        context = {
+            'sign_in_text': translate('SIGN_IN', lang),
+            'username': username,
+        }
         form = signUser()
         context['form'] = form
         return render(request, 'signIn.html', context)
