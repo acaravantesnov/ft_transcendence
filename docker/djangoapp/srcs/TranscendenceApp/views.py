@@ -55,6 +55,7 @@ import logging
 import random
 
 logger = logging.getLogger("views")
+lang_global = "en"
 
 # Normal views
 
@@ -72,12 +73,20 @@ def change_language(request, lang):
         'french_text': translate('FRENCH', lang),
         'spanish_text': translate('SPANISH', lang),
         'title_text': translate('TITLE', lang),
+        'username_text' : translate('USERNAME', lang),
+        'pass_text' : translate('PASS', lang),
     }
     if request.user.is_authenticated:
         request.user.preferred_language = lang
         request.user.save()
         return render(request, 'title.html', context)
-    form = signUser()
+    else:
+        global lang_global
+        logger.debug(f" [views] lang_global: {lang_global}, lang  {lang}")
+        lang_global = lang
+        logger.debug(f" [views] lang_global: {lang_global}, lang  {lang}")
+        print(f" [views] lang_global: {lang_global}, lang  {lang}")
+    form = signUser(context=context)
     context['form'] = form
     return render(request, 'signIn.html', context)
     
@@ -108,7 +117,7 @@ def title(request):
     return redirect('home', context)
 
 def home(request, username):
-    lang = 'en'
+    lang = lang_global
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
@@ -124,6 +133,8 @@ def home(request, username):
         'french_text': translate('FRENCH', lang),
         'spanish_text': translate('SPANISH', lang),
         'title_text': translate('TITLE', lang),
+        'username_text' : translate('USERNAME', lang),
+        'pass_text' : translate('PASS', lang),
     }
     if request.headers.get('Accept') != '*/*':
         username = request.user.username
@@ -131,13 +142,13 @@ def home(request, username):
         return render(request, 'index.html', context)
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'title.html', context)
-    form = signUser()
+    form = signUser(context=context)
     context['form'] = form
     return render(request, 'signIn.html', context)
     
 
 def play(request, username):
-    lang = 'en'
+    lang = lang_global
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
@@ -153,6 +164,8 @@ def play(request, username):
         'french_text': translate('FRENCH', lang),
         'spanish_text': translate('SPANISH', lang),
         'wait_text': translate('WAIT', lang),
+        'username_text' : translate('USERNAME', lang),
+        'pass_text' : translate('PASS', lang),
     }
     if request.headers.get('Accept') != '*/*':
         username = request.user.username
@@ -160,7 +173,7 @@ def play(request, username):
         return render(request, 'index.html', context)
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'game.html', context)
-    form = signUser()
+    form = signUser(context=context)
     context['form'] = form
     return render(request, 'signIn.html', context)
 
@@ -175,19 +188,44 @@ def playing(request, username):
 
 
 def menu(request, username):
-    if request.headers.get('Accept') != '*/*':
-        return render(request, 'index.html', {'username': username})
-    if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'menu.html');
+    lang = lang_global
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
     context = {
         'username': username,
+        'welcome_message': translate('WELCOME', lang),
         'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
+        'wait_text': translate('WAIT', lang),
+        'vsIA_text': translate('IA', lang),
+        'vsPalyer_text': translate('VS_PLAYER', lang),
+        'Tournament_text': translate('TOURNAMENT', lang),
+        'username_text' : translate('USERNAME', lang),
+        'pass_text' : translate('PASS', lang),
     }
-    form = signUser()
+    if request.headers.get('Accept') != '*/*':
+        return render(request, 'index.html', context)
+    if request.user.is_authenticated and username != 'Guest':
+        return render(request, 'menu.html', context)
+    form = signUser(context=context)
     context['form'] = form
     return render(request, 'signIn.html', context)
 
 def modeMenu(request, mode, username):
+    lang = lang_global
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
+    context = {
+        'local_text': translate('LOCAL', lang),
+        'online_text': translate('ONLINE', lang),
+    }
     if request.headers.get('Accept') != '*/*':
         return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated and username != 'Guest':
@@ -196,11 +234,13 @@ def modeMenu(request, mode, username):
     return render(request, 'signIn.html', {'form': form})
 
 def profile(request, username):
-    lang = 'en'
+    lang = lang_global
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
         'username': username,
+        'username_text' : translate('USERNAME', lang),
+        'pass_text' : translate('PASS', lang),
         'welcome_message': translate('WELCOME', lang),
         'sign_in_text': translate('SIGN_IN', lang),
         'sign_up_text': translate('SIGN_UP', lang),
@@ -221,15 +261,23 @@ def profile(request, username):
         context['edit_profile_text'] = translate('EDIT_PROFILE', lang)
         context['change_pass_text'] = translate('C_PASS', lang)
         context['choose_avatar_text'] = translate('AVATAR', lang)
+        context['first_name_text'] = translate('FIRST_NAME', lang)
+        context['last_name_text'] = translate('LAST_NAME', lang)
+        context['email_text'] = translate('EMAIL', lang)
+        context['last_login_text'] = translate('LAST_LOGIN', lang)
+        context['date_joined_text'] = translate('DATE_JOINED', lang)
+        context['avatar_route_text'] = translate('AVATAR_ROUTE', lang)
         return render(request, 'profile.html', context)
-    form = signUser()
+    form = signUser(context=context)
     context['form'] = form
     return render(request, 'signIn.html', context)
 
 def signUp(request):
-    lang = 'en'
+    lang = lang_global
+    print(f" [views] lang_global: {lang_global}, lang  {lang} 2")
     if request.user.is_authenticated:
         lang = request.user.preferred_language
+    print(f" [views] lang_global: {lang_global}, lang  {lang} 2")
     context = {
         'welcome_message': translate('WELCOME', lang),
         'sign_in_text': translate('SIGN_IN', lang),
@@ -246,14 +294,14 @@ def signUp(request):
         username = request.user.username
         context['username'] = username
         return render(request, 'index.html', context)
-    form = newUser()
-    context['form'] = form
     context['username_text'] = translate('USERNAME', lang)
     context['first_name_text'] = translate('FIRST_NAME', lang)
     context['last_name_text'] = translate('LAST_NAME', lang)
     context['email_text'] = translate('EMAIL', lang)
     context['pass_text'] = translate('PASS', lang)
     context['pass_confirmation_text'] = translate('CONF_PASS', lang)
+    form = newUser(context=context)
+    context['form'] = form
     return render(request, "signUp.html", context)
 
 def editProfile(request):
@@ -292,7 +340,7 @@ def editProfile(request):
     return render(request, 'editProfile.html', context)
 
 def changePassword(request):
-    lang = 'en'
+    lang = lang_global
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
@@ -324,7 +372,7 @@ def changePassword(request):
     return render(request, 'changePassword.html', context)
 
 def leaderboards(request, username):
-    lang = 'en'
+    lang = lang_global
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
@@ -349,7 +397,7 @@ def leaderboards(request, username):
     return render(request, 'leaderboards.html', context)
 
 def friends(request, username):
-    lang = 'en'
+    lang = lang_global
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     context = {
@@ -380,7 +428,7 @@ def friends(request, username):
     return render(request, 'signIn.html', context)
 
 def dashboard(request, username):
-    lang = 'en'
+    lang = lang_global
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     username = request.user.username
@@ -414,7 +462,7 @@ def dashboard(request, username):
     return render(request, 'dashboard.html', context)
 
 def stats(request, username):
-    lang = 'en'
+    lang = lang_global
     if request.user.is_authenticated:
         lang = request.user.preferred_language
     username = request.user.username
@@ -513,6 +561,9 @@ def deleteUser(request, pk):
 
 @api_view(['GET'])
 def get_stats(request, username):
+    lang = lang_global
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
     try:
         user = MyCustomUser.objects.get(username=username)
     except MyCustomUser.DoesNotExist:
@@ -542,6 +593,8 @@ def get_stats(request, username):
         'total_points': total_possible_points,
         'total_scored': total_scored,
         'total_conceded': total_conceded,
+        'points_scored_text': translate('POINTS_SCORED', lang),
+        'points_conceded_text': translate('POINTS_CONCEDED', lang),
     }
 
     return JsonResponse(stats_data)
@@ -564,6 +617,10 @@ def getUserInfo(request):
                 'friends_text': translate('FRIENDS', lang),
                 'dashboard_text': translate('DASHBOARD', lang),
                 'sign_out_text': translate('SIGN_OUT', lang),
+                'rank_text': translate('RANK', lang),
+                'player_text': translate('PLAYER', lang),
+                'add_text': translate('ADD', lang),
+                'user_text': translate('USERS', lang),
             }
             return JsonResponse(context)
         except MyCustomUser.DoesNotExist:

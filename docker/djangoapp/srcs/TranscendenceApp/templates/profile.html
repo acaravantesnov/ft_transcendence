@@ -3,20 +3,34 @@
 <div class="container scrollable mb-3">
     <center>
         <p id="avatar" class="pb-2"></p>
-        <p id="username"></p>
+
+        <h5 id="username"></h5>
+
     </center>
 </div>
 
 <div class="container col-12 mb-5" style="font-family: Dosis">
     <div class="card card-body pt-4 pb-4">
     <h3 class="card-title responsive-text-medium">{{ profile_text }}</h3>
+
     <hr>
+
+    {{ email_text }}
     <span id="email"></span>
+
+    {{ first_name_text }}
     <span id="first_name"></span>
+
+    {{ last_name_text }}
     <span id="last_name"></span>
+
+    {{ last_login_text }}
     <span id="last_login"></span>
+
+    {{ date_joined_text }}
     <span id="date_joined"></span>
 
+    {{ avatar_route_text }}
     <span id="avatar_2"></span>
 
     <div class="in-line">
@@ -34,6 +48,7 @@
 	    <div id="avatarDiv" class="form-group">
 	    </div>
     </form>
+    </div>
 </div>
 
 <script src="{% static 'js/profile.js' %}"></script>

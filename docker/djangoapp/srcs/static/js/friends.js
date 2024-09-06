@@ -108,8 +108,12 @@ async function friends (){
 async function autocomplete(inp) {
 
 	var arr = [];
+	const lang = await fetch('/users/getUserInfo/');
+	const langData = await lang.json();
 	const response = await fetch('/users/getUsers/');
    	const data = await response.json();
+
+
 	
 	data.forEach(element => {
 		arr.push(element.username)
@@ -125,19 +129,19 @@ async function autocomplete(inp) {
 		const tableBody = document.getElementById('userTable').getElementsByTagName('tbody')[0];
 		const a = document.createElement("h2");
 		a.setAttribute("class", "text-center");
-		a.innerHTML = "Users";
+		a.innerHTML = `${langData.user_text}`;
 		tableBody.parentNode.before(a);
 		const b = document.createElement("thead");
 		r = b.insertRow();
 		const ra = r.insertCell(0);
 		ra.setAttribute("scope", "col");
-		ra.outerHTML = "<th>Rank</th>";
+		ra.outerHTML = `<th>${langData.rank_text}</th>`;
 		const player = r.insertCell(1);
 		player.setAttribute("scope", "col");
-		player.outerHTML = "<th>Player</th>";
+		player.outerHTML = `<th>${langData.player_text}</th>`;
 		const add = r.insertCell(2);
 		add.setAttribute("scope", "col");
-		add.outerHTML = "<th>Add</th>";
+		add.outerHTML = `<th>${langData.add_text}</th>`;
 		
 		tableBody.before(b);
 

@@ -57,7 +57,7 @@ async function stats() {
         pointsScoredChartInstance = new Chart(document.getElementById('pointsScoredChart'), {
             type: 'pie',
             data: {
-                labels: ['Points Scored'],
+                labels: [data.points_scored_text],
                 datasets: [{
                     label: 'Points Scored',
                     data: [pointsScoredPercentage, 100 - pointsScoredPercentage],
@@ -91,7 +91,7 @@ async function stats() {
         pointsConcededChartInstance = new Chart(document.getElementById('pointsConcededChart'), {
             type: 'pie',
             data: {
-                labels: ['Points Conceded'],
+                labels: [data.points_conceded_text],
                 datasets: [{
                     label: 'Points Conceded',
                     data: [pointsConcededPercentage, 100 - pointsConcededPercentage],

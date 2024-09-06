@@ -10,7 +10,7 @@ async function dashboard () {
             const gamesList = document.getElementById('games-list');
             gamesList.innerHTML = '';
             if (data.games_list.length === 0) {
-                gamesList.innerHTML = '<tr><td colspan="7" class="text-center">No games played yet</td></tr>';
+                gamesList.innerHTML = '<tr><td colspan="7" class="text-center"> - - - </td></tr>';
             } else {
                 data.games_list.forEach((game, index) => {
                     const row = document.createElement('tr');

@@ -19,6 +19,7 @@ translations = {
         'C_PASS': 'Cambiar Contraseña',
         'AVATAR': 'Elige tu avatar',
         'USERNAME': 'Usuario',
+        'USERS': 'Usuarios',
         'FIRST_NAME': 'Nombre',
         'LAST_NAME': 'Apellido',
         'EMAIL': 'Correo',
@@ -53,6 +54,15 @@ translations = {
         'INSTRUCTIONS_BODY_L4': '- En 1vs1 local puedes jugar con un amigo en el mismo dispositivo. Puedes usar 🔼 y 🔽, mientras que tu compañero usa W y S. Para jugar online usa dichas flechas y dile a tu compañero que se conecte en https://c1r2s3:8080 por ejemplo.',
         'INSTRUCTIONS_BODY_L5': '- En 1vsAI juegas contra una inteligencia artificial que puede detectar la bola cada 1 segundo. Juega con 🔼 y 🔽.',
         'INSTRUCTIONS_BODY_L6': '- En torneo se forman parejas aleatorias y juegan partidas de 3 puntos. El ganador de cada partida avanza a la siguiente ronda. El torneo termina cuando solo queda un ganador. Juega con 🔼 y 🔽.'
+        'VS_PLAYER': 'vsJugador',
+        'TOURNAMENT':'Torneo',
+        'IA':'vsIA',
+        'LAST_LOGIN':'Ultima conexión', 
+        'DATE_JOINED':'Fecha de Creación',
+        'AVATAR_ROUTE':'Ruta Avatar',
+        'POINTS_SCORED': 'Puntos marcados',
+        'POINTS_CONCEDED': 'Puntos encajados',
+        'ADD':'Añadir',
     },
     'en': {
         'WELCOME': 'Welcome!',
@@ -74,6 +84,7 @@ translations = {
         'C_PASS': 'Change Password',
         'AVATAR': 'Choose your avatar',
         'USERNAME': 'Username',
+        'USERS': 'Users',
         'FIRST_NAME': 'First Name',
         'LAST_NAME': 'Last Name',
         'EMAIL': 'Email',
@@ -108,6 +119,16 @@ translations = {
         'INSTRUCTIONS_BODY_L4': '- In local 1vs1, you can play with a friend on the same device. You can use 🔼 and 🔽, while your partner uses W and S. To play online, use these arrows and tell your partner to connect at https://c1r2s3:8080, for example.',
         'INSTRUCTIONS_BODY_L5': '- In 1vsAI, you play against an artificial intelligence that can detect the ball every 1 second. Play with 🔼 and 🔽.',
         'INSTRUCTIONS_BODY_L6': '- In tournament mode, random pairs are formed, and they play matches to 3 points. The winner of each match advances to the next round. The tournament ends when only one winner remains. Play with 🔼 and 🔽.'
+        'VS_PLAYER': 'vsPlayer',
+        'TOURNAMENT':'Tournament',
+        'IA':'vsAI',
+        'LAST_LOGIN':'Last login', 
+        'DATE_JOINED':'Date joined',
+        'AVATAR_ROUTE':'Avatar route',
+        'POINTS_SCORED': 'Points scored',
+        'POINTS_CONCEDED': 'Points conceded',
+        'ADD':'Add',
+
     },
     'fr': {
         'WELCOME': 'Bienvenu!',
@@ -129,6 +150,7 @@ translations = {
         'C_PASS': 'Changer le mot de passe',
         'AVATAR': 'Choisis ton avatar',
         'USERNAME': "Nom d'utilisateur",
+        'USERS': "Nom d'utilisateurs",
         'FIRST_NAME': 'Prénom',
         'LAST_NAME': 'Nom de famille',
         'EMAIL': 'E-mail',
@@ -163,6 +185,15 @@ translations = {
         'INSTRUCTIONS_BODY_L4': '- En 1vs1 local, vous pouvez jouer avec un ami sur le même appareil. Vous pouvez utiliser 🔼 et 🔽, tandis que votre partenaire utilise W et S. Pour jouer en ligne, utilisez ces flèches et demandez à votre partenaire de se connecter sur https://c1r2s3:8080, par exemple.',
         'INSTRUCTIONS_BODY_L5': '- En 1vsIA, vous jouez contre une intelligence artificielle qui peut détecter la balle toutes les 1 seconde. Jouez avec 🔼 et 🔽.',
         'INSTRUCTIONS_BODY_L6': '- En mode tournoi, des paires aléatoires sont formées et jouent des matchs en 3 points. Le gagnant de chaque match passe au tour suivant. Le tournoi se termine lorsqu’il ne reste qu’un seul gagnant. Jouez avec 🔼 et 🔽.'
+        'VS_PLAYER': 'vsJoueur',
+        'TOURNAMENT':'Tournoi',
+        'IA':'vsIA',
+        'LAST_LOGIN':'Dernière connexion', 
+        'DATE_JOINED':"Date d'adhésion",
+        'AVATAR_ROUTE':"Itinéraire d'avatar",
+        'POINTS_SCORED': 'Points marqués',
+        'POINTS_CONCEDED': 'Points concédés',
+        'ADD':'Ajouter',
     },
 }
 

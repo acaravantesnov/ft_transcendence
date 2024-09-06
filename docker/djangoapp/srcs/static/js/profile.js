@@ -64,15 +64,14 @@ function successfulUpdateAvatarToast()
 
 async function refresh_profile() {
     await updateUser();
-	document.getElementById('username').innerHTML = `<h5>${user.username}</h5>`;
-	document.getElementById('first_name').innerHTML = `<h5>First name: </h5>${user.first_name}`;
-	document.getElementById('last_name').innerHTML = `<h5>Last name: </h5>${user.last_name}`;
-	document.getElementById('email').innerHTML = `<h5>Email: </h5>${user.email}`;
-	document.getElementById('last_login').innerHTML = `<h5>Last login: </h5>${user.last_login}`;
-	document.getElementById('date_joined').innerHTML = `<h5>Date joined: </h5>${user.date_joined}`;
+	document.getElementById('username').innerHTML = `<i>${user.username}</i>`;
+	document.getElementById('first_name').innerHTML = `<i>${user.first_name}</i>`;
+	document.getElementById('last_name').innerHTML = `<i>${user.last_name}</i>`;
+	document.getElementById('email').innerHTML = `<i>${user.email}</i>`;
+	document.getElementById('last_login').innerHTML = `<i>${user.last_login}</i>`;
+	document.getElementById('date_joined').innerHTML = `<i>${user.date_joined}</i>`;
 
 	document.getElementById('avatar').innerHTML = `<img src="${user.avatar}" alt="logo" class="image-center" style="width: 15vh; height: 15vh;">`;
-	document.getElementById('avatar_2').innerHTML = `<h5>Avatar route: </h5>${user.avatar}`;
+	document.getElementById('avatar_2').innerHTML = `<i>${user.avatar}</i>`;
 }
 refresh_profile();
-

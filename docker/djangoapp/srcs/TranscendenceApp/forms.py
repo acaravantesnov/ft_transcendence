@@ -52,10 +52,10 @@ class newUser(forms.ModelForm):
         model = MyCustomUser
         fields = ['username', 'first_name', 'last_name', 'email', 'password', 'avatar']
         widgets = {
-            'username': forms.TextInput(attrs={'class':'form-control', 'placeholder':'username'}),
-            'first_name': forms.TextInput(attrs={'class':'form-control', 'placeholder':'name...'}),
-            'last_name': forms.TextInput(attrs={'class':'form-control', 'placeholder':'last name...'}),
-            'email': forms.EmailInput(attrs={'class':'form-control', 'placeholder':'user@42.fr.com'}),
+            'username': forms.TextInput(attrs={'class':'form-control', 'placeholder':'dj-ango'}),
+            'first_name': forms.TextInput(attrs={'class':'form-control', 'placeholder':'pepe...'}),
+            'last_name': forms.TextInput(attrs={'class':'form-control', 'placeholder':'garcia...'}),
+            'email': forms.EmailInput(attrs={'class':'form-control', 'placeholder':'pp@42.fr.com'}),
             'password': forms.PasswordInput(attrs={'class':'form-control', 'placeholder':'*******'}),
             'avatar': forms.FileInput(attrs={'class':'form-control'}),
         }
@@ -63,7 +63,16 @@ class newUser(forms.ModelForm):
     preferred_language = forms.CharField(max_length=10, required=False)
 
     def __init__(self, *args, **kwargs):
+
+        context = kwargs.pop('context', None)
+
         super().__init__(*args, **kwargs)
+        
+        self.fields['username'].label = context['username_text']
+        self.fields['first_name'].label = context['first_name_text']
+        self.fields['last_name'].label = context['last_name_text']
+        self.fields['email'].label = context['email_text']
+        self.fields['password'].label = context['pass_text']
         self.fields['password'].required = True
         self.fields['confirm_password'].required = True
 
@@ -158,15 +167,23 @@ class updateAvatarForm(forms.ModelForm):
         return instance
 
 class signUser(forms.Form):
-    username = forms.CharField(max_length=15, label="Username",
-                                widget=forms.TextInput(
-                                    attrs={
-                                        'class':'form-control',
-                                        'placeholder':'username',
+    username = forms.CharField(max_length=15,
+                            widget=forms.TextInput(
+                                attrs={
+                                    'class':'form-control',
+                                    'placeholder':'dj-ango',
+                            }))
+    password = forms.CharField(
+                            widget=forms.PasswordInput(
+                                attrs={
+                                    'class':'form-control',
+                                    'placeholder':'********'
                                 }))
-    password = forms.CharField(label="Password",
-                                widget=forms.PasswordInput(
-                                    attrs={
-                                        'class':'form-control',
-                                        'placeholder':'********'
-                                }))
+    def __init__(self, *args, **kwargs):
+
+        context = kwargs.pop('context', None)
+        print(context)
+        super().__init__(*args, **kwargs)
+
+        self.fields['username'].label = context['username_text']
+        self.fields['password'].label = context['pass_text']
