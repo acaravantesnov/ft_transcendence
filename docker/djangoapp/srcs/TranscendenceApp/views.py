@@ -280,6 +280,10 @@ def editProfile(request):
         context['last_name_text'] = translate('LAST_NAME', lang)
         context['email_text'] = translate('EMAIL', lang)
         context['update_text'] = translate('UPDATE', lang)
+    if not request.user.is_authenticated:
+        form = signUser()
+        context['form'] = form
+        return render(request, 'signIn.html', context)
     return render(request, 'editProfile.html', context)
 
 def changePassword(request):
@@ -308,6 +312,10 @@ def changePassword(request):
     context['c_pass_text']= translate('C_PASS', lang) 
     context['r_pass_text']= translate('R_PASS', lang) 
     context['u_pass_text']= translate('U_PASS', lang) 
+    if not request.user.is_authenticated:
+        form = signUser()
+        context['form'] = form
+        return render(request, 'signIn.html', context)
     return render(request, 'changePassword.html', context)
 
 def leaderboards(request, username):
@@ -394,6 +402,10 @@ def dashboard(request, username):
     context['winner_text']= translate('WINNER', lang)
     context['date_text']= translate('DATE', lang)
     context['no_games_text']= translate('NO_GAMES', lang)
+    if not request.user.is_authenticated:
+        form = signUser()
+        context['form'] = form
+        return render(request, 'signIn.html', context)
     return render(request, 'dashboard.html', context)
 
 def stats(request, username):
@@ -417,11 +429,19 @@ def stats(request, username):
     if request.headers.get('Accept') != '*/*':
         username = request.user.username
         return render(request, 'index.html', {'username': username})
+    if not request.user.is_authenticated:
+        form = signUser()
+        context['form'] = form
+        return render(request, 'signIn.html', context)
     return render(request, 'stats.html', {'username': username})
     
 def tournament(request, username):
     if request.headers.get('Accept') != '*/*':
         return render(request, 'index.html', {'username': username})
+    if not request.user.is_authenticated:
+        form = signUser()
+        context['form'] = form
+        return render(request, 'signIn.html', context)
     return render(request, 'tournaments.html', {'username': username})
 
 def instructions(request, username):
