@@ -27,6 +27,7 @@ urlpatterns = [
     path('getStats/<str:username>/', views.get_stats, name='get_stats'),
     path('changePassword/', views.changePassword, name="changePassword"),
     path('change_language/<str:lang>/', views.change_language, name='change_language'),
+    path('instructions/<str:username>/', views.instructions, name='instructions'),
     
     # CRUD API views
     path('create', views.createUser), # API POST

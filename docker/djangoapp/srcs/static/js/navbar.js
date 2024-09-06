@@ -47,7 +47,7 @@ document.querySelectorAll('.cmon').forEach(function(element) {
                 const event = new CustomEvent('CMONTRIGGER', { detail: { href: str } });
                 document.dispatchEvent(event);
             }
-            else if (e.target.href.endsWith('leaderboards/'))
+            else if (e.target.href.endsWith('leaderboards/') || e.target.href.endsWith('instructions/'))
             {
                 let str = e.target.href + 'Guest/';
                 const event = new CustomEvent('CMONTRIGGER', { detail: { href: str } });

@@ -46,6 +46,13 @@ translations = {
         'DATE': 'Fecha',
         'NO_GAMES': 'Aún no se han jugado partidas',
         'STATS': 'Estadisticas de',
+        'INSTRUCTIONS_TITLE': 'Instrucciones',
+        'INSTRUCTIONS_BODY_L1': 'Bienvenido a nuestro transcendence!Para jugar -> 🏓, para ver la clasificación -> 🏆',
+        'INSTRUCTIONS_BODY_L2': 'Si quieres ver información en relación con tu perfil, pulsa en tu avatar arriba a la derecha.',
+        'INSTRUCTIONS_BODY_L3': 'El juego tiene 3 modalidades: 1vs1 (local/online), 1vsAI y torneo. Cada partida es a 3 puntos. Si golpeas a la bola en su dirección, su velocidad aumenta, de forma inversa si golpeas en la dirección contraria.',
+        'INSTRUCTIONS_BODY_L4': '- En 1vs1 local puedes jugar con un amigo en el mismo dispositivo. Puedes usar 🔼 y 🔽, mientras que tu compañero usa W y S. Para jugar online usa dichas flechas y dile a tu compañero que se conecte en https://c1r2s3:8080 por ejemplo.',
+        'INSTRUCTIONS_BODY_L5': '- En 1vsAI juegas contra una inteligencia artificial que puede detectar la bola cada 1 segundo. Juega con 🔼 y 🔽.',
+        'INSTRUCTIONS_BODY_L6': '- En torneo se forman parejas aleatorias y juegan partidas de 3 puntos. El ganador de cada partida avanza a la siguiente ronda. El torneo termina cuando solo queda un ganador. Juega con 🔼 y 🔽.'
     },
     'en': {
         'WELCOME': 'Welcome!',
@@ -94,6 +101,13 @@ translations = {
         'DATE': 'Date',
         'NO_GAMES': 'No games played yet',
         'STATS': 'Stats for',
+        'INSTRUCTIONS_TITLE': 'Instructions',
+        'INSTRUCTIONS_BODY_L1': 'Welcome to our transcendence! To play -> 🏓, to view the leaderboard -> 🏆',
+        'INSTRUCTIONS_BODY_L2': 'If you want to see information related to your profile, click on your avatar at the top right.',
+        'INSTRUCTIONS_BODY_L3': 'The game has 3 modes: 1vs1 (local/online), 1vsAI, and tournament. Each match is played to 3 points. If you hit the ball in its direction, its speed increases, and inversely, if you hit it in the opposite direction.',
+        'INSTRUCTIONS_BODY_L4': '- In local 1vs1, you can play with a friend on the same device. You can use 🔼 and 🔽, while your partner uses W and S. To play online, use these arrows and tell your partner to connect at https://c1r2s3:8080, for example.',
+        'INSTRUCTIONS_BODY_L5': '- In 1vsAI, you play against an artificial intelligence that can detect the ball every 1 second. Play with 🔼 and 🔽.',
+        'INSTRUCTIONS_BODY_L6': '- In tournament mode, random pairs are formed, and they play matches to 3 points. The winner of each match advances to the next round. The tournament ends when only one winner remains. Play with 🔼 and 🔽.'
     },
     'fr': {
         'WELCOME': 'Bienvenu!',
@@ -142,8 +156,14 @@ translations = {
         'DATE': 'Date',
         'NO_GAMES': "Aucun jeu joué pour l'instant",
         'STATS': 'Statistiques pour',
+        'INSTRUCTIONS_TITLE': 'Instructions',
+        'INSTRUCTIONS_BODY_L1': 'Bienvenue dans notre transcendance ! Pour jouer -> 🏓, pour voir le classement -> 🏆',
+        'INSTRUCTIONS_BODY_L2': 'Si vous souhaitez voir des informations liées à votre profil, cliquez sur votre avatar en haut à droite.',
+        'INSTRUCTIONS_BODY_L3': 'Le jeu propose 3 modes : 1vs1 (local/en ligne), 1vsIA et tournoi. Chaque partie se joue en 3 points. Si vous frappez la balle dans sa direction, sa vitesse augmente, et inversement, si vous la frappez dans la direction opposée.',
+        'INSTRUCTIONS_BODY_L4': '- En 1vs1 local, vous pouvez jouer avec un ami sur le même appareil. Vous pouvez utiliser 🔼 et 🔽, tandis que votre partenaire utilise W et S. Pour jouer en ligne, utilisez ces flèches et demandez à votre partenaire de se connecter sur https://c1r2s3:8080, par exemple.',
+        'INSTRUCTIONS_BODY_L5': '- En 1vsIA, vous jouez contre une intelligence artificielle qui peut détecter la balle toutes les 1 seconde. Jouez avec 🔼 et 🔽.',
+        'INSTRUCTIONS_BODY_L6': '- En mode tournoi, des paires aléatoires sont formées et jouent des matchs en 3 points. Le gagnant de chaque match passe au tour suivant. Le tournoi se termine lorsqu’il ne reste qu’un seul gagnant. Jouez avec 🔼 et 🔽.'
     },
-    
 }
 
 def translate(key, lang='en'):
