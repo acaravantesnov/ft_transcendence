@@ -43,7 +43,7 @@ async function submitSignUp(event) {
             unsuccessfulSignUpToast(errorMessage);
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.log('Error:', error);
         unsuccessfulSignUpToast('An error occurred while signing up. Please try again later.');
     }
 }

@@ -36,7 +36,7 @@ async function submitNewPassword()
                 unsuccessfulPassToast(responseData.message);
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.log('Error:', error);
         }
     }
 }

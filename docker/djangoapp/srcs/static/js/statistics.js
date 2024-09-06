@@ -8,7 +8,7 @@ var stats = async () => {
             document.getElementById('goals').textContent = data.goals;
             document.getElementById('score').textContent = data.score;
         })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => console.log('Error fetching data:', error));
 };
 
 stats();

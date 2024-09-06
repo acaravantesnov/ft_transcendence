@@ -34,7 +34,7 @@ async function stats() {
         const data = await response.json();
 
         if (data.error) {
-            console.error('Error fetching stats:', data.error);
+            console.log('Error fetching stats:', data.error);
             return;
         }
 
@@ -122,7 +122,7 @@ async function stats() {
             }
         });
     } catch (error) {
-        console.error('Error fetching stats data:', error);
+        console.log('Error fetching stats data:', error);
     }
 }
 
@@ -132,5 +132,5 @@ loadScript('https://cdn.jsdelivr.net/npm/chart.js')
         stats();  // Ejecuta la función stats después de que Chart.js ha sido cargado
     })
     .catch(error => {
-        console.error("Error loading Chart.js:", error);
+        console.log("Error loading Chart.js:", error);
     });

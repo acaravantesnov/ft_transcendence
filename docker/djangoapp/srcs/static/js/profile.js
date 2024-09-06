@@ -48,7 +48,7 @@ async function updateAvatar() {
 			document.dispatchEvent(event);
 		} else { unsuccessfulUpdateAvatarToast(); }
 	} catch (error) {
-		console.error('Error: ', error);
+		console.log('Error: ', error);
 		unsuccessfulUpdateAvatarToast('An error ocurred while updating your avatar. Please try again later.');
 	}
 }

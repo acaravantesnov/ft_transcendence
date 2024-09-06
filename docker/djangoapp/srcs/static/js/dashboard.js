@@ -37,7 +37,7 @@ async function dashboard () {
                 });
             }
         })
-        .catch(error => console.error('Error fetching dashboard data:', error));
+        .catch(error => console.log('Error fetching dashboard data:', error));
 }
 
 function toggleDetails(index) {

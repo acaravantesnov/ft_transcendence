@@ -55,10 +55,10 @@ class GameManager:
                     }
                     logger.debug(f" [GameManager] Game exists for user {username}: {ret} ")
                     return ret 
-                logger.debug(f" [GameManager] Game does not exist for user {username} ")
-                return {
-                    "status": "error",
-                }
+            logger.debug(f" [GameManager] Game does not exist for user {username} ")
+            return {
+                "status": "error",
+            }
         except Exception as e:
             logger.error(f" [GameManager] Error checking if game exists for user {username}: {e} ")
             return {

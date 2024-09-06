@@ -30,7 +30,7 @@ async function submitNewProfile(event) {
 			    document.dispatchEvent(event);
 		    } else { unsuccessfulEditProfileToast(errorMessage); }
 	    } catch (error) {
-		    console.error('Error:', error);
+		    console.log('Error:', error);
 		    unsuccessfulEditProfileToast('An error occurred while updating profile. Please try again later.');
 	    }
     }

@@ -19,7 +19,7 @@ async function join_tournament(room_name) {
 			go_to(`/users/play/tournament/${user.username}`);
 		}
 	} catch (error) {
-		console.error(' Error while join {room_name} due to: ', error);
+		console.log(' Error while join {room_name} due to: ', error);
 	}
 }
 
@@ -33,7 +33,7 @@ async function quit_tournament(room_name) {
 		if (data.status == 'success') {
 		}
 	} catch (error) {
-		console.error(' Error while quitting from {room_name} due to: ', error);
+		console.log(' Error while quitting from {room_name} due to: ', error);
 	}
 }
 
@@ -54,7 +54,7 @@ async function waiting_tournament_room(room_name) {
 			// Incluir algo de informacion como la gente que falta para estar ready
 		}
 	} catch (error) {
-		console.error(' Error while entering {room_name} due to: ', error);
+		console.log(' Error while entering {room_name} due to: ', error);
 	}
 }
 
@@ -108,7 +108,7 @@ async function waiting_for_tournament_game(room_name) {
                 }
 
         } catch (error) {
-                console.error(' Error while managing the game -- due to: ', error);
+                console.log(' Error while managing the game -- due to: ', error);
         }
 }
 
@@ -133,7 +133,7 @@ async function createTournament() {
 			}
 		}
 	} catch (error) {
-		console.error('Error while creating a tournament: ', error);
+		console.log('Error while creating a tournament: ', error);
 	}
 }
 
@@ -191,7 +191,7 @@ async function getTournaments() {
 			});
 		}
 	} catch (error) {
-		console.error('Error while getting tournaments: ', error);
+		console.log('Error while getting tournaments: ', error);
 		console.log(user.username);
 	}
 }
@@ -222,7 +222,7 @@ async function enter_tournament(room_name, username) {
 		}
 	}
 	catch (error) {
-		console.error(' Error while entering room {room_name} due to: ', error);
+		console.log(' Error while entering room {room_name} due to: ', error);
 	}
 }
 

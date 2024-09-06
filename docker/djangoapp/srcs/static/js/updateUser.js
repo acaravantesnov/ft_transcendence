@@ -17,7 +17,7 @@ async function updateUser() {
         document.getElementById('signOut').innerHTML = user.sign_out_text;
         document.getElementById('navbar-avatar').innerHTML = `<img src="${user.avatar}" alt="logo" style="width: 50px; height: 50px;">`;
     } catch (error) {
-        console.error('Fetch error:', error);
+        console.log('Fetch error:', error);
     }
 }
 

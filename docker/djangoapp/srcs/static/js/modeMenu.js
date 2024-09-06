@@ -31,7 +31,7 @@ async function init_game(str) {
 		} else if (data.status === 'waiting') {
 			check_waitlist();
 		}
-	} catch (error) { console.error('Error creating game: ', error); }
+	} catch (error) { console.log('Error creating game: ', error); }
 }
 
 async function checkWaitlist() {
@@ -50,7 +50,7 @@ async function checkWaitlist() {
             initializeGame(room_name, side, user_left, user_right);
         }
     } catch (error) {
-        console.error('Error checking waitlist:', error);
+        console.log('Error checking waitlist:', error);
     }
 }
 

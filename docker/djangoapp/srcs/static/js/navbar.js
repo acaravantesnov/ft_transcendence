@@ -40,7 +40,7 @@ document.querySelectorAll('.cmon').forEach(function(element) {
                             return;
                         }
                     } catch (error) {
-                        console.error('Error checking if user has a game in progress:', error);
+                        console.log('Error checking if user has a game in progress:', error);
                     }
                 }
                 let str = e.target.href + user.username + '/';

@@ -26,10 +26,10 @@ async function addToWaitlist() {
         if (response.ok) {
             console.log('Added to waitlist:', data);
         } else {
-            console.error('Failed to add to waitlist:', data);
+            console.log('Failed to add to waitlist:', data);
         }
     } catch (error) {
-        console.error('Error adding to waitlist:', error);
+        console.log('Error adding to waitlist:', error);
     }
 }
 
@@ -45,7 +45,7 @@ async function checkWaitlist() {
             initializeGame(room_name, side);
         }
     } catch (error) {
-        console.error('Error checking waitlist:', error);
+        console.log('Error checking waitlist:', error);
     }
 }
 

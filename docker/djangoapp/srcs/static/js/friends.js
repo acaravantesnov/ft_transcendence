@@ -15,7 +15,7 @@
 
 	});
 	    } catch (error) {
-	    console.error('Error:', error);
+	    console.log('Error:', error);
 	    alert('An error ocurred while fetching the usersList. Please try again later.');
     }
 }*/
@@ -74,7 +74,7 @@ async function friend_requests (){
 
 	});
 	    } catch (error) {
-	    console.error('Error:', error);
+	    console.log('Error:', error);
 	    alert('An error ocurred while fetching the requestsList. Please try again later.');
     }
 }
@@ -98,7 +98,7 @@ async function friends (){
 			stat.appendChild(circle);
 		});
 	} catch (error) {
-		console.error('Error:', error);
+		console.log('Error:', error);
 		// We don't want the alert in the evaluation
 		// alert('An error ocurred while fetching the friendList. Please try again later.');
 		}

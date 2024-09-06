@@ -33,7 +33,7 @@ async function init_game(str) {
 		} else if (data.status === 'waiting') {
 			check_waitlist();
 		}
-	} catch (error) { console.error('Error creating vsIA game: ', error); }
+	} catch (error) { console.log('Error creating vsIA game: ', error); }
 }
 */
 
@@ -50,7 +50,7 @@ async function checkWaitlist() {
             initializeGame(room_name, side);
         }
     } catch (error) {
-        console.error('Error checking waitlist:', error);
+        console.log('Error checking waitlist:', error);
     }
 }
 */
@@ -174,43 +174,53 @@ function updateGameState(state) {
 // Event listeners
 
 document.addEventListener('keydown', (e) => {
-    if (mode == 'remote') {
-	    let speed = 0;
-	    if (e.key === 'ArrowUp') speed = -3;
-	    else if (e.key === 'ArrowDown') speed = 3;
-	    if (speed !== 0 && socket) {
-		    socket.send(JSON.stringify({type: 'paddle', speed}));
-	    }
+    try{
+        if (mode == 'remote') {
+            let speed = 0;
+            if (e.key === 'ArrowUp') speed = -3;
+            else if (e.key === 'ArrowDown') speed = 3;
+            if (speed !== 0 && socket) {
+                socket.send(JSON.stringify({type: 'paddle', speed}));
+            }
 
-    } else if (mode == 'local') {
-    	let right_speed = 0;
-    	let left_speed = 0;
-    	if (e.key === 'ArrowUp') right_speed = -3;
-    	else if (e.key === 'ArrowDown') right_speed = 3;
-    	else if (e.key === 'w') left_speed = -3;
-    	else if (e.key === 's') left_speed = 3;
-    
-    	if (right_speed !== 0 && socket) {
-        	socket.send(JSON.stringify({type: 'right_paddle', speed: right_speed}));
-    	}
-    	if (left_speed !== 0 && socket) {
-			socket.send(JSON.stringify({type: 'left_paddle', speed: left_speed}));
-    	}
+        } else if (mode == 'local') {
+            let right_speed = 0;
+            let left_speed = 0;
+            if (e.key === 'ArrowUp') right_speed = -3;
+            else if (e.key === 'ArrowDown') right_speed = 3;
+            else if (e.key === 'w') left_speed = -3;
+            else if (e.key === 's') left_speed = 3;
+        
+            if (right_speed !== 0 && socket) {
+                socket.send(JSON.stringify({type: 'right_paddle', speed: right_speed}));
+            }
+            if (left_speed !== 0 && socket) {
+                socket.send(JSON.stringify({type: 'left_paddle', speed: left_speed}));
+            }
+        }
+    }
+    catch (error) {
+        console.log('Error while keydown -- due to: ', error);
     }
 });
 
 document.addEventListener('keyup', (e) => {
-    if (mode == 'remote') {
-		if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && socket) {
-			socket.send(JSON.stringify({type: 'paddle', speed: 0}));
-		}
-    } else if (mode == 'local') {
-    	if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && socket) {
-        	socket.send(JSON.stringify({type: 'right_paddle', speed: 0}));
-    	}
-    	if ((e.key === 'w' || e.key === 's') && socket) {
-			socket.send(JSON.stringify({type: 'left_paddle', speed: 0}));
-    	}
+    try{
+        if (mode == 'remote') {
+            if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && socket) {
+                socket.send(JSON.stringify({type: 'paddle', speed: 0}));
+            }
+        } else if (mode == 'local') {
+            if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && socket) {
+                socket.send(JSON.stringify({type: 'right_paddle', speed: 0}));
+            }
+            if ((e.key === 'w' || e.key === 's') && socket) {
+                socket.send(JSON.stringify({type: 'left_paddle', speed: 0}));
+            }
+        }
+    }
+    catch (error) {
+        console.log('Error while keyup -- due to: ', error);
     }
 });
 

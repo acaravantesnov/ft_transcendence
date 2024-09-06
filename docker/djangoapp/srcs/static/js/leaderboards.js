@@ -13,7 +13,7 @@ async function leaderboards () {
             score.textContent = element.score;
         });
     } catch (error) {
-        console.error('Error:', error);
+        console.log('Error:', error);
         alert('An error occurred while fetching the leaderboards. Please try again later.');
     }
 }

@@ -20,7 +20,7 @@ async function gameIA() {
 			initializeGame(room_name, 'right', 'AI', user.username);
 
 		}
-	} catch (error) { console.error('Error creating vsAI game: ', error); }
+	} catch (error) { console.log('Error creating vsAI game: ', error); }
 }
 
 // To Playing page

@@ -36,7 +36,7 @@ async function submitSignIn()
                 unsuccessfulLoginToast(responseData.message);
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.log('Error:', error);
         }
     }
 }
