@@ -44,6 +44,7 @@ async function checkWaitlist() {
             const { room_name, user_left, user_right } = data.response;
             const side = user.username === user_left ? 'left' : (user.username === user_right ? 'right' : 'spectator');
             clearInterval(intervalId);
+            sessionStorage.setItem('waiting', 'false');
             await go_to(`/users/playing/${user.username}`)
             await new Promise(r => setTimeout(r, 1500));
             initializeGame(room_name, side, user_left, user_right);
@@ -108,7 +109,14 @@ local.addEventListener('click', () => init_game('local'));
 
 remote.addEventListener('click', () => {
 	if (title == 'Tournament') { go_to(`/users/play/tournament/${user.username}`); }
-	else { init_game('remote'); }
+	else {
+        // Hide the buttons and show "Waiting Room"
+        document.getElementById('modeMenu').innerHTML = "<h3>Waiting Room</h3>";
+        sessionStorage.setItem('waiting', 'true');
+
+        // Initialize the remote game
+        init_game('remote');
+    }
 });
 
 /*
@@ -142,4 +150,12 @@ document.addEventListener('keyup', (e) => {
 function check_waitlist() {
 	intervalId = setInterval(checkWaitlist, 1000);
 }
+
+function restore_page() {
+    if (sessionStorage.getItem('waiting') === 'true') {
+        document.getElementById('modeMenu').innerHTML = "<h3>Waiting Room</h3>";
+        // check_waitlist();
+    }
+}
+restore_page();
 

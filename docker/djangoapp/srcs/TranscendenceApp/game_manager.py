@@ -163,6 +163,8 @@ class GameManager:
                     except Exception as e:
                         logger.error(f" [GameManager] Catched Error saving game to database: {e} ")
                     logger.debug(f" [GameManager] Deleting game instance")
+                else:
+                    await self.games[room_group_name].stop()
                 if self.left_user.get(room_group_name):
                     self.left_user.pop(room_group_name)
                 if self.right_user.get(room_group_name):
