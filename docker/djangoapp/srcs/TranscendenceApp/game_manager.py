@@ -37,6 +37,7 @@ class GameManager:
             logger.debug(f" [GameManager] check_game_exists: {username} ")
             for room_group_name in self.games:
                 logger.debug(f" [GameManager] Checking game {room_group_name} ")
+                logger.debug(f" [GameManager] left_user: {self.left_user.get(room_group_name)} , right_user: {self.right_user.get(room_group_name)} ")
                 if self.left_user.get(room_group_name) == username or self.right_user.get(room_group_name) == username:
                     logger.debug(f" [GameManager] Game exists for user {username} , room_group_name: {room_group_name} ")
                     logger.debug(f" [GameManager] left_user: {self.left_user.get(room_group_name)} , right_user: {self.right_user.get(room_group_name)} ")

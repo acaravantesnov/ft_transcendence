@@ -46,7 +46,7 @@ async function updateAvatar() {
 			successfulUpdateAvatarToast();
 			const event = new CustomEvent('UPDATEAVATARTRIGGER', { detail: { href: `/users/profile/${user.username}` } });
 			document.dispatchEvent(event);
-		} else { unsuccessfulUpdateAvatarToast(); }
+		} else { unsuccessfulUpdateAvatarToast('Error'); }
 	} catch (error) {
 		console.log('Error: ', error);
 		unsuccessfulUpdateAvatarToast('An error ocurred while updating your avatar. Please try again later.');

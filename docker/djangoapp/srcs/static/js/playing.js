@@ -133,12 +133,20 @@ function startGame(roomName, side) {
     console.log(roomName.search('T'));
 
     if (roomName.search('T') > 0) {
-        socket.onclose = event => {
+        // socket.onclose = event => {
+        //     sessionStorage.removeItem('roomName');
+        //     sessionStorage.removeItem('side');
+        //     go_to(`/users/play/tournament/${user.username}`);
+        //     go_back_to_wait_for_game(roomName);
+        // };
+        socket.onclose = async (event) => {
             sessionStorage.removeItem('roomName');
             sessionStorage.removeItem('side');
-            go_to(`/users/play/tournament/${user.username}`);
-            go_back_to_wait_for_game(roomName);
+            await go_to(`/users/play/tournament/${user.username}`);
+            await new Promise(r => setTimeout(r, 1000));
+            await go_back_to_wait_for_game(roomName);
         };
+
     } else {
         socket.onclose = event => {
             sessionStorage.removeItem('roomName');
@@ -226,7 +234,8 @@ document.addEventListener('keyup', (e) => {
 
 
 // Restore state and reconnect WebSocket on page load
-function restore_game() {
+async function restore_game() {
+    await updateUser();
     const roomName = sessionStorage.getItem('roomName');
     const side = sessionStorage.getItem('side');
     console.log('Restoring game state from local storage...');
