@@ -170,12 +170,16 @@ def playing(request, username):
 
 
 def menu(request, username):
+    if request.headers.get('Accept') != '*/*':
+        return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'menu.html');
     form = signUser();
     return render(request, 'signIn.html', {'form': form})
 
 def modeMenu(request, mode, username):
+    if request.headers.get('Accept') != '*/*':
+        return render(request, 'index.html', {'username': username})
     if request.user.is_authenticated and username != 'Guest':
         return render(request, 'menu2.html');
     form = signUser();
