@@ -17,11 +17,6 @@ const startsWithRoutes = [
 ]
 
 var routes = {
-    404: {
-        urlPattern: '404',
-        title: '404 - Page not found',
-        description: '404 - Page not found'
-    },
     '/users/signIn/': {
         urlPattern: '/users/signIn/',
         title: 'Sign In',
@@ -50,14 +45,6 @@ const route = (event) => {
 
 const locationHandler = async () => {
     const location = window.location.pathname;
-    // let location = window.location.pathname;
-    // const languagePrefix = location.match(/^\/(en|es|fr)\//);
-    // if (languagePrefix) {
-    //     location = location.replace(languagePrefix[0], '/');  // Eliminar el prefijo de idioma de la ruta
-    // }
-    // if (location.length == 0) {
-    //     location = '/';
-    // }
 
     let html = '';
     if ((location == '/') || (location == '/users/home/')) {
@@ -67,7 +54,7 @@ const locationHandler = async () => {
         html = await fetch(location).then(res => res.text());
     }
     else { // routes
-        const route = routes[location] || routes[404];
+        const route = routes[location];
         html = await fetch(route.urlPattern).then(res => res.text());
     }
 

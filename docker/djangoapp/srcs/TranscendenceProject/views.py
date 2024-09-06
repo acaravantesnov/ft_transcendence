@@ -25,12 +25,3 @@ def welcome(request):
         'spanish_text': translate('SPANISH', lang),
     }
     return render(request, 'index.html', context)
-
-def error404(request):
-    lang = request.session.get('lang_code', 'es')
-    if request.user.is_authenticated:
-        lang = request.user.preferred_language
-    context = {
-        'not_found_text': translate('NOT_FOUND', lang),
-    }
-    return render(request, '404.html', context)

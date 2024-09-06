@@ -14,7 +14,6 @@ urlpatterns = [
     path('play/mode/<str:mode>/<str:username>/', views.modeMenu, name="modeMenu"),
     path('play/tournament/<str:username>', views.tournament, name="tournament"),
     path('playing/<str:username>/', views.playing, name="playing"),
-    #path('play/<str:username>/', views.play, name="play"),
     path('leaderboards/<str:username>/', views.leaderboards, name="leaderboards"),
     path('profile/<str:username>/', views.profile, name="profile"),
     path('friends/<str:username>/', views.friends, name="friends"),
@@ -56,7 +55,6 @@ urlpatterns = [
     path('updateAvatar/<str:username>/', views.updateAvatar),
 
     # Tournament views
-    #path('tournament/createTournament/<str:username>', views.create_tournament, name='createTournament'),
     path('tournament/addtowaitingroom/<str:room_id>/<str:username>/', views.add_to_tournament_waiting_room, name='add_to_tournament_waiting_room'),
     path('tournament/checkwaitingroom/<str:room_id>/', views.check_tournament_waiting_room, name='check_tournament_waiting_room'),
     path('tournament/readytoplay/<str:room_id>/<str:username>/', views.set_ready_to_play, name='ready_to_play'),
@@ -64,6 +62,5 @@ urlpatterns = [
     path('tournament/gettournaments/<str:username>/', views.get_tournaments, name='get_tournaments'),
     path('tournament/getstate/<str:room_id>/', views.get_tournament_state, name='get_tournament_state'),
     path('tournament/stopgame/<str:room_id>/<str:winner_id>/<str:loser_id>/', views.stop_game_torunament, name='stop_game'),
-
 ]
 
