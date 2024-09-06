@@ -63,7 +63,7 @@ async function go_back_to_wait_for_game(room_name) {
   //torunament_name = 'roomTR52365'
   torunament_name = room_name.split('_')[0];
   await new Promise(r => setTimeout(r, 250));
-  tarea.parentElement.innerHTML = `<h3><i>Waiting for ${torunament_name}</i></h3>`;
+  tarea.parentElement.innerHTML = `<h3><i>⏰ ${torunament_name} ⏰</i></h3>`;
   // await new Promise(r => setTimeout(r, 250));
   gestion_de_waiters('juego', torunament_name);
 }
@@ -154,7 +154,7 @@ async function getTournaments() {
 				a.appendChild(b);
 				a.appendChild(document.createElement("br"));
 				const c = document.createElement('i');
-				c.innerHTML = "Current members: " + element.players;
+				c.innerHTML = "🧑🏻‍🤝‍🧑🏻: " + element.players + "<br>";
 				a.appendChild(c);
 				
 				buttons = document.createElement("span");
@@ -173,7 +173,7 @@ async function getTournaments() {
 					waiting.setAttribute("type", "button");
 					waiting.setAttribute("class", "btn btn-secondary");
 					const w = document.createElement("i");
-					w.innerHTML = "Joined";
+					w.innerHTML = "🚪";
 					waiting.appendChild(w);
 					buttons.appendChild(waiting);
 					//const reject = document.createElement("button");
@@ -216,7 +216,7 @@ async function enter_tournament(room_name, username) {
 		});
 		const data = await response.json();
 		if (data.status == 'success') {
-			tarea.parentElement.innerHTML = `<h3><i>Waiting for ${room_name}</i></h3>`;
+			tarea.parentElement.innerHTML = `<h3><i>⏰ ${room_name} ⏰</i></h3>`;
 			gestion_de_waiters('torneo', room_name);
 //			intervalID = setInterval(waiting_tournament_room, 3000, room_name);
 		}

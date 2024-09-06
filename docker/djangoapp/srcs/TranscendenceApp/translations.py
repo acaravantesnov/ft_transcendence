@@ -56,6 +56,7 @@ translations = {
         'INSTRUCTIONS_BODY_L6': '- En torneo se forman parejas aleatorias y juegan partidas de 3 puntos. El ganador de cada partida avanza a la siguiente ronda. El torneo termina cuando solo queda un ganador. Juega con 🔼 y 🔽.'
         'VS_PLAYER': 'vsJugador',
         'TOURNAMENT':'Torneo',
+        'TOURNAMENTS':'Torneos',
         'IA':'vsIA',
         'LAST_LOGIN':'Ultima conexión', 
         'DATE_JOINED':'Fecha de Creación',
@@ -63,6 +64,8 @@ translations = {
         'POINTS_SCORED': 'Puntos marcados',
         'POINTS_CONCEDED': 'Puntos encajados',
         'ADD':'Añadir',
+        'LOCAL':'Local',
+        'ONLINE':'En linea',
     },
     'en': {
         'WELCOME': 'Welcome!',
@@ -121,6 +124,7 @@ translations = {
         'INSTRUCTIONS_BODY_L6': '- In tournament mode, random pairs are formed, and they play matches to 3 points. The winner of each match advances to the next round. The tournament ends when only one winner remains. Play with 🔼 and 🔽.'
         'VS_PLAYER': 'vsPlayer',
         'TOURNAMENT':'Tournament',
+        'TOURNAMENTS':'Tournaments',
         'IA':'vsAI',
         'LAST_LOGIN':'Last login', 
         'DATE_JOINED':'Date joined',
@@ -128,6 +132,8 @@ translations = {
         'POINTS_SCORED': 'Points scored',
         'POINTS_CONCEDED': 'Points conceded',
         'ADD':'Add',
+        'LOCAL':'Local',
+        'ONLINE':'Online',
 
     },
     'fr': {
@@ -187,6 +193,7 @@ translations = {
         'INSTRUCTIONS_BODY_L6': '- En mode tournoi, des paires aléatoires sont formées et jouent des matchs en 3 points. Le gagnant de chaque match passe au tour suivant. Le tournoi se termine lorsqu’il ne reste qu’un seul gagnant. Jouez avec 🔼 et 🔽.'
         'VS_PLAYER': 'vsJoueur',
         'TOURNAMENT':'Tournoi',
+        'TOURNAMENTS':'Tournois',
         'IA':'vsIA',
         'LAST_LOGIN':'Dernière connexion', 
         'DATE_JOINED':"Date d'adhésion",
@@ -194,6 +201,8 @@ translations = {
         'POINTS_SCORED': 'Points marqués',
         'POINTS_CONCEDED': 'Points concédés',
         'ADD':'Ajouter',
+        'LOCAL':'Locale',
+        'ONLINE':'En ligne',
     },
 }
 

@@ -225,13 +225,27 @@ def modeMenu(request, mode, username):
     context = {
         'local_text': translate('LOCAL', lang),
         'online_text': translate('ONLINE', lang),
+        'username': username,
+        'username_text' : translate('USERNAME', lang),
+        'pass_text' : translate('PASS', lang),
+        'welcome_message': translate('WELCOME', lang),
+        'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
     }
     if request.headers.get('Accept') != '*/*':
-        return render(request, 'index.html', {'username': username})
+        return render(request, 'index.html', context)
     if request.user.is_authenticated and username != 'Guest':
-        return render(request, 'menu2.html');
-    form = signUser();
-    return render(request, 'signIn.html', {'form': form})
+        return render(request, 'menu2.html', context)
+    form = signUser(context=context)
+    context['form'] = form
+    return render(request, 'signIn.html', context)
 
 def profile(request, username):
     lang = lang_global
@@ -480,17 +494,33 @@ def stats(request, username):
         'username': username,
     }
     if request.headers.get('Accept') != '*/*':
-        username = request.user.username
-        return render(request, 'index.html', {'username': username})
+        return render(request, 'index.html', context)
     if not request.user.is_authenticated:
         form = signUser()
         context['form'] = form
         return render(request, 'signIn.html', context)
-    return render(request, 'stats.html', {'username': username})
+    return render(request, 'stats.html', context)
     
 def tournament(request, username):
+    lang = lang_global
+    if request.user.is_authenticated:
+        lang = request.user.preferred_language
+    context = {
+        'welcome_message': translate('WELCOME', lang),
+        'sign_in_text': translate('SIGN_IN', lang),
+        'sign_up_text': translate('SIGN_UP', lang),
+        'no_account_text': translate('NO_ACCOUNT', lang),
+        'play_text': translate('PLAY', lang),
+        'leaderboards_text': translate('LEADERBOARDS', lang),
+        'dashboard_text': translate('DASHBOARD', lang),
+        'english_text': translate('ENGLISH', lang),
+        'french_text': translate('FRENCH', lang),
+        'spanish_text': translate('SPANISH', lang),
+        'tournaments_text': translate('TOURNAMENTS', lang),
+        'username': username,
+    }
     if request.headers.get('Accept') != '*/*':
-        return render(request, 'index.html', {'username': username})
+        return render(request, 'index.html', context)
     if not request.user.is_authenticated:
         context = {
             'sign_in_text': translate('SIGN_IN', lang),
@@ -499,7 +529,7 @@ def tournament(request, username):
         form = signUser()
         context['form'] = form
         return render(request, 'signIn.html', context)
-    return render(request, 'tournaments.html', {'username': username})
+    return render(request, 'tournaments.html', context)
 
 def instructions(request, username):
     lang = 'en'
