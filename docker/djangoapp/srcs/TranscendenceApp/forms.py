@@ -73,6 +73,7 @@ class newUser(forms.ModelForm):
         self.fields['last_name'].label = context['last_name_text']
         self.fields['email'].label = context['email_text']
         self.fields['password'].label = context['pass_text']
+        self.fields['confirm_password'].label = context['pass_confirmation_text']
         self.fields['password'].required = True
         self.fields['confirm_password'].required = True
 

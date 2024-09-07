@@ -14,8 +14,6 @@ var leftScore = document.getElementById('left-score');
 var rightScore = document.getElementById('right-score');
 var gameArea = document.getElementById('game-area');
 
-title = document.getElementsByClassName('display-2')[0].innerHTML = (window.location.toString().search('vsPlayer')>0 ? 'vsPlayer' : window.location.toString().search('tournament')>0 ? 'Tournament' : " ");
-
 /*
 async function init_game(str) {
 	try {

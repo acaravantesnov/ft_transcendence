@@ -9,11 +9,9 @@
 //var rightScore = document.getElementById('right-score');
 //var gameArea = document.getElementById('game-area');
 
-var title = document.getElementsByClassName('display-2')[0].innerHTML = (window.location.toString().search('vsPlayer')>0 ? 'vsPlayer' : window.location.toString().search('tournament')>0 ? 'Tournament' : " ");
-
 async function init_game(str) {
 	try {
-		const txt = title+str; 
+		const txt = 'vsPlayer'+str; 
 		const response = await fetch(`/users/play/createGame/${txt}/${user.username}/`);
 		//const response = await fetch(`/users/tournament/addtowaitingroom/${room_id}/${user.username}`)
 		const data = await response.json();
@@ -108,15 +106,12 @@ function updateGameState(state) {
 local.addEventListener('click', () => init_game('local'));
 
 remote.addEventListener('click', () => {
-	if (title == 'Tournament') { go_to(`/users/play/tournament/${user.username}`); }
-	else {
-        // Hide the buttons and show "Waiting Room"
-        document.getElementById('modeMenu').innerHTML = "<h3>Waiting Room</h3>";
-        sessionStorage.setItem('waiting', 'true');
+    // Hide the buttons and show "Waiting Room"
+    document.getElementById('modeMenu').innerHTML = "<h3>⏰⏰⏰</h3>";
+    sessionStorage.setItem('waiting', 'true');
 
-        // Initialize the remote game
-        init_game('remote');
-    }
+    // Initialize the remote game
+    init_game('remote');
 });
 
 /*
